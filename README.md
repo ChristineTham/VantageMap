@@ -79,7 +79,7 @@ src/
     data.ts               # Data models + sample data
 ```
 
-## Licence
+## 📄 License
 
 MIT
 
@@ -89,7 +89,3 @@ MIT
 We are building a community of contributors who believe that Business Architecture is the missing link in the modern enterprise. Whether you are a developer, a designer, or a strategist, we welcome your input in making organizations more legible and agile.
 
 ------------------------------
-
-## 📄 License
-
-VantageMap is released under the Apache 2.0 License.
