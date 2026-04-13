@@ -693,77 +693,77 @@ export const techRadar: TechEntry[] = [
   { id: "t-28", name: "Angular", description: "TypeScript-based web application framework.", ring: "Hold", quadrant: "Languages & Frameworks", moved: -1, tags: ["frontend", "framework"] },
 ];
 
-// ─── Helper utilities ──────────────────────────────────────────────────────────
+// ─── Helper utilities (Rosely colour palette) ─────────────────────────────────
 
 export const healthColour: Record<HealthStatus, string> = {
-  Excellent: "bg-emerald-100 text-emerald-800 border border-emerald-300",
-  Good: "bg-green-100 text-green-800 border border-green-300",
-  Fair: "bg-yellow-100 text-yellow-800 border border-yellow-300",
-  Poor: "bg-orange-100 text-orange-800 border border-orange-300",
-  Critical: "bg-red-100 text-red-800 border border-red-300",
+  Excellent: "bg-rosely-teal/20 text-rosely-night border border-rosely-teal",
+  Good:      "bg-rosely-periwinkle/20 text-rosely-night border border-rosely-periwinkle",
+  Fair:      "bg-rosely-golden/20 text-rosely-night border border-rosely-golden",
+  Poor:      "bg-rosely-flamingo/20 text-rosely-night border border-rosely-flamingo",
+  Critical:  "bg-rosely-rose/20 text-rosely-cream border border-rosely-rose",
 };
 
 export const healthBg: Record<HealthStatus, string> = {
-  Excellent: "bg-emerald-50 border-emerald-300",
-  Good: "bg-green-50 border-green-300",
-  Fair: "bg-yellow-50 border-yellow-300",
-  Poor: "bg-orange-50 border-orange-300",
-  Critical: "bg-red-50 border-red-300",
+  Excellent: "bg-rosely-teal/10 border-rosely-teal/50",
+  Good:      "bg-rosely-periwinkle/10 border-rosely-periwinkle/50",
+  Fair:      "bg-rosely-golden/10 border-rosely-golden/50",
+  Poor:      "bg-rosely-flamingo/10 border-rosely-flamingo/50",
+  Critical:  "bg-rosely-rose/10 border-rosely-rose/50",
 };
 
 export const lifecycleColour: Record<LifecyclePhase, string> = {
-  Plan: "bg-blue-100 text-blue-800 border border-blue-300",
-  "Phase In": "bg-cyan-100 text-cyan-800 border border-cyan-300",
-  Active: "bg-green-100 text-green-800 border border-green-300",
-  "Phase Out": "bg-orange-100 text-orange-800 border border-orange-300",
-  "End of Life": "bg-red-100 text-red-800 border border-red-300",
+  Plan:           "bg-rosely-cornflower/20 text-rosely-night border border-rosely-cornflower",
+  "Phase In":     "bg-rosely-periwinkle/20 text-rosely-night border border-rosely-periwinkle",
+  Active:         "bg-rosely-teal/20 text-rosely-night border border-rosely-teal",
+  "Phase Out":    "bg-rosely-flamingo/20 text-rosely-night border border-rosely-flamingo",
+  "End of Life":  "bg-rosely-rose/20 text-rosely-cream border border-rosely-rose",
 };
 
 export const ringColour: Record<TechRing, string> = {
-  Adopt: "bg-emerald-100 text-emerald-800 border border-emerald-300",
-  Trial: "bg-blue-100 text-blue-800 border border-blue-300",
-  Assess: "bg-yellow-100 text-yellow-800 border border-yellow-300",
-  Hold: "bg-red-100 text-red-800 border border-red-300",
+  Adopt:  "bg-rosely-teal/20 text-rosely-night border border-rosely-teal",
+  Trial:  "bg-rosely-periwinkle/20 text-rosely-night border border-rosely-periwinkle",
+  Assess: "bg-rosely-golden/20 text-rosely-night border border-rosely-golden",
+  Hold:   "bg-rosely-rose/20 text-rosely-cream border border-rosely-rose",
 };
 
 export const ringBg: Record<TechRing, string> = {
-  Adopt: "bg-emerald-50 border-emerald-200",
-  Trial: "bg-blue-50 border-blue-200",
-  Assess: "bg-yellow-50 border-yellow-200",
-  Hold: "bg-red-50 border-red-200",
+  Adopt:  "bg-rosely-teal/10 border-rosely-teal/40",
+  Trial:  "bg-rosely-periwinkle/10 border-rosely-periwinkle/40",
+  Assess: "bg-rosely-golden/10 border-rosely-golden/40",
+  Hold:   "bg-rosely-rose/10 border-rosely-rose/40",
 };
 
 export const perspectiveColour: Record<StrategicPerspective, string> = {
-  Financial: "bg-emerald-100 text-emerald-800 border border-emerald-300",
-  Customer: "bg-blue-100 text-blue-800 border border-blue-300",
-  "Internal Process": "bg-purple-100 text-purple-800 border border-purple-300",
-  "Learning & Growth": "bg-orange-100 text-orange-800 border border-orange-300",
+  Financial:          "bg-rosely-teal/20 text-rosely-night border border-rosely-teal",
+  Customer:           "bg-rosely-periwinkle/20 text-rosely-night border border-rosely-periwinkle",
+  "Internal Process": "bg-rosely-lilac/20 text-rosely-night border border-rosely-lilac",
+  "Learning & Growth":"bg-rosely-flamingo/20 text-rosely-night border border-rosely-flamingo",
 };
 
 export const perspectiveBg: Record<StrategicPerspective, string> = {
-  Financial: "bg-emerald-50 border-emerald-200",
-  Customer: "bg-blue-50 border-blue-200",
-  "Internal Process": "bg-purple-50 border-purple-200",
-  "Learning & Growth": "bg-orange-50 border-orange-200",
+  Financial:          "bg-rosely-teal/10 border-rosely-teal/40",
+  Customer:           "bg-rosely-periwinkle/10 border-rosely-periwinkle/40",
+  "Internal Process": "bg-rosely-lilac/10 border-rosely-lilac/40",
+  "Learning & Growth":"bg-rosely-flamingo/10 border-rosely-flamingo/40",
 };
 
 export const kpiStatusColour: Record<KPI["status"], string> = {
-  "On Track": "text-emerald-700",
-  "At Risk": "text-yellow-700",
-  "Off Track": "text-red-700",
+  "On Track": "text-rosely-teal",
+  "At Risk":  "text-rosely-golden",
+  "Off Track":"text-rosely-rose",
 };
 
 export const initiativeStatusColour: Record<InitiativeStatus, string> = {
-  "Not Started": "bg-slate-100 text-slate-700 border border-slate-300",
-  "In Progress": "bg-blue-100 text-blue-800 border border-blue-300",
-  Completed: "bg-emerald-100 text-emerald-800 border border-emerald-300",
-  "On Hold": "bg-yellow-100 text-yellow-800 border border-yellow-300",
-  Cancelled: "bg-red-100 text-red-800 border border-red-300",
+  "Not Started": "bg-rosely-mist/20 text-rosely-dusk border border-rosely-mist",
+  "In Progress": "bg-rosely-periwinkle/20 text-rosely-night border border-rosely-periwinkle",
+  Completed:     "bg-rosely-teal/20 text-rosely-night border border-rosely-teal",
+  "On Hold":     "bg-rosely-golden/20 text-rosely-night border border-rosely-golden",
+  Cancelled:     "bg-rosely-rose/20 text-rosely-cream border border-rosely-rose",
 };
 
 export const criticalityColour: Record<Application["businessCriticality"], string> = {
-  "Mission Critical": "bg-red-100 text-red-800 border border-red-300",
-  "Business Critical": "bg-orange-100 text-orange-800 border border-orange-300",
-  "Business Operational": "bg-yellow-100 text-yellow-800 border border-yellow-300",
-  Administrative: "bg-slate-100 text-slate-700 border border-slate-300",
+  "Mission Critical":    "bg-rosely-rose/20 text-rosely-cream border border-rosely-rose",
+  "Business Critical":   "bg-rosely-flamingo/20 text-rosely-night border border-rosely-flamingo",
+  "Business Operational":"bg-rosely-golden/20 text-rosely-night border border-rosely-golden",
+  Administrative:        "bg-rosely-mist/20 text-rosely-dusk border border-rosely-mist",
 };

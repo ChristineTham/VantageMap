@@ -13,10 +13,8 @@ function dateToNum(dateStr: string): number {
 }
 
 const YEARS = [2024, 2025, 2026];
-
-// Compute global min and max for the timeline
-const minDate = dateToNum("2024-01-01");
-const maxDate = dateToNum("2026-12-31");
+const minDate  = dateToNum("2024-01-01");
+const maxDate  = dateToNum("2026-12-31");
 const totalSpan = maxDate - minDate;
 
 function pct(dateStr: string): number {
@@ -32,50 +30,42 @@ const STATUS_ORDER = [
 ] as const;
 
 export default function RoadmapPage() {
-  // Group by status order
   const sorted = [...initiatives].sort(
     (a, b) =>
-      STATUS_ORDER.indexOf(a.status as never) -
-      STATUS_ORDER.indexOf(b.status as never)
+      STATUS_ORDER.indexOf(a.status as never) - STATUS_ORDER.indexOf(b.status as never)
   );
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
-          Strategic Roadmap
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Gantt-style timeline of all strategic initiatives. Bars are
-          colour-coded by status.
+        <h1 className="text-2xl font-bold text-rosely-night">Strategic Roadmap</h1>
+        <p className="text-sm text-rosely-mist mt-1">
+          Gantt-style timeline of all strategic initiatives. Bars are colour-coded by status.
         </p>
       </div>
 
       {/* Legend */}
       <div className="flex flex-wrap gap-3">
         {STATUS_ORDER.map((status) => (
-          <span
-            key={status}
-            className={`text-xs px-2.5 py-1 rounded-full font-medium ${initiativeStatusColour[status]}`}
-          >
+          <span key={status} className={`text-xs px-2.5 py-1 rounded-full font-medium ${initiativeStatusColour[status]}`}>
             {status}
           </span>
         ))}
       </div>
 
       {/* Gantt chart */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 overflow-x-auto">
+      <div className="bg-white rounded-xl border border-rosely-blush p-5 overflow-x-auto">
         {/* Year axis */}
         <div className="relative ml-64 mb-2">
           <div className="flex">
             {YEARS.map((year) => {
-              const left = pct(`${year}-01-01`);
+              const left  = pct(`${year}-01-01`);
               const right = pct(`${year + 1}-01-01`);
               return (
                 <div
                   key={year}
-                  className="absolute text-xs font-semibold text-slate-400"
+                  className="absolute text-xs font-semibold text-rosely-mist"
                   style={{ left: `${left}%`, width: `${right - left}%` }}
                 >
                   {year}
@@ -83,44 +73,41 @@ export default function RoadmapPage() {
               );
             })}
           </div>
-          {/* Height placeholder */}
           <div className="h-5" />
         </div>
 
         {/* Rows */}
         <div className="space-y-2">
           {sorted.map((ini) => {
-            const left = pct(ini.startDate);
+            const left  = pct(ini.startDate);
             const width = pct(ini.endDate) - left;
 
             const barColour =
               ini.status === "In Progress"
-                ? "bg-blue-500"
+                ? "bg-rosely-periwinkle"
                 : ini.status === "Not Started"
-                ? "bg-slate-400"
+                ? "bg-rosely-mist"
                 : ini.status === "Completed"
-                ? "bg-emerald-500"
+                ? "bg-rosely-teal"
                 : ini.status === "On Hold"
-                ? "bg-yellow-400"
-                : "bg-red-400";
+                ? "bg-rosely-golden"
+                : "bg-rosely-rose";
 
             return (
               <div key={ini.id} className="flex items-center gap-2 group">
                 {/* Label column */}
                 <div className="w-64 shrink-0 pr-3 text-right">
-                  <p className="text-xs font-medium text-slate-800 truncate">
-                    {ini.name}
-                  </p>
-                  <p className="text-xs text-slate-400 truncate">{ini.owner}</p>
+                  <p className="text-xs font-medium text-rosely-night truncate">{ini.name}</p>
+                  <p className="text-xs text-rosely-mist truncate">{ini.owner}</p>
                 </div>
 
                 {/* Bar area */}
-                <div className="flex-1 relative h-8 bg-slate-50 rounded border border-slate-100">
+                <div className="flex-1 relative h-8 bg-rosely-cream rounded border border-rosely-petal">
                   {/* Grid lines */}
                   {YEARS.map((year) => (
                     <div
                       key={year}
-                      className="absolute top-0 bottom-0 w-px bg-slate-200"
+                      className="absolute top-0 bottom-0 w-px bg-rosely-blush"
                       style={{ left: `${pct(`${year}-01-01`)}%` }}
                     />
                   ))}
@@ -130,7 +117,7 @@ export default function RoadmapPage() {
                     style={{ left: `${left}%`, width: `${Math.max(width, 1)}%` }}
                     title={`${ini.startDate} → ${ini.endDate}${ini.budget ? ` | $${(ini.budget / 1000).toFixed(0)}k` : ""}`}
                   >
-                    <span className="text-xs text-white font-medium truncate hidden sm:block">
+                    <span className="text-xs text-rosely-cream font-medium truncate hidden sm:block">
                       {ini.name}
                     </span>
                   </div>
@@ -138,9 +125,7 @@ export default function RoadmapPage() {
 
                 {/* Status badge */}
                 <div className="w-24 shrink-0">
-                  <span
-                    className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${initiativeStatusColour[ini.status]}`}
-                  >
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${initiativeStatusColour[ini.status]}`}>
                     {ini.status}
                   </span>
                 </div>
@@ -153,49 +138,35 @@ export default function RoadmapPage() {
       {/* Initiative detail cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {sorted.map((ini) => {
-          const caps = capabilities.filter((c) =>
-            ini.capabilityIds.includes(c.id)
-          );
-          const objs = strategicObjectives.filter((o) =>
-            ini.objectiveIds.includes(o.id)
-          );
+          const caps = capabilities.filter((c) => ini.capabilityIds.includes(c.id));
+          const objs = strategicObjectives.filter((o) => ini.objectiveIds.includes(o.id));
           return (
             <div
               key={ini.id}
-              className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-300 hover:shadow-sm transition-all"
+              className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-semibold text-slate-900 text-sm leading-tight">
-                  {ini.name}
-                </h3>
-                <span
-                  className={`text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0 ${initiativeStatusColour[ini.status]}`}
-                >
+                <h3 className="font-semibold text-rosely-night text-sm leading-tight">{ini.name}</h3>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0 ${initiativeStatusColour[ini.status]}`}>
                   {ini.status}
                 </span>
               </div>
 
-              <p className="text-xs text-slate-500 mb-3 line-clamp-2">
-                {ini.description}
-              </p>
+              <p className="text-xs text-rosely-dusk mb-3 line-clamp-2">{ini.description}</p>
 
-              <div className="space-y-1.5 text-xs text-slate-500 mb-3">
+              <div className="space-y-1.5 text-xs text-rosely-dusk mb-3">
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>
-                    {ini.startDate.slice(0, 7)} → {ini.endDate.slice(0, 7)}
-                  </span>
+                  <Calendar className="w-3.5 h-3.5 text-rosely-mist" />
+                  <span>{ini.startDate.slice(0, 7)} → {ini.endDate.slice(0, 7)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Owner</span>
-                  <span className="text-slate-700">{ini.owner}</span>
+                  <span className="text-rosely-night">{ini.owner}</span>
                 </div>
                 {ini.budget && (
                   <div className="flex items-center justify-between">
                     <span>Budget</span>
-                    <span className="text-slate-700">
-                      ${ini.budget.toLocaleString()}
-                    </span>
+                    <span className="text-rosely-night">${ini.budget.toLocaleString()}</span>
                   </div>
                 )}
               </div>
@@ -203,24 +174,18 @@ export default function RoadmapPage() {
               {/* Tags */}
               <div className="flex flex-wrap gap-1 mb-3">
                 {ini.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full"
-                  >
+                  <span key={tag} className="text-xs bg-rosely-petal text-rosely-dusk px-2 py-0.5 rounded-full">
                     {tag}
                   </span>
                 ))}
               </div>
 
               {caps.length > 0 && (
-                <div className="pt-2 border-t border-slate-100">
-                  <p className="text-xs text-slate-400 mb-1">Capabilities:</p>
+                <div className="pt-2 border-t border-rosely-petal">
+                  <p className="text-xs text-rosely-mist mb-1">Capabilities:</p>
                   <div className="flex flex-wrap gap-1">
                     {caps.map((c) => (
-                      <span
-                        key={c.id}
-                        className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded-full"
-                      >
+                      <span key={c.id} className="text-xs bg-rosely-periwinkle/15 text-rosely-night border border-rosely-periwinkle/40 px-1.5 py-0.5 rounded-full">
                         {c.name}
                       </span>
                     ))}
@@ -229,16 +194,11 @@ export default function RoadmapPage() {
               )}
 
               {objs.length > 0 && (
-                <div className="pt-2 mt-2 border-t border-slate-100">
-                  <p className="text-xs text-slate-400 mb-1">
-                    Strategic Objectives:
-                  </p>
+                <div className="pt-2 mt-2 border-t border-rosely-petal">
+                  <p className="text-xs text-rosely-mist mb-1">Strategic Objectives:</p>
                   <div className="flex flex-wrap gap-1">
                     {objs.map((o) => (
-                      <span
-                        key={o.id}
-                        className="text-xs bg-purple-50 text-purple-700 border border-purple-200 px-1.5 py-0.5 rounded-full"
-                      >
+                      <span key={o.id} className="text-xs bg-rosely-lilac/15 text-rosely-night border border-rosely-lilac/40 px-1.5 py-0.5 rounded-full">
                         {o.name}
                       </span>
                     ))}
