@@ -273,4 +273,61 @@ Phase 7+:
    Chosen to minimize delivery risk while preserving a path to advanced reporting and traversal queries.
 
 5. Security and audit capabilities introduced before broad feature expansion  
-   Chosen because enterprise adoption requires governance and trust as 
+   Chosen because enterprise adoption requires governance and trust as foundational attributes.
+
+## Data Platform Decision (Updated)
+
+Primary system of record: Managed PostgreSQL 16 with Prisma.  
+Supporting stores are introduced only when measurable needs emerge (search index, graph projection/read model, cache).
+
+### Why PostgreSQL is the primary datastore
+
+1. Enterprise consistency requirements  
+The platform must safely handle role enforcement, lifecycle transitions, audit capture, and integration sync. These are transactional workloads where ACID guarantees materially reduce data integrity risk.
+
+2. Governance-heavy domain model  
+Fact sheets, typed relationships, ownership, quality states, and policy checks benefit from relational constraints and referential integrity.
+
+3. Reporting and analytics fit  
+LeanIX-style value depends on cross-domain queries and aggregations. SQL is the most direct and maintainable foundation for these workloads in MVP and early scale.
+
+4. Controlled extensibility  
+PostgreSQL JSONB allows custom fields while preserving a governed relational core. This balances flexibility with compliance and operational predictability.
+
+5. Delivery speed and operational maturity  
+PostgreSQL plus Prisma provides a strong migration workflow, backup/restore ecosystem, and broad team familiarity, improving time-to-value.
+
+### Why MongoDB (or similar NoSQL document stores) is not the primary datastore
+
+1. Schema flexibility can weaken governance  
+The platform needs controlled evolution, not unconstrained document drift across tenants and modules.
+
+2. Relationship-heavy reporting is less natural  
+Complex cross-entity analysis often requires denormalization or application-level joins, increasing implementation and maintenance complexity.
+
+3. Governance controls are harder to standardize  
+Permission and audit semantics across many document variants create higher long-term complexity than a relational core.
+
+### Why a Graph DB is not the primary datastore (initially)
+
+1. Graph traversal is only part of the workload  
+The system also needs strong admin, security, audit, configuration, and integration workflows that are not graph-native first.
+
+2. Early operational complexity is higher  
+Running a dedicated graph datastore from phase one adds platform and modeling overhead before usage patterns justify it.
+
+3. PostgreSQL can satisfy early-to-mid graph needs  
+Typed edge tables plus indexing cover most required relationship traversal for MVP and early growth.
+
+### Evolution path (important)
+
+1. Keep PostgreSQL as source of truth.  
+2. Add managed search for full-text and faceted discovery when needed.  
+3. Add a graph read model or graph datastore only if traversal latency, query complexity, or scale metrics consistently exceed targets.  
+4. Keep write-path governance in the relational core even if specialized read models are introduced.
+
+### Decision trigger points for adding specialized stores
+
+1. Search index: when complex free-text/faceted search impacts primary database performance or response targets.  
+2. Graph projection: when relationship traversal queries repeatedly breach agreed SLOs despite indexing and query optimization.  
+3. Additional datastores: only after clear production evidence and explicit operational ownership.
