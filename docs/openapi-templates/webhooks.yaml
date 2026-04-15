@@ -1,0 +1,118 @@
+openapi: 3.1.0
+info:
+  title: VantageMap Webhooks API
+  version: 0.1.0
+  description: Skeleton contract for webhook subscription management.
+servers:
+  - url: https://api.vantagemap.example
+paths:
+  /v1/webhooks/subscriptions:
+    post:
+      summary: Create webhook subscription
+      operationId: createWebhookSubscription
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '400':
+          description: Validation error
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+  /v1/webhooks/subscriptions/{subscriptionId}:
+    delete:
+      summary: Delete webhook subscription
+      operationId: deleteWebhookSubscription
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+        '404':
+          description: Not found
+  /v1/webhooks/subscriptions/{subscriptionId}/test:
+    post:
+      summary: Send webhook test event
+      operationId: testWebhookSubscription
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Test event accepted
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    WebhookSubscriptionCreateRequest:
+      type: object
+      required: [callbackUrl, eventTypes]
+      properties:
+        callbackUrl:
+          type: string
+          format: uri
+        eventTypes:
+          type: array
+          items:
+            type: string
+        secret:
+          type: string
+        retryPolicy:
+          type: object
+          properties:
+            maxAttempts:
+              type: integer
+            backoffStrategy:
+              type: string
+    WebhookSubscription:
+      type: object
+      required: [id, callbackUrl, eventTypes, status]
+      properties:
+        id:
+          type: string
+        callbackUrl:
+          type: string
+        eventTypes:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [active, paused]

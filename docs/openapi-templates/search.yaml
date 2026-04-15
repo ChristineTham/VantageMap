@@ -1,0 +1,104 @@
+openapi: 3.1.0
+info:
+  title: VantageMap Search API
+  version: 0.1.0
+  description: Skeleton contract for inventory search and filtering.
+servers:
+  - url: https://api.vantagemap.example
+paths:
+  /v1/search:
+    get:
+      summary: Search fact sheets
+      operationId: searchFactSheets
+      tags: [Search]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ownerId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: lifecycle
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Unauthorized:
+      description: Authentication required
+    Forbidden:
+      description: Permission denied
+  schemas:
+    SearchResponse:
+      type: object
+      required: [items, pageInfo]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+    SearchResultItem:
+      type: object
+      required: [id, type, name]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        lifecycle:
+          type: string
+        ownerId:
+          type: string
+    PageInfo:
+      type: object
+      required: [hasNextPage]
+      properties:
+        hasNextPage:
+          type: boolean
+        nextCursor:
+          type: string

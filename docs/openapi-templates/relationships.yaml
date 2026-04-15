@@ -1,0 +1,91 @@
+openapi: 3.1.0
+info:
+  title: VantageMap Relationships API
+  version: 0.1.0
+  description: Skeleton contract for creating and removing fact sheet relationships.
+servers:
+  - url: https://api.vantagemap.example
+paths:
+  /v1/relations:
+    post:
+      summary: Create relationship
+      operationId: createRelation
+      tags: [Relations]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRelationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Relation'
+        '400':
+          description: Validation error
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+  /v1/relations/{relationId}:
+    delete:
+      summary: Delete relationship
+      operationId: deleteRelation
+      tags: [Relations]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: relationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+        '404':
+          description: Not found
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateRelationRequest:
+      type: object
+      required: [fromFactSheetId, toFactSheetId, relationType]
+      properties:
+        fromFactSheetId:
+          type: string
+        toFactSheetId:
+          type: string
+        relationType:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+    Relation:
+      type: object
+      required: [id, fromFactSheetId, toFactSheetId, relationType]
+      properties:
+        id:
+          type: string
+        fromFactSheetId:
+          type: string
+        toFactSheetId:
+          type: string
+        relationType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time

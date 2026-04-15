@@ -110,3 +110,26 @@ Build an incremental MVP that establishes a durable LeanIX-like platform foundat
 
 3. Custom Field Strategy Recommendation
    : Option A (recommended): JSON/JSONB columns for custom field storage with configurable validation; Option B: fully relational schema for each customer extension (requires meta-model schema migration machinery).
+
+## Phase 0 Execution Status
+
+Phase 0 implementation has started with baseline planning artifacts and governance instructions.
+
+### Created Artifacts
+
+- [docs/phase-0/README.md](docs/phase-0/README.md)
+- [docs/phase-0/traceability-matrix.csv](docs/phase-0/traceability-matrix.csv)
+- [docs/phase-0/epic-catalog.md](docs/phase-0/epic-catalog.md)
+- [docs/phase-0/nfr.md](docs/phase-0/nfr.md)
+- [docs/phase-0/acceptance-criteria-templates.md](docs/phase-0/acceptance-criteria-templates.md)
+- [docs/phase-0/migration-plan.md](docs/phase-0/migration-plan.md)
+- [docs/phase-0/security-rbac.md](docs/phase-0/security-rbac.md)
+- [docs/phase-0/gates.md](docs/phase-0/gates.md)
+- [.github/instructions/requirements.instructions.md](.github/instructions/requirements.instructions.md)
+
+### Immediate Next Work
+
+1. Start Phase 1 platform bootstrap execution from Sprint 1 scope in [docs/phase-0/mvp-sprint-plan.md](docs/phase-0/mvp-sprint-plan.md).
+2. Convert OpenAPI skeletons in [docs/openapi-templates/facts-crud.yaml](docs/openapi-templates/facts-crud.yaml), [docs/openapi-templates/search.yaml](docs/openapi-templates/search.yaml), [docs/openapi-templates/relationships.yaml](docs/openapi-templates/relationships.yaml), [docs/openapi-templates/auth.yaml](docs/openapi-templates/auth.yaml), and [docs/openapi-templates/webhooks.yaml](docs/openapi-templates/webhooks.yaml) into implementation contracts.
+3. Break Sprint 1 and Sprint 2 scopes into engineering tasks with acceptance tests derived from [docs/phase-0/acceptance-criteria-templates.md](docs/phase-0/acceptance-criteria-templates.md).
+4. Run dependency and capacity check against target dates in [docs/phase-0/epic-catalog.md](docs/phase-0/epic-catalog.md).

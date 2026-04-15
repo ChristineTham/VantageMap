@@ -1,0 +1,61 @@
+requirement_id,capability_family,requirement_summary,source_doc,epic_id,scope,acceptance_criteria_ids,dependencies,owner,status
+REQ-001,Meta Model,"Support canonical fact sheet types and relationships",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-001;AC-MODEL-002",EP-PLATFORM-001,Architecture,baselined
+REQ-002,Fact Sheets,"Create and edit core fact sheets in inventory",docs/USER-GUIDE.md,EP-FACT-001,MVP,"AC-FACT-001;AC-FACT-002",EP-ID-001;EP-MODEL-001,Product,baselined
+REQ-003,Fact Sheets,"Filter and search fact sheets by type, owner, tags, lifecycle",docs/USER-GUIDE.md,EP-FACT-002,MVP,"AC-FACT-010;AC-FACT-011",EP-FACT-001,Product,baselined
+REQ-004,UAM,"Provide role-based access with standard and custom roles",docs/UAM.md,EP-ID-001,MVP,"AC-ID-001;AC-ID-002",EP-PLATFORM-001,Security,baselined
+REQ-005,UAM,"Support technical users and API token lifecycle",docs/UAM.md,EP-ID-002,MVP,"AC-ID-010;AC-ID-011",EP-ID-001,Security,baselined
+REQ-006,UAM,"Support SSO using SAML and lifecycle sync using SCIM",docs/UAM.md,EP-ID-003,Post-MVP,"AC-ID-020;AC-ID-021",EP-ID-001,Security,baselined
+REQ-007,Admin,"Configure workspace governance including tagging and subscriptions",docs/ADMIN.md,EP-ADMIN-001,MVP,"AC-ADMIN-001;AC-ADMIN-002",EP-ID-001,Operations,baselined
+REQ-008,Integrations,"Deliver REST APIs for core inventory and settings operations",docs/DEVELOPER.md,EP-INT-001,MVP,"AC-INT-001;AC-INT-002",EP-PLATFORM-001;EP-ID-002,Platform,baselined
+REQ-009,Integrations,"Deliver GraphQL endpoint for fact sheet and report queries",docs/DEVELOPER.md,EP-INT-002,MVP,"AC-INT-010;AC-INT-011",EP-FACT-001;EP-REPORT-001,Platform,baselined
+REQ-010,Integrations,"Deliver outbound webhooks with retry and logging",docs/DEVELOPER.md,EP-INT-003,MVP,"AC-INT-020;AC-INT-021",EP-PLATFORM-001,Platform,baselined
+REQ-011,Reporting,"Provide dashboard and use-case aligned reporting views",docs/USE-CASES.md,EP-REPORT-001,MVP,"AC-REPORT-001;AC-REPORT-002",EP-FACT-001;EP-INT-002,Product,baselined
+REQ-012,Roadmap,"Support strategic initiative planning with timeline visibility",docs/USE-CASES.md,EP-ROADMAP-001,MVP,"AC-ROADMAP-001;AC-ROADMAP-002",EP-FACT-001,Product,baselined
+REQ-013,Automation,"Support rule-based automation and notification workflows",docs/ADMIN.md,EP-AUTO-001,Post-MVP,"AC-AUTO-001;AC-AUTO-002",EP-INT-003,Platform,baselined
+REQ-014,Data Migration,"Replace static sample data with persistent API-backed model",docs/PLAN.md,EP-PLATFORM-002,MVP,"AC-PLATFORM-010;AC-PLATFORM-011",EP-PLATFORM-001,Architecture,baselined
+REQ-015,Architecture,"Use bounded contexts and managed services architecture",docs/ARCHITECTURE.md,EP-PLATFORM-001,MVP,"AC-PLATFORM-001;AC-PLATFORM-002",,Architecture,baselined
+REQ-016,Security,"Capture immutable audit trail for mutation events",docs/ADMIN.md,EP-SEC-001,MVP,"AC-SEC-001;AC-SEC-002",EP-ID-001;EP-PLATFORM-001,Security,baselined
+REQ-017,Use Cases,"Enable application rationalization workflow support",docs/USE-CASES.md,EP-REPORT-002,MVP,"AC-REPORT-010;AC-REPORT-011",EP-REPORT-001;EP-FACT-002,Product,baselined
+REQ-018,Use Cases,"Enable modernization and transformation scenario modeling",docs/USE-CASES.md,EP-TRANSFORM-001,Post-MVP,"AC-TRANSFORM-001;AC-TRANSFORM-002",EP-ROADMAP-001;EP-REPORT-001,Product,baselined
+REQ-019,Admin,"Support workspace branding and settings management",docs/ADMIN.md,EP-ADMIN-001,MVP,"AC-ADMIN-003;AC-ADMIN-004",EP-ID-001,Operations,baselined
+REQ-020,Admin,"Support maintenance mode with admin-only access",docs/ADMIN.md,EP-ADMIN-001,Post-MVP,"AC-ADMIN-020;AC-ADMIN-021",EP-ID-001,Operations,baselined
+REQ-021,UAM,"Support user invite and lifecycle status transitions",docs/UAM.md,EP-ID-001,MVP,"AC-ID-003;AC-ID-004",EP-PLATFORM-001,Security,baselined
+REQ-022,UAM,"Support default role assignment for new SSO users",docs/UAM.md,EP-ID-003,Post-MVP,"AC-ID-022;AC-ID-023",EP-ID-001,Security,baselined
+REQ-023,UAM,"Support invite-only mode for restricted workspace access",docs/UAM.md,EP-ID-001,MVP,"AC-ID-005;AC-ID-006",EP-ID-001,Security,baselined
+REQ-024,UAM,"Support token rotation and immediate revocation",docs/UAM.md,EP-ID-002,MVP,"AC-ID-012;AC-ID-013",EP-ID-001,Security,baselined
+REQ-025,Integrations,"Support OpenAPI documentation for REST endpoints",docs/DEVELOPER.md,EP-INT-001,MVP,"AC-INT-003;AC-INT-004",EP-INT-001,Platform,baselined
+REQ-026,Integrations,"Support GraphQL pagination and complexity guardrails",docs/DEVELOPER.md,EP-INT-002,MVP,"AC-INT-012;AC-INT-013",EP-INT-002,Platform,baselined
+REQ-027,Integrations,"Support GraphQL upload endpoint for bulk operations",docs/DEVELOPER.md,EP-INT-002,Post-MVP,"AC-INT-030;AC-INT-031",EP-INT-002,Platform,baselined
+REQ-028,Integrations,"Support webhook dead-letter handling and replay safety",docs/DEVELOPER.md,EP-INT-003,MVP,"AC-INT-022;AC-INT-023",EP-INT-003,Platform,baselined
+REQ-029,Integrations,"Support MCP server endpoint and scoped tool visibility",docs/DEVELOPER.md,EP-INT-004,Post-MVP,"AC-INT-040;AC-INT-041",EP-ID-002;EP-INT-001,Platform,baselined
+REQ-030,Model,"Define Objective fact sheet semantics and KPI linkage",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-003;AC-MODEL-004",EP-MODEL-001,Architecture,baselined
+REQ-031,Model,"Define Platform fact sheet lifecycle semantics",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-005;AC-MODEL-006",EP-MODEL-001,Architecture,baselined
+REQ-032,Model,"Define Initiative with Idea, Program, Project, Epic subtypes",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-007;AC-MODEL-008",EP-MODEL-001,Architecture,baselined
+REQ-033,Model,"Define Organization hierarchy and subtype semantics",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-009;AC-MODEL-010",EP-MODEL-001,Architecture,baselined
+REQ-034,Model,"Define Business Capability maturity and strategic importance",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-011;AC-MODEL-012",EP-MODEL-001,Architecture,baselined
+REQ-035,Model,"Define Application lifecycle and portfolio strategy fields",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-013;AC-MODEL-014",EP-MODEL-001,Architecture,baselined
+REQ-036,Model,"Define Interface subtypes including API and MCP",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-015;AC-MODEL-016",EP-MODEL-001,Architecture,baselined
+REQ-037,Model,"Define Provider contract and SLA semantics",docs/MODEL.md,EP-MODEL-001,Post-MVP,"AC-MODEL-030;AC-MODEL-031",EP-MODEL-001,Architecture,baselined
+REQ-038,Model,"Define IT Component lifecycle and technology standards linkage",docs/MODEL.md,EP-MODEL-001,MVP,"AC-MODEL-017;AC-MODEL-018",EP-MODEL-001,Architecture,baselined
+REQ-039,Model,"Support typed relationships and dependency semantics",docs/MODEL.md,EP-FACT-001,MVP,"AC-FACT-003;AC-FACT-004",EP-MODEL-001;EP-FACT-001,Product,baselined
+REQ-040,Model,"Support lifecycle state model Plan through End of Life",docs/MODEL.md,EP-FACT-001,MVP,"AC-FACT-005;AC-FACT-006",EP-MODEL-001;EP-FACT-001,Product,baselined
+REQ-041,User Workflow,"Support saved and shared search configurations",docs/USER-GUIDE.md,EP-FACT-002,Post-MVP,"AC-FACT-030;AC-FACT-031",EP-FACT-002,Product,baselined
+REQ-042,User Workflow,"Support bulk update and spreadsheet import-export",docs/USER-GUIDE.md,EP-FACT-003,MVP,"AC-FACT-020;AC-FACT-021",EP-FACT-001;EP-INT-001,Product,baselined
+REQ-043,User Workflow,"Support comments, to-dos, and collaboration workflows",docs/USER-GUIDE.md,EP-COLLAB-001,Post-MVP,"AC-COLLAB-001;AC-COLLAB-002",EP-FACT-001;EP-ID-001,Product,baselined
+REQ-044,User Workflow,"Support quality seal state tracking and notifications",docs/USER-GUIDE.md,EP-ADMIN-002,MVP,"AC-ADMIN-010;AC-ADMIN-011",EP-ADMIN-001;EP-ID-001,Operations,baselined
+REQ-045,User Workflow,"Support fact sheet subscriptions with role assignment",docs/USER-GUIDE.md,EP-ADMIN-001,MVP,"AC-ADMIN-005;AC-ADMIN-006",EP-ADMIN-001,Operations,baselined
+REQ-046,Use Cases,"Support TIME classification model for rationalization",docs/USE-CASES.md,EP-REPORT-002,MVP,"AC-REPORT-012;AC-REPORT-013",EP-REPORT-002,Product,baselined
+REQ-047,Use Cases,"Support 6R modernization classification model",docs/USE-CASES.md,EP-REPORT-003,Post-MVP,"AC-REPORT-030;AC-REPORT-031",EP-REPORT-002;EP-ROADMAP-001,Product,baselined
+REQ-048,Use Cases,"Support pace-layering analysis for application portfolios",docs/USE-CASES.md,EP-REPORT-003,Post-MVP,"AC-REPORT-032;AC-REPORT-033",EP-REPORT-001,Product,baselined
+REQ-049,Use Cases,"Support ERP transformation scenario comparison",docs/USE-CASES.md,EP-TRANSFORM-001,Post-MVP,"AC-TRANSFORM-003;AC-TRANSFORM-004",EP-TRANSFORM-001,Product,baselined
+REQ-050,Use Cases,"Support obsolescence risk aggregation and remediation tracking",docs/USE-CASES.md,EP-REPORT-004,Post-MVP,"AC-REPORT-040;AC-REPORT-041",EP-REPORT-001;EP-FACT-002,Product,baselined
+REQ-051,Use Cases,"Support AI governance and adoption tracking",docs/USE-CASES.md,EP-REPORT-005,Post-MVP,"AC-REPORT-050;AC-REPORT-051",EP-REPORT-001;EP-MODEL-001,Product,baselined
+REQ-052,Architecture,"Persist data to managed PostgreSQL with ACID guarantees",docs/ARCHITECTURE.md,EP-PLATFORM-001,MVP,"AC-PLATFORM-003;AC-PLATFORM-004",EP-PLATFORM-001,Architecture,baselined
+REQ-053,Architecture,"Support Redis caching and session management",docs/ARCHITECTURE.md,EP-PLATFORM-001,MVP,"AC-PLATFORM-005;AC-PLATFORM-006",EP-PLATFORM-001,Architecture,baselined
+REQ-054,Architecture,"Support async job processing runtime for imports and reports",docs/ARCHITECTURE.md,EP-PLATFORM-003,MVP,"AC-PLATFORM-020;AC-PLATFORM-021",EP-PLATFORM-001,Platform,baselined
+REQ-055,Architecture,"Support advanced search infrastructure and indexing",docs/ARCHITECTURE.md,EP-FACT-002,MVP,"AC-FACT-012;AC-FACT-013",EP-PLATFORM-001;EP-FACT-001,Platform,baselined
+REQ-056,Architecture,"Support immutable audit logs for create, update, delete, and admin events",docs/ARCHITECTURE.md,EP-SEC-001,MVP,"AC-SEC-003;AC-SEC-004",EP-SEC-001,Security,baselined
+REQ-057,Architecture,"Support backup, restore, and migration safety procedures",docs/ARCHITECTURE.md,EP-PLATFORM-004,MVP,"AC-PLATFORM-030;AC-PLATFORM-031",EP-PLATFORM-001,Operations,baselined
+REQ-058,Architecture,"Support custom fields via governed JSONB extensions",docs/ARCHITECTURE.md,EP-MODEL-002,Post-MVP,"AC-MODEL-040;AC-MODEL-041",EP-MODEL-001,Architecture,baselined
+REQ-059,Architecture,"Support versioned migrations with backward compatibility",docs/ARCHITECTURE.md,EP-PLATFORM-002,MVP,"AC-PLATFORM-012;AC-PLATFORM-013",EP-PLATFORM-001,Architecture,baselined
+REQ-060,Getting Started,"Support three-product framing across APM, APL, and Transformation",docs/GETTING-STARTED.md,EP-REPORT-001,MVP,"AC-REPORT-003;AC-REPORT-004",EP-REPORT-001,Product,baselined
