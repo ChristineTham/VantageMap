@@ -60,3 +60,10 @@ npm run lint     # ESLint
 - `params` and `searchParams` in page components are now **async** — must be awaited
 - Image, Script, and Font APIs may differ from Next.js 13/14 training data
 - When in doubt: `node_modules/next/dist/docs/`
+
+## Deployment and Cost Constraints
+
+- **Zero-cost MVP**: initial deployment must use only free tiers (hosting, database, cache, observability). No paid services for MVP.
+- **Open-source first**: prefer open-source tools and libraries over commercial/proprietary at every layer. Commercial services are acceptable only when a free tier exists and no viable open-source alternative covers the capability.
+- **Production target**: Azure (preferred), Google Cloud (secondary), AWS (tertiary). Application code must be cloud-agnostic — only environment configuration changes between providers.
+- **Tech stack decisions**: all backend technology choices (database, ORM, auth, API layer, etc.) are deferred to Phase 1 evaluation. See `docs/ARCHITECTURE.md` for preliminary hypotheses and `docs/adr/` for final decisions.

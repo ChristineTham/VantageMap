@@ -3,19 +3,51 @@ Understood. Below is the proposed content for docs/ARCHITECTURE.md, shown inline
 # VantageMap Architecture
 
 ## 1. Purpose and Scope
-This document defines the target architecture for VantageMap as a LeanIX-class enterprise architecture platform. It describes the technology stack, system boundaries, data and integration patterns, and why each major design decision was selected.
+This document defines the target architecture for VantageMap as an enterprise architecture platform inspired by SAP LeanIX. It describes the technology stack, system boundaries, data and integration patterns, and why each major design decision was selected.
 
 Scope includes:
 - MVP architecture for persistent, multi-user, API-driven operation
 - Post-MVP expansion path for scale and advanced capability parity
 - Security, observability, and operational controls required for enterprise use
+- Deployment cost model: zero-cost for MVP, production-ready on Azure (preferred)
 
 Out of scope:
 - Detailed endpoint specifications
 - Detailed schema DDL and migration scripts
 - UI component-level implementation details
 
-## 2. Current State and Architectural Gap
+## 2. Deployment and Cost Constraints
+
+### Zero-Cost MVP Deployment
+The MVP must be deployable at zero monetary cost using free tiers from hosting, database, and service providers. This enables rapid iteration without budget approval gates and supports the vibe-coding execution model.
+
+### Open-Source First
+Prefer open-source tools and libraries over commercial/proprietary offerings at every layer. Commercial services are acceptable only when:
+- No viable open-source alternative exists for the capability
+- The commercial offering has a free tier sufficient for MVP scale
+- Migration to an open-source alternative is feasible post-MVP
+
+### Production Deployment (Post-MVP)
+Production workloads target hyperscaler managed services in this order of preference:
+1. **Microsoft Azure** (preferred) — Azure App Service, Azure Database for PostgreSQL, Azure Cache for Redis, Azure Blob Storage
+2. **Google Cloud** (secondary) — Cloud Run, Cloud SQL, Memorystore, Cloud Storage
+3. **AWS** (tertiary) — ECS/Lambda, RDS, ElastiCache, S3
+
+### Free Tier Baseline for MVP
+The following free tiers are representative starting points (to be validated in Phase 1 step 1.7):
+
+| Layer | Free tier options | Limits |
+|-------|------------------|--------|
+| Hosting | Vercel Hobby, Netlify Free, Cloudflare Pages, Railway Starter | Varies; typically 100 GB bandwidth, serverless function limits |
+| Database | Neon Free, Supabase Free, PlanetScale Hobby, local SQLite/PostgreSQL | Typically 500 MB–1 GB storage, connection limits |
+| Cache/Queue | Upstash Free (Redis-compatible), local in-memory for dev | Typically 10K commands/day |
+| Search | PostgreSQL full-text search (no additional service), Meilisearch (self-hosted) | Built-in; no cost |
+| Object Storage | Cloudflare R2 Free, Supabase Storage Free | Typically 10 GB |
+| Auth | Open-source libraries (Auth.js, Lucia) — no external service cost | Self-hosted |
+| Observability | Sentry Free, Grafana Cloud Free, Better Stack Free | Limited retention/volume |
+| CI/CD | GitHub Actions Free (2,000 min/month for public repos) | Sufficient for MVP |
+
+## 3. Current State and Architectural Gap
 
 Current implementation strengths:
 - Modern frontend foundation with Next.js 16, TypeScript, Tailwind v4
@@ -36,42 +68,55 @@ The current system is visualization-first. The target system must be data-first 
 1. Incremental delivery over big-bang rewrite  
    Start with a production-capable monolith, then split services only when scale and team topology require it.
 
-2. Managed services first  
-   Prefer managed database, cache, logging, and storage to reduce operational overhead and accelerate delivery.
+2. Zero-cost MVP, production-ready architecture  
+   Every technology choice must have a free-tier path for MVP. Architecture must also scale to managed cloud services for production without rewriting application code.
 
-3. API-first domain model  
+3. Open-source first  
+   Prefer open-source tools at every layer. Use commercial services only when they offer a free tier and no viable open-source alternative exists.
+
+4. Managed services for production  
+   For production deployment, prefer managed database, cache, logging, and storage on Azure (preferred), GCP, or AWS to reduce operational overhead.
+
+5. API-first domain model  
    Frontend modules consume stable APIs; no direct dependency on static data modules.
 
-4. Security and audit by design  
+6. Security and audit by design  
    RBAC, token hygiene, tenant scoping, and immutable audit trails are mandatory platform capabilities.
 
-5. Operational resilience as a feature  
+7. Operational resilience as a feature  
    Retries, idempotency, observability, and backup/restore are part of the core architecture, not afterthoughts.
 
-## 4. Recommended Tech Stack and Justification
+## 5. Recommended Tech Stack and Justification
 
-| Layer | Technology | Why this decision |
-|---|---|---|
-| Frontend | Next.js 16 App Router + React 19 + TypeScript | Reuses existing codebase, strong SSR/RSC model, fast team velocity, strict typing for large domain evolution |
-| Backend API | Next.js route handlers for MVP | Low-friction full-stack TypeScript development; avoids early distributed-system complexity |
-| Database | Managed PostgreSQL 16 | ACID guarantees, mature indexing, JSONB for extensibility, strong ecosystem, enterprise reliability |
-| ORM/Data access | Prisma | High developer productivity, schema migrations, typed query APIs, stable fit for TypeScript teams |
-| Authentication | NextAuth.js v5 + OAuth 2.0 | Fast path to production auth flows with standards-based integration patterns |
-| Enterprise SSO | SAML support (phase-aligned) | Required for enterprise identity federation and LeanIX parity expectations |
-| Provisioning | SCIM (phase-aligned) | Required for automated user lifecycle management in enterprise deployments |
-| Authorization | Role-based access control with workspace scoping | Enables module-level and entity-level permissions needed for governance and multi-tenant use |
-| Cache/session/rate controls | Managed Redis | Improves read performance, supports session/state patterns, rate limiting, queue backend |
-| Async processing | Bull with Redis | Handles imports, connectors, webhook retries, report generation, scheduled sync jobs |
-| Search | Elasticsearch or managed equivalent | Supports high-volume filtering and cross-entity search beyond transactional DB patterns |
-| API docs | OpenAPI for REST | Makes integration contracts explicit and testable for external systems and internal teams |
-| Observability | OpenTelemetry + centralized logs/metrics/traces | Enables SLO-driven operations, faster incident triage, and capacity planning |
-| Storage | S3-compatible object storage | Durable storage for exports/import artifacts, audit bundles, and connector payload archives |
-| Hosting | Vercel + managed PostgreSQL + managed Redis | Fast deployment workflow, strong DX, lower ops burden for MVP and early growth |
+All choices below are preliminary hypotheses to be validated in Phase 1. Final decisions will be recorded as ADRs in `docs/adr/`.
+
+| Layer | Recommendation | Open-source? | Free tier for MVP? | Production path | Why this direction |
+|---|---|---|---|---|---|
+| Frontend | Next.js 16 App Router + React 19 + TypeScript | Yes (MIT) | Yes (self-hosted or Vercel Hobby) | Azure App Service / Vercel Pro | Reuses existing codebase; strong SSR/RSC model |
+| Backend API | Next.js route handlers for MVP | Yes (MIT) | Yes (same deployment) | Same as frontend | Low-friction full-stack TypeScript |
+| Database | PostgreSQL 16 | Yes (PostgreSQL License) | Yes (Neon Free, Supabase Free, or local) | Azure Database for PostgreSQL | ACID, JSONB, mature ecosystem |
+| ORM/Data access | Prisma or Drizzle ORM | Yes (Apache 2.0 / MIT) | Yes (library only) | Same | Type-safe queries, migrations |
+| Authentication | Auth.js (NextAuth) v5 or Lucia | Yes (MIT) | Yes (self-hosted, no external service) | Same | Standards-based; no vendor dependency |
+| Enterprise SSO | SAML via open-source library (phase-aligned) | Yes | Yes (library only) | Keycloak or Azure AD | Enterprise identity federation |
+| Provisioning | SCIM endpoint (phase-aligned) | Yes (custom implementation) | Yes | Same | Automated user lifecycle |
+| Authorization | RBAC with workspace scoping | Yes (custom) | Yes | Same | Module/entity-level permissions |
+| Cache/session | Redis-compatible (Upstash free or local) | Yes (BSD) | Yes (Upstash Free or local) | Azure Cache for Redis | Read performance, sessions, rate limiting |
+| Async processing | BullMQ with Redis, or Inngest (free tier) | Yes (MIT) / freemium | Yes | Same or Azure Queue Storage | Imports, webhooks, reports |
+| Search | PostgreSQL full-text search (MVP); Meilisearch (if needed) | Yes | Yes (built-in / self-hosted) | Azure Cognitive Search or Meilisearch Cloud | Cross-entity queries |
+| API docs | OpenAPI for REST | Yes (standard) | Yes | Same | Explicit, testable contracts |
+| Observability | Sentry Free + Grafana Cloud Free, or OpenTelemetry → self-hosted | Yes (MIT) / freemium | Yes (free tiers) | Azure Monitor or Grafana Cloud | SLO-driven operations |
+| Storage | Cloudflare R2 Free or Supabase Storage | Yes / freemium | Yes | Azure Blob Storage | Exports, imports, audit bundles |
+| Hosting | Vercel Hobby, Netlify Free, or self-hosted Docker | Mixed | Yes | Azure App Service | Fast deployment for MVP |
 
 Why not microservices first:
 - Higher operational complexity with limited early payoff
 - Slower MVP delivery and more difficult debugging
 - Unnecessary before workload and team boundaries become clear
+
+Why PostgreSQL full-text search before a dedicated search engine:
+- Zero additional infrastructure cost for MVP
+- Sufficient for early entity volumes (< 10K fact sheets)
+- Upgrade path to Meilisearch or managed search when metrics justify it
 
 ## 5. Target Logical Architecture
 
@@ -149,8 +194,8 @@ REST accelerates delivery and integration clarity. GraphQL is introduced where i
 ## 9. Security and UAM Architecture
 
 Authentication:
-- NextAuth.js with OAuth 2.0 flows
-- SAML federation for enterprise SSO
+- Auth.js (NextAuth) v5 or Lucia with OAuth 2.0 flows (open-source, self-hosted)
+- SAML federation for enterprise SSO (Post-MVP; open-source library or Keycloak)
 - Technical/service users for machine-to-machine integrations
 
 Authorization:
@@ -201,16 +246,28 @@ Integration breadth is central to LeanIX parity and enterprise adoption. A stabl
 
 ## 12. Deployment Topology
 
-Recommended MVP topology:
-- Vercel hosting for web app and API routes
-- Managed PostgreSQL for transactional persistence
-- Managed Redis for cache and jobs
-- Managed object storage for artifacts
-- Managed observability provider for telemetry and alerting
+MVP topology (zero-cost):
+- Vercel Hobby (or Netlify Free / self-hosted Docker) for web app and API routes
+- Neon Free or Supabase Free for PostgreSQL (or local PostgreSQL for dev)
+- Upstash Free for Redis-compatible cache/queue (or local Redis for dev)
+- Cloudflare R2 Free for object storage (or local filesystem for dev)
+- Sentry Free + Grafana Cloud Free for observability
+
+Production topology (Azure-preferred):
+- Azure App Service for web app and API routes
+- Azure Database for PostgreSQL Flexible Server
+- Azure Cache for Redis
+- Azure Blob Storage for artifacts
+- Azure Monitor + Application Insights for observability
+
+Alternative production paths:
+- Google Cloud: Cloud Run + Cloud SQL + Memorystore + Cloud Storage
+- AWS: ECS/Lambda + RDS + ElastiCache + S3
 
 Why this topology:
-- Fastest route to production
-- Lowest platform operations burden for MVP
+- MVP runs at zero cost on free tiers
+- Same application code deploys to any target without modification
+- Production upgrade is configuration-only (environment variables, not code changes)
 - Clear upgrade path to service decomposition and regional scaling later
 
 ## 13. Migration Strategy from Current Implementation
@@ -240,44 +297,66 @@ Migration guardrails:
 
 ## 14. Phase Mapping
 
-Phase 1 to 2:
-- Foundation, persistence, bounded contexts, canonical domain model
+Phase 1:
+- Tech stack research and architecture decisions (ADRs)
+
+Phase 2:
+- Project bootstrap, database setup, CI, testing
 
 Phase 3:
-- UAM and security hardening
+- Database schema and core domain models
 
-Phase 4:
-- API-driven core product modules
+Phases 4–6:
+- Backend API foundation, entity CRUD, relationships, search
 
-Phase 5:
-- Integration and eventing baseline
+Phases 7–8:
+- Frontend shell, shared components, six core views
 
-Phase 6:
-- Reporting and use-case engines
+Phase 9:
+- CRUD and editing UI
 
-Phase 7+:
-- Advanced automation, virtual workspaces, transformation intelligence, expanded AI/MCP capabilities
+Phase 10:
+- User management and authentication flows
+
+Phase 11:
+- Governance controls, tagging, quality seal
+
+Phase 12:
+- Integration surface (OpenAPI, GraphQL, webhooks, import/export)
+
+Phase 13:
+- Reporting, analytics, and use-case engines
+
+Phases 14–15 (Post-MVP):
+- Enterprise identity (SSO/SCIM), advanced automation, transformations, MCP, AI, portals
 
 ## 15. Key Decision Summary
 
-1. Managed cloud over self-hosting for MVP  
-   Chosen for delivery speed, reduced operations burden, and better early-stage cost efficiency.
+1. Zero-cost MVP with free-tier services  
+   Chosen to enable rapid iteration without budget gates. All tech choices must have a free-tier deployment path.
 
-2. Modular monolith over early microservices  
+2. Open-source first at every layer  
+   Chosen to avoid vendor lock-in and ensure long-term flexibility. Commercial services used only when free tier exists and no open-source alternative is viable.
+
+3. Azure-preferred production deployment  
+   Chosen as the primary hyperscaler target. Application code is cloud-agnostic; only configuration changes between providers.
+
+4. Modular monolith over early microservices  
    Chosen for faster iteration, simpler observability, and easier cross-domain changes in early phases.
 
-3. PostgreSQL plus Prisma over specialized graph-first persistence  
-   Chosen for strong consistency, operational maturity, and sufficient relationship-query capability for MVP to mid-scale growth.
+5. PostgreSQL over specialized graph-first persistence  
+   Chosen for strong consistency, operational maturity, zero-cost availability (Neon/Supabase free), and sufficient relationship-query capability for MVP.
 
-4. REST-first with phased GraphQL adoption  
+6. REST-first with phased GraphQL adoption  
    Chosen to minimize delivery risk while preserving a path to advanced reporting and traversal queries.
 
-5. Security and audit capabilities introduced before broad feature expansion  
+7. Security and audit capabilities introduced before broad feature expansion  
    Chosen because enterprise adoption requires governance and trust as foundational attributes.
 
 ## Data Platform Decision (Updated)
 
-Primary system of record: Managed PostgreSQL 16 with Prisma.  
+Primary system of record: PostgreSQL 16 (open-source; free-tier hosting via Neon or Supabase for MVP; Azure Database for PostgreSQL for production).  
+ORM: Prisma or Drizzle (to be evaluated in Phase 1 step 1.3).  
 Supporting stores are introduced only when measurable needs emerge (search index, graph projection/read model, cache).
 
 ### Why PostgreSQL is the primary datastore

@@ -1,135 +1,366 @@
-## Plan: LeanIX Replication Implementation
+# Plan: VantageMap Enterprise Architecture Platform
 
-Build an incremental MVP that establishes a durable LeanIX-like platform foundation (data model + UAM + inventory + core reporting + integrations) on a managed-cloud stack, then iteratively add advanced capabilities (automation depth, virtual workspaces, transformation intelligence, and AI/MCP expansion). Use the existing VantageMap frontend as a UX seed only; introduce a production backend, persistence, identity, and integration runtime as first-class architecture components. Include explicit updates to Copilot instructions/skills so implementation work stays aligned with this plan.
+Build VantageMap incrementally from backend to frontend as a LeanIX-inspired enterprise architecture platform. Each step is designed for AI-assisted vibe coding: self-contained, clearly scoped, and independently implementable. Steps within a phase can run in parallel unless an explicit dependency is noted.
 
-**Steps**
-1. Phase 0 - Program Setup and Parity Baseline
-   : Build a requirements traceability matrix from the docs corpus (admin, user, UAM, developer, model, use-cases, getting started) into epics/capabilities with MVP vs Post-MVP tags. Define acceptance criteria and non-functional targets for v1 MVP.
+### Execution Model
 
-2. Phase 1 - Target Architecture and Platform Foundation (*depends on 1*)
-   : Stand up managed-cloud baseline (recommended: Vercel + managed Postgres + managed Redis + object storage + centralized logging/APM).
-   : Define bounded contexts: `Identity/UAM`, `Meta Model`, `Fact Sheets`, `Reporting`, `Integrations`, `Automation`, `Admin Settings`.
-   : Introduce backend API layer (REST first), persistence, migration pipeline, and background job runner.
-   : Establish tenant/workspace isolation model and audit/event foundation from day one.
+- **Vibe coding**: every step is scoped for a single AI coding session with clear inputs, outputs, and acceptance criteria.
+- **Backend → frontend**: persistence and APIs are built before UI, so each frontend step has a stable API to consume.
+- **Parallel by default**: steps within a phase have no implicit ordering. Dependencies are listed explicitly as `depends on: X.Y`.
+- **Incremental delivery**: each step produces working, testable, deployable output. No step requires understanding the full system.
+- **Instruction alignment**: steps that create or modify code must follow the conventions in [AGENTS.md](../AGENTS.md) and the `.github/instructions/` files.
 
-3. Phase 2 - Canonical Domain Model and Meta Model Engine (*depends on 2*)
-   : Implement canonical entity model to cover LeanIX core fact sheets and relations, including lifecycle, quality states, subscriptions, tags, and ownership semantics.
-   : Build meta model configuration capabilities (fact sheet type configuration, custom fields/relations, permissions hooks, audit logs for model changes).
-   : Add versioned schema migrations and data evolution strategy for customer-specific extensions.
+---
 
-4. Phase 3 - UAM, Security, and Access Control (*parallel with 3 where possible*)
-   : Implement technical users and token lifecycle for API access.
-   : Implement OAuth token exchange flow for service auth, then SAML SSO and SCIM user-state sync.
-   : Add role/permission framework (standard + custom role mapping), invite flows, archive lifecycle, and permission evaluation for modules.
-   : Defer full virtual workspace ACL complexity to Post-MVP unless needed for pilot customers.
+### Phase 0 — Program Setup and Parity Baseline ✅
 
-5. Phase 4 - Core Product MVP Experiences (*depends on 3 and 4*)
-   : Replace static data sourcing with backend APIs for inventory, fact sheet detail/editing, relationships, and search/filtering.
-   : Deliver dashboard, capabilities, applications, strategy, radar, and roadmap as API-driven modules with persistence.
-   : Add governance controls required for MVP: tagging modes, subscription roles, basic quality seal workflow, user/role admin, dashboard defaults.
+Build a requirements traceability matrix from the docs corpus into epics/capabilities with MVP vs Post-MVP tags. Define acceptance criteria and non-functional targets for v1 MVP. **Status: Complete.**
 
-6. Phase 5 - Integration and Eventing MVP (*depends on 4*)
-   : Deliver GraphQL endpoint for fact-sheet-centric access and report queries.
-   : Deliver REST APIs for admin/user/settings/integration operations with OpenAPI docs.
-   : Deliver webhook infrastructure (PUSH first, retries, event catalog subset), and baseline integration-run logging.
-   : Provide initial import/export workflows (CSV/Excel + API) with idempotent upsert semantics.
+---
 
-7. Phase 6 - Reporting and Use-Case Engines (*depends on 5 and 6*)
-   : Implement custom reporting runtime path (GraphQL-powered report datasets + export).
-   : Deliver MVP use-case engines: application rationalization (TIME/6R), lifecycle/obsolescence indicators, roadmap impact views.
-   : Add phased analytics for adoption and data quality metrics.
+### Phase 1 — Tech Stack Research and Architecture Decisions
 
-8. Phase 7 - Post-MVP Expansion (*parallel tracks after MVP release*)
-   : Advanced automation orchestration (branching/complex conditions/scripts).
-   : Virtual workspaces and ACE/ACL fact-sheet scoping.
-   : Transformation template engine with scenario comparison and rollback support.
-   : Expanded MCP/AI tooling, portal enhancements, and deeper connector catalog.
+Evaluate technology choices against the requirements in [docs/ARCHITECTURE.md](ARCHITECTURE.md), [docs/DEVELOPER.md](DEVELOPER.md), and [docs/MODEL.md](MODEL.md). Each step produces a short decision record (problem, options evaluated, decision, rationale) saved to `docs/adr/`. The preliminary recommendations in ARCHITECTURE.md serve as starting hypotheses, not foregone conclusions.
 
-9. Cross-Cutting Delivery Controls (*runs throughout Phases 1-7*)
-   : Observability: traces, logs, metrics, error budgets.
-   : Reliability: queues/retries/idempotency, backup/restore, migration safety gates.
-   : Security/compliance: secret management, audit retention, privacy controls.
-   : Performance: query budgets, pagination, cache strategy, search indexing.
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 1.1 | Database evaluation | Compare PostgreSQL, MySQL, CockroachDB, PlanetScale, and MongoDB against requirements: ACID transactions, JSONB for custom fields, relationship traversal, audit table performance, managed hosting options, cost at 100K fact sheets / 500K relations (from [nfr.md](phase-0/nfr.md)). **Evaluate**: open-source status, free-tier hosted options (Neon, Supabase, PlanetScale Hobby), Azure managed path. | — |
+| 1.2 | ORM and migration tooling | Compare Prisma, Drizzle ORM, Kysely, and TypeORM. Evaluate: type safety, migration workflow, JSON column support, raw query escape hatch, Next.js App Router compatibility. | 1.1 |
+| 1.3 | Authentication and session management | Compare NextAuth.js v5, Lucia, Clerk, Auth0, and custom JWT. Evaluate: OAuth 2.0 client credentials for technical users, SAML 2.0 SSO path, session strategy (JWT vs database), token lifecycle, Next.js 16 middleware compatibility. **Prefer**: open-source self-hosted (Auth.js, Lucia) over commercial SaaS (Clerk, Auth0) to ensure zero-cost MVP. Reference [UAM.md](UAM.md). | — |
+| 1.4 | API layer strategy | Compare Next.js Route Handlers (REST), tRPC, and GraphQL-first (Apollo/Yoga). Evaluate: type safety, OpenAPI generation, schema evolution, client code generation, compatibility with Server Components. Reference [DEVELOPER.md](DEVELOPER.md). | — |
+| 1.5 | Async job processing | Compare BullMQ + Redis, Inngest, Trigger.dev, and Vercel Cron/Queues. Evaluate: retry semantics, dead-letter handling, job observability, webhook delivery use case, managed vs self-hosted Redis. **Evaluate**: free-tier limits (Upstash Free for Redis, Inngest free tier), open-source status. | — |
+| 1.6 | Search engine | Compare PostgreSQL full-text search, Meilisearch, Typesense, and managed Elasticsearch/OpenSearch. Evaluate: faceted search, cross-entity queries, index sync strategy, p95 <300 ms target, operational overhead. | 1.1 |
+| 1.7 | Hosting and deployment | Compare Vercel, Netlify, AWS Amplify, Railway, Fly.io, and self-hosted Docker. Evaluate: Next.js 16 support, managed database add-ons, preview deployments, edge vs serverless. **Key constraint**: MVP must deploy at zero cost on free tier. Evaluate free-tier limits (bandwidth, build minutes, function invocations). Document Azure App Service path for production. | — |
+| 1.8 | Observability and monitoring | Compare Vercel Analytics + Sentry, Datadog, Grafana Cloud, and OpenTelemetry Collector → self-hosted. Evaluate: distributed tracing, structured logging, error tracking, alerting. **Prefer**: free-tier options (Sentry Free, Grafana Cloud Free, Better Stack Free) over commercial (Datadog). Reference [nfr.md](phase-0/nfr.md). | — |
+| 1.9 | Compile ADR documents | Write final architecture decision records from steps 1.1–1.8. Create `docs/adr/` directory with one ADR per decision. Update [AGENTS.md](../AGENTS.md) tech stack section and [ARCHITECTURE.md](ARCHITECTURE.md) if choices differ from preliminary recommendations. | 1.1–1.8 |
 
-10. Copilot Instructions and Skills Update Plan (*starts after plan approval; *parallel with Phase 1*)
-   : Update existing instruction files to encode LeanIX-replication architecture decisions and domain rules.
-   : Add new instruction coverage for EA domain semantics, integration patterns, and permission modeling.
-   : Add/extend skill workflows for adding enterprise entities/capabilities, not just pages.
-   : Add a reusable planning prompt for parity tracking and phased delivery governance.
+---
 
-**Relevant files**
-- [docs/GETTING-STARTED.md](docs/GETTING-STARTED.md) - product onboarding and baseline product positioning to anchor MVP scope framing.
-- [docs/MODEL.md](docs/MODEL.md) - canonical meta model, entity/relationship coverage, and mapping guidance.
-- [docs/USE-CASES.md](docs/USE-CASES.md) - strategic use-case engines and methodology requirements.
-- [docs/USER-GUIDE.md](docs/USER-GUIDE.md) - end-user workflow parity requirements.
-- [docs/ADMIN.md](docs/ADMIN.md) - administration/gov controls and operational feature requirements.
-- [docs/UAM.md](docs/UAM.md) - identity/access lifecycle, SSO/SCIM, and role model requirements.
-- [docs/DEVELOPER.md](docs/DEVELOPER.md) - API/integration/developer tooling requirements.
-- [src/lib/data.ts](src/lib/data.ts) - current static data shape and short-term migration source.
-- [src/app/layout.tsx](src/app/layout.tsx) - shell/layout composition to preserve while swapping data sources.
-- [src/components/Sidebar.tsx](src/components/Sidebar.tsx) - module navigation baseline for phased module delivery.
-- [AGENTS.md](AGENTS.md) - top-level engineering guidance to align with new platform architecture plan.
-- [.github/instructions/data.instructions.md](.github/instructions/data.instructions.md) - data-model authoring rules to evolve from sample-only to enterprise canonical modeling.
-- [.github/instructions/nextjs.instructions.md](.github/instructions/nextjs.instructions.md) - frontend implementation constraints and server/client component rules.
-- [.github/instructions/styling.instructions.md](.github/instructions/styling.instructions.md) - design system constraints for consistency while adding complex modules.
-- [.github/skills/add-page/SKILL.md](.github/skills/add-page/SKILL.md) - existing workflow skill to expand toward domain-capability workflows.
+### Phase 2 — Project Bootstrap
 
-**Verification**
-1. Requirements Traceability Check
-   : Confirm every major capability family from docs is mapped to a phase and tagged as MVP or Post-MVP.
+Scaffold the project and establish the development baseline. All steps follow [AGENTS.md](../AGENTS.md) conventions (Next.js 16, TypeScript strict, Tailwind CSS v4, App Router only).
 
-2. Architecture Review Gate
-   : Validate target stack against scale/security/integration needs and approve managed-cloud baseline.
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 2.1 | Initialize Next.js project | Create Next.js 16 project with TypeScript strict mode. Configure `tsconfig.json` path alias `@/` → `src/`. Add `.gitignore`, `package.json` scripts (`dev`, `build`, `lint`). Create placeholder `src/app/layout.tsx` and `src/app/page.tsx`. | Phase 1 |
+| 2.2 | Configure Tailwind CSS v4 and Rosely palette | Set up `src/app/globals.css` with `@import "tailwindcss"` and `@theme inline {}` block defining all 16 Rosely colour tokens as CSS variables and Tailwind utilities. Reference [styling.instructions.md](../.github/instructions/styling.instructions.md). | 2.1 |
+| 2.3 | Set up database and ORM | Install chosen ORM, configure database connection via environment variables, create initial migration with empty schema, add migration scripts to `package.json`. Create `prisma/schema.prisma` (or equivalent). | 2.1 |
+| 2.4 | Linting, formatting, and CI | Configure ESLint (Next.js recommended rules + TypeScript strict), Prettier, and a GitHub Actions CI workflow for lint + build + type-check on every PR. | 2.1 |
+| 2.5 | Environment and secrets configuration | Create `.env.example` with documented variable stubs (database URL, auth secret, API keys). Add validation using `zod` or `@t3-oss/env-nextjs` to fail fast on missing config. | 2.1 |
+| 2.6 | Testing framework | Set up Vitest (or chosen test runner) for unit and integration tests. Add test scripts to `package.json`. Create a sample test to verify the pipeline works. | 2.1 |
 
-3. MVP Scope Gate
-   : Confirm Incremental MVP includes: persistent data model, UAM baseline, inventory/editing, core reports, REST/GraphQL/webhook baseline.
+---
 
-4. Technical Readiness Gate
-   : Ensure migration strategy exists for moving from static `src/lib/data.ts` to persistent API-backed model with no broken UI routes.
+### Phase 3 — Database Schema and Core Domain Models
 
-5. Instruction/Skill Governance Gate
-   : Confirm instruction updates explicitly reflect domain modeling, integration policies, and access-control rules before implementation handoff.
+Implement the canonical data model from [MODEL.md](MODEL.md) as database tables with typed ORM models. Each step creates the tables, migration, and TypeScript types for one bounded context.
 
-6. Non-Functional Readiness Gate
-   : Define measurable targets for API latency, search/report performance, auditability, and reliability before build execution.
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 3.1 | Business architecture entities | Tables for `BusinessCapability` (hierarchical, with level/parent), `Organization` (with subtypes: Business Unit, Customer, Region, Legal Entity, Team), `BusinessContext` (with subtypes: Product, Journey, Process, Value Stream, ESG). Include lifecycle phase, health status, and description fields. | 2.3 |
+| 3.2 | Application and data entities | Tables for `Application` (with subtypes: Business Application, Microservice, AI Agent), `DataObject`, `Interface` (with subtypes: Logical, API, MCP). Include lifecycle, fit scores (technical/functional), business criticality, TIME classification. | 2.3 |
+| 3.3 | Strategy and planning entities | Tables for `StrategicObjective`, `Initiative` (with subtypes: Idea, Program, Project, Epic), `Platform`. Include KPI sub-entities linked to objectives. | 2.3 |
+| 3.4 | Technology entities | Tables for `TechCategory`, `ITComponent`, `Provider`, optional `System`. Include ring/quadrant for radar placement, lifecycle, end-of-life dates. | 2.3 |
+| 3.5 | Relationship and edge tables | Generic typed edge table for entity-to-entity relationships (e.g., `application → capability`, `initiative → objective`, hierarchical parent-child). Include relationship type, direction, and metadata columns. Reference the full relationship matrix in [MODEL.md](MODEL.md). | 3.1–3.4 |
+| 3.6 | Tags, subscriptions, and custom fields | Tables for `Tag` (with tag groups and modes), `Subscription` (role-based: Responsible, Accountable, Observer), and a JSONB custom fields column on each fact sheet table. | 3.1–3.4 |
+| 3.7 | Audit log table | Immutable `AuditEntry` table: actor, action (create/update/delete), target entity type, target ID, timestamp, diff (JSONB), request context. Indexed for p95 <1 s retrieval per [nfr.md](phase-0/nfr.md). | 2.3 |
+| 3.8 | User, role, and workspace tables | Tables for `User` (status lifecycle: Active, Invited, Requested, Not Invited, Archived), `Role` (Viewer, Member, Admin, Custom), `Workspace`, `UserWorkspaceRole` join. Reference [UAM.md](UAM.md) and [security-rbac.md](phase-0/security-rbac.md). | 2.3 |
+| 3.9 | Seed data and fixtures | Migration script that populates all tables with sample data equivalent to the static fixtures described in [data.instructions.md](../.github/instructions/data.instructions.md). Create dev-only seed command. | 3.1–3.8 |
 
-**Decisions**
-- Hosting: Managed Cloud (selected)
-- Delivery strategy: Incremental MVP (selected)
-- Architecture direction: Keep Next.js frontend but add full backend/persistence/security/integration layers; do not treat current stack as sufficient on its own.
-- Scope boundary for MVP: prioritize core parity (data model/UAM/core modules/reporting/integrations baseline), defer full enterprise depth (advanced automation branching, full ACL virtual workspaces, broad AI/portal depth) to post-MVP phases.
-- Included in this planning deliverable: explicit plan for updating Copilot instructions/skills to enforce architectural and domain consistency.
-- Excluded from this planning turn: direct code/config edits (planning-only mode).
+---
 
-**Further Considerations**
-1. MVP Boundary Recommendation
-   : Option A (recommended): include virtual workspace ACL in Post-MVP; Option B: include minimal ACL if first pilot requires strict data segmentation.
+### Phase 4 — Backend API Foundation
 
-2. API Strategy Recommendation
-   : Option A (recommended): REST-first MVP with GraphQL added in Phase 5 for reporting/complex queries; Option B: GraphQL-only from Phase 1 (requires schema maturity first).
+Build shared API infrastructure that all entity endpoints will use. Each step is a reusable middleware or utility layer.
 
-3. Custom Field Strategy Recommendation
-   : Option A (recommended): JSON/JSONB columns for custom field storage with configurable validation; Option B: fully relational schema for each customer extension (requires meta-model schema migration machinery).
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 4.1 | API route handler patterns | Create shared utilities for API route handlers: standard JSON response envelope, error formatting (4xx/5xx), input validation with Zod, and typed request/response helpers. Establish the file pattern `src/app/api/[resource]/route.ts`. | 2.1 |
+| 4.2 | Authentication middleware | Implement session-based or JWT authentication middleware for API routes. Protect all `/api/*` routes by default. Support both user sessions and technical user bearer tokens. Reference [UAM.md](UAM.md). | 3.8, 4.1 |
+| 4.3 | RBAC permission middleware | Implement role-based permission checking at the API boundary. Map operations (view, create, edit, delete) to roles per [security-rbac.md](phase-0/security-rbac.md). Return 403 with reason on unauthorized access. | 4.2 |
+| 4.4 | Audit logging middleware | Implement automatic audit entry creation for all mutation endpoints (POST, PUT, PATCH, DELETE). Capture actor, action, target, timestamp, and diff. Log failed authorization attempts. | 3.7, 4.2 |
+| 4.5 | Pagination, sorting, and filtering utilities | Shared query helpers: cursor or offset pagination (required for >200 records per [nfr.md](phase-0/nfr.md)), sort-by-field, filter-by-field. Standard query parameter parsing. | 4.1 |
+| 4.6 | Feature flag infrastructure | Simple feature flag system (environment variable or database-backed) to enable per-module rollback during migration per [migration-plan.md](phase-0/migration-plan.md). | 4.1 |
+
+---
+
+### Phase 5 — Entity CRUD APIs
+
+One step per fact sheet type. All steps are independent and parallelizable. Each step creates the full REST endpoint suite (GET list, GET by ID, POST create, PUT update, DELETE) with pagination, permission checks, audit logging, and tests.
+
+| Step | Title | Entity | Depends on |
+|------|-------|--------|------------|
+| 5.1 | Business Capability API | `BusinessCapability` — hierarchical listing by level/parent, CRUD with lifecycle fields | 3.1, 4.1–4.5 |
+| 5.2 | Application API | `Application` — CRUD with fit scores, criticality, TIME classification, lifecycle | 3.2, 4.1–4.5 |
+| 5.3 | Strategic Objective API | `StrategicObjective` — CRUD with KPI sub-resources and perspective grouping | 3.3, 4.1–4.5 |
+| 5.4 | Initiative API | `Initiative` — CRUD with status workflow, date ranges, linked objectives | 3.3, 4.1–4.5 |
+| 5.5 | Tech Radar Entry API | `ITComponent` / `TechCategory` — CRUD with ring, quadrant, lifecycle, provider linkage | 3.4, 4.1–4.5 |
+| 5.6 | Organization API | `Organization` — hierarchical CRUD with subtypes | 3.1, 4.1–4.5 |
+| 5.7 | Data Object API | `DataObject` — CRUD with application linkage | 3.2, 4.1–4.5 |
+| 5.8 | Interface API | `Interface` — CRUD with provider/consumer direction, subtypes | 3.2, 4.1–4.5 |
+| 5.9 | Provider API | `Provider` — CRUD with linked IT components | 3.4, 4.1–4.5 |
+| 5.10 | Platform API | `Platform` — CRUD with linked applications and objectives | 3.3, 4.1–4.5 |
+
+---
+
+### Phase 6 — Relationship and Search APIs
+
+Cross-entity operations that span multiple fact sheet types.
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 6.1 | Relationship CRUD API | Create, read, update, delete typed relationships between any two fact sheets. Validate relationship type against allowed pairs from [MODEL.md](MODEL.md). Support bulk relationship creation. | 3.5, 4.1–4.5 |
+| 6.2 | Cross-entity search API | Full-text search across all fact sheet types. Return results grouped by type with highlighting. p95 <300 ms per [nfr.md](phase-0/nfr.md). | Phase 5 (any 2+ entity APIs), search engine from Phase 1 |
+| 6.3 | Faceted filter API | Filter fact sheets by type, lifecycle phase, health status, tags, subscriptions, and custom field values. Support saved filter configurations. | Phase 5 (any 2+ entity APIs) |
+| 6.4 | Bulk operations API | Bulk update (tags, lifecycle, fields) and bulk delete for selected fact sheets. Idempotent upsert for import workflows. Audit log each affected entity. | Phase 5 (any 2+ entity APIs), 4.4 |
+
+---
+
+### Phase 7 — Frontend Shell and Shared Components
+
+Build the application shell and reusable UI component library before individual views. Follow [nextjs.instructions.md](../.github/instructions/nextjs.instructions.md) and [styling.instructions.md](../.github/instructions/styling.instructions.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 7.1 | App layout and Sidebar | Create `src/app/layout.tsx` with `<Sidebar />` + `<main>` wrapper. Build `src/components/Sidebar.tsx` as a Client Component with navigation for all six routes, active state via `usePathname`. Install and configure Lucide React icons. | 2.1, 2.2 |
+| 7.2 | API client and data layer | Create `src/lib/api.ts` with typed fetch wrappers for all entity APIs. Create `src/lib/data.ts` with TypeScript types matching the database models. Support feature-flag toggle between static fixtures and API calls per [migration-plan.md](phase-0/migration-plan.md). | 4.1, Phase 5 (at least one API) |
+| 7.3 | Shared UI components | Build reusable components in `src/components/`: Card, DataTable, StatusBadge, HealthIndicator, LifecycleTag, SearchInput, FilterBar, EmptyState, LoadingSpinner, Pagination. All styled with Rosely tokens. | 2.2 |
+| 7.4 | Error and loading patterns | Create error boundary components, loading skeletons (`loading.tsx`), and `not-found.tsx` pages. Implement global error handling for API failures. | 7.1 |
+
+---
+
+### Phase 8 — Frontend Views
+
+One step per route/view. All steps are independent and parallelizable. Each step creates a Server Component page that fetches data from the API layer (via `src/lib/api.ts` or `src/lib/data.ts`) and renders it with shared components. Follow the [add-page skill](../.github/skills/add-page/SKILL.md) checklist.
+
+| Step | Title | Route | Depends on |
+|------|-------|-------|------------|
+| 8.1 | Dashboard page | `/` — summary cards (counts, health distribution, recent changes), charts via Recharts, quick links to other views | 7.1–7.4, 5.1, 5.2 |
+| 8.2 | Business Capability Map | `/capabilities` — hierarchical capability tree with level-based grouping, health indicators, linked application counts, drill-down | 7.1–7.4, 5.1 |
+| 8.3 | Application Portfolio | `/applications` — filterable table/grid of applications with fit scores, lifecycle, criticality, TIME classification, health status | 7.1–7.4, 5.2 |
+| 8.4 | Strategy Map | `/strategy` — Balanced Scorecard layout grouping objectives by perspective (Financial, Customer, Internal, Learning), linked KPIs and initiatives | 7.1–7.4, 5.3, 5.4 |
+| 8.5 | Technology Radar | `/radar` — radar visualization with quadrants (Languages, Frameworks, Tools, Platforms) and rings (Adopt, Trial, Assess, Hold), interactive hover/click | 7.1–7.4, 5.5 |
+| 8.6 | Strategic Roadmap | `/roadmap` — Gantt-style timeline of initiatives with status indicators, date ranges, milestone markers, objective linkage | 7.1–7.4, 5.4 |
+
+---
+
+### Phase 9 — CRUD and Editing UI
+
+Add create, edit, and detail views to support data stewardship workflows from [USER-GUIDE.md](USER-GUIDE.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 9.1 | Fact sheet detail view | Universal detail page pattern (`/[type]/[id]`) showing all fields, lifecycle, subscriptions, tags, relationships, and audit history for any fact sheet. | Phase 8 (any view) |
+| 9.2 | Create fact sheet form | Modal or page-based create flow with field validation, type selection, and initial relationship attachment. Client Component with `"use client"`. | 9.1, relevant entity API |
+| 9.3 | Edit fact sheet form | Inline or modal editing of fact sheet fields with optimistic UI, validation, audit diff preview. | 9.1 |
+| 9.4 | Relationship editor | Add/remove/edit relationships from a fact sheet detail view. Autocomplete search for target entity. Visual relationship diagram (optional). | 9.1, 6.1 |
+| 9.5 | Bulk edit UI | Multi-select fact sheets from list views, apply bulk tag/lifecycle/field updates. Confirmation dialog with affected entity count. | Phase 8 (any view), 6.4 |
+| 9.6 | Search and filter UI | Global search bar in Sidebar or header. Advanced filter panel with facets. Saved search configurations. Results page. | 6.2, 6.3 |
+
+---
+
+### Phase 10 — User Management
+
+Implement user lifecycle and administration workflows from [UAM.md](UAM.md) and [ADMIN.md](ADMIN.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 10.1 | User registration and login | Sign-up, email/password login, session management, password reset. Protected route middleware. | 4.2 |
+| 10.2 | User profile and settings | Profile page with name, email, avatar, notification preferences. Password change. | 10.1 |
+| 10.3 | User administration | Admin-only UI for listing users, inviting by email, changing roles, archiving users. User status lifecycle (Active → Archived). | 10.1, 4.3 |
+| 10.4 | Technical user management | Admin UI for creating technical users, generating API tokens, setting token expiry, revoking tokens. Tokens shown once at creation. | 10.3 |
+| 10.5 | Role assignment and permissions UI | Admin UI for assigning standard roles (Viewer, Member, Admin) to users. Display effective permissions matrix. | 10.3, 4.3 |
+
+---
+
+### Phase 11 — Governance and Data Quality
+
+Implement governance controls from [ADMIN.md](ADMIN.md) and [USER-GUIDE.md](USER-GUIDE.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 11.1 | Tagging system | Tag groups with configurable modes (on-the-fly, hybrid, predefined-only). Tag CRUD API and UI for applying tags to fact sheets. | Phase 5 (any entity API), Phase 8 (any view) |
+| 11.2 | Subscription and ownership model | Subscription roles (Responsible, Accountable, Observer) per fact sheet. Subscribe/unsubscribe API and UI. Notification triggers on subscribed entity changes. | Phase 5, 9.1 |
+| 11.3 | Quality seal workflow | Quality seal states (Draft, Check Needed, Approved, Rejected) per fact sheet. State transition rules based on subscriber role. Configurable renewal intervals. API and UI. | 11.2, 9.1 |
+| 11.4 | Comments and collaboration | Comments on fact sheets with threaded replies. Mention other users. Comment notification. | 9.1, 10.1 |
+| 11.5 | To-do and task tracking | To-do items linked to fact sheets. Assign to users. Status tracking (open/done). | 9.1, 10.1 |
+| 11.6 | Survey framework | Create surveys to collect data from stakeholders. Link survey questions to fact sheet fields. Response collection and merge workflow. | 10.1, Phase 5 |
+
+---
+
+### Phase 12 — Integration Surface
+
+Build external integration capabilities from [DEVELOPER.md](DEVELOPER.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 12.1 | OpenAPI documentation | Auto-generate OpenAPI 3.1 specification from route handlers. Serve interactive API explorer at `/api/docs`. Publish as static YAML for CI validation. | Phase 5 |
+| 12.2 | GraphQL endpoint | GraphQL API for fact sheet queries with relationship traversal, field selection, and pagination. Schema generated from database models. Complexity limits enforced. | Phase 5, 6.1 |
+| 12.3 | Webhook infrastructure | Webhook subscription CRUD API. Event catalog (fact sheet created/updated/deleted, relationship changed). PUSH delivery with retry and exponential backoff. Dead-letter queue. Delivery logs. | Phase 5, 4.4 |
+| 12.4 | CSV/Excel import | Upload CSV or Excel file, map columns to fact sheet fields, preview changes, confirm import. Idempotent upsert by external ID or name. Error report for failed rows. | Phase 5, 6.4 |
+| 12.5 | CSV/Excel export | Export filtered fact sheet lists and relationship data to CSV or Excel. Include all fields and custom fields. Streaming download for large datasets. | Phase 5, 6.3 |
+
+---
+
+### Phase 13 — Reporting and Analytics
+
+Implement use-case engines and analytics from [USE-CASES.md](USE-CASES.md).
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 13.1 | Reporting data pipeline | Reporting runtime: pre-computed or on-demand aggregation of fact sheet data for dashboard and report consumption. Cache layer for expensive queries. | Phase 5, Recharts (from AGENTS.md) |
+| 13.2 | Application rationalization (TIME) | TIME model (Tolerate/Invest/Migrate/Eliminate) classification engine. Dashboard widget showing distribution. Drill-down to application list per category. | 5.2, 8.3 |
+| 13.3 | Cloud migration strategy (6R) | 6R classification (Rehost/Replatform/Rearchitect/Repurchase/Retain/Retire) per application. Dashboard widget and portfolio view overlay. | 5.2, 8.3 |
+| 13.4 | Lifecycle and obsolescence risk | Identify applications and IT components approaching end-of-life. Risk score calculation. Alert dashboard for items within configurable time horizon. | 5.2, 5.5, 8.1 |
+| 13.5 | Roadmap impact analysis | Show which capabilities and applications are affected by each initiative. Impact matrix view. Gap analysis (capabilities without planned initiatives). | 5.1, 5.4, 6.1 |
+| 13.6 | Data quality metrics | Quality completeness scores per fact sheet type (% fields filled, % relationships defined, % subscriptions assigned). Dashboard widget and trend chart. | Phase 5, 11.3 |
+| 13.7 | Adoption metrics | User activity tracking: logins, edits, searches. Adoption dashboard for admins. Reference [ADMIN.md](ADMIN.md) adoption KPIs. | 10.1, 3.7 |
+
+---
+
+### Phase 14 — Enterprise Identity (Post-MVP)
+
+Enterprise SSO and provisioning from [UAM.md](UAM.md). Deferred from MVP unless required by pilot customers.
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 14.1 | SAML 2.0 SSO | SP-initiated SAML flow. IdP metadata configuration UI. JIT user provisioning on first login. Attribute mapping (firstname, lastname, email, uid, role). | 10.1, 4.2 |
+| 14.2 | SCIM provisioning | SCIM 2.0 endpoint for user lifecycle sync (create, update, deactivate). Attribute mapping for role, department, ACE. Workspace-specific configuration. | 14.1 |
+| 14.3 | IdP-managed custom roles | Receive custom role claims from IdP. Map to permission sets. Standard role precedence rules. Multiple role aggregation. | 14.1, 4.3 |
+| 14.4 | Virtual workspaces and ACL | Access Control Entities (ACE) for fact sheet scoping. Virtual workspace views with filtered fact sheet visibility. ACL defaults for new vs existing records. | 14.3, 10.5 |
+
+---
+
+### Phase 15 — Advanced Features (Post-MVP)
+
+Advanced capabilities from [ADMIN.md](ADMIN.md), [USE-CASES.md](USE-CASES.md), and [DEVELOPER.md](DEVELOPER.md). All steps are independent.
+
+| Step | Title | Scope | Depends on |
+|------|-------|-------|------------|
+| 15.1 | Automation framework | No-code event-condition-action workflows. Trigger on fact sheet changes. Actions: update fields, send notifications, create tasks. Admin UI for rule builder. | Phase 5, 12.3 |
+| 15.2 | Transformation scenarios | Scenario modeling with baseline and target states. Predefined templates (cloud migration, org restructure). Side-by-side comparison view. Rollback support. | Phase 5, Phase 8 |
+| 15.3 | MCP server for AI integration | MCP-compatible endpoint exposing fact sheet tools for AI clients. Permission-scoped tool visibility. Query limits (max 10 values). Reference [DEVELOPER.md](DEVELOPER.md). | Phase 5, 4.3 |
+| 15.4 | AI-powered recommendations | AI-assisted description generation for fact sheets. Relationship suggestions based on existing patterns. Natural language search/filtering. | 6.2, 9.1 |
+| 15.5 | Portal for external audiences | Read-only portal view of selected fact sheets and reports. Configurable visibility scope. Branding and theming. No authentication required for portal consumers. | Phase 8, 4.6 |
+| 15.6 | Connector catalog | Pre-built integration connectors for common data sources (ServiceNow, Jira, Azure AD, AWS). Connector configuration UI. Scheduled sync with conflict resolution. | 12.3, 12.4 |
+| 15.7 | AI governance use case | AI policy and ethics tracking. AI Agent fact sheet subtype management. Risk and compliance scoring for AI initiatives. Reference [USE-CASES.md](USE-CASES.md). | 5.2, 13.4 |
+
+---
+
+### Cross-Cutting Concerns (Continuous)
+
+These activities run alongside all phases and should be addressed incrementally as each step is implemented.
+
+| Concern | Scope | Reference |
+|---------|-------|-----------|
+| Observability | Structured JSON logging, distributed tracing (OpenTelemetry), error tracking, alerting on latency/error thresholds | [nfr.md](phase-0/nfr.md) |
+| Performance | API p95 <250 ms (read), <400 ms (write). Pagination for >200 records. Query budgets. Cache strategy for hot paths. | [nfr.md](phase-0/nfr.md) |
+| Security | Secret management via environment variables (never in code). Input validation on all endpoints. CSRF protection. Rate limiting. Dependency vulnerability scanning. | [security-rbac.md](phase-0/security-rbac.md) |
+| Reliability | 99.5% availability target. Idempotent writes. Backup/restore procedures (24 h RPO, 4 h RTO). Migration safety gates. | [nfr.md](phase-0/nfr.md) |
+| Instruction updates | Update `.github/instructions/` and `.github/skills/` files as new patterns are established. Each phase should leave instructions accurate for the next phase. | [AGENTS.md](../AGENTS.md) |
+| Testing | Unit tests for utilities and domain logic. Integration tests for API endpoints. End-to-end tests for critical user flows. Target: every step includes tests for its scope. | [acceptance-criteria-templates.md](phase-0/acceptance-criteria-templates.md) |
+
+---
+
+### Dependency Graph Summary
+
+```
+Phase 0 ✅
+  └→ Phase 1 (Tech Stack Research)
+       └→ Phase 2 (Project Bootstrap)
+            ├→ Phase 3 (Database Schema)         — all 3.x steps parallel
+            │    └→ Phase 4 (API Foundation)      — sequential within phase
+            │         └→ Phase 5 (Entity APIs)    — all 5.x steps parallel
+            │              ├→ Phase 6 (Relationships & Search)
+            │              ├→ Phase 12 (Integrations)
+            │              └→ Phase 13 (Reporting)
+            └→ Phase 7 (Frontend Shell)           — parallel with Phase 3–5
+                 └→ Phase 8 (Frontend Views)      — all 8.x steps parallel
+                      └→ Phase 9 (CRUD UI)
+            
+Phase 4.2 → Phase 10 (User Management)
+Phase 5 + 8 → Phase 11 (Governance)
+Phase 10 → Phase 14 (Enterprise Identity)    — Post-MVP
+Phase 5 + 12 → Phase 15 (Advanced Features)  — Post-MVP
+```
+
+**Shortest path to a working demo**: 1.9 → 2.1 → 2.2 → 2.3 → 3.1 → 3.2 → 3.9 → 4.1 → 5.1 → 5.2 → 7.1 → 7.2 → 7.3 → 8.1 → 8.2 → 8.3
+
+**Parallelizable tracks after Phase 2**:
+- Track A: Database schema (Phase 3) → API foundation (Phase 4) → Entity APIs (Phase 5)
+- Track B: Frontend shell (Phase 7) → Frontend views (Phase 8) — can use static fixtures initially
+- Track C: CI, linting, testing setup (2.4, 2.6) — independent from tracks A and B
+
+---
+
+### Relevant Files
+
+| File | Role in Plan |
+|------|-------------|
+| [AGENTS.md](../AGENTS.md) | Tech stack constraints, architecture conventions, all steps must comply |
+| [docs/ARCHITECTURE.md](ARCHITECTURE.md) | Target architecture; preliminary tech recommendations for Phase 1 evaluation |
+| [docs/MODEL.md](MODEL.md) | Canonical meta model driving Phase 3 schema and Phase 5 APIs |
+| [docs/UAM.md](UAM.md) | Identity/access requirements for Phase 4, 10, 14 |
+| [docs/ADMIN.md](ADMIN.md) | Governance and admin features for Phase 10, 11 |
+| [docs/USER-GUIDE.md](USER-GUIDE.md) | End-user workflow parity requirements for Phase 8, 9 |
+| [docs/DEVELOPER.md](DEVELOPER.md) | API/integration requirements for Phase 12 |
+| [docs/USE-CASES.md](USE-CASES.md) | Use-case engines and methodology for Phase 13 |
+| [docs/GETTING-STARTED.md](GETTING-STARTED.md) | Onboarding and adoption sequencing context |
+| [docs/phase-0/](phase-0/README.md) | Phase 0 artifacts: traceability matrix, epics, NFRs, gates, sprint plan |
+| [docs/openapi-templates/](openapi-templates/) | API contract skeletons for Phase 5 and 12 implementation |
+| [.github/instructions/](../.github/instructions/) | Coding conventions enforced during implementation |
+| [.github/skills/add-page/](../.github/skills/add-page/SKILL.md) | Page creation workflow for Phase 8 steps |
+
+---
+
+### Decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Delivery strategy | Incremental, backend-first | Each step produces working output; backend APIs stabilize before frontend consumes them |
+| Implementation mode | Vibe coding (AI agent per step) | Steps are self-contained with clear scope, inputs, outputs, and acceptance criteria |
+| Tech stack | Evaluate in Phase 1, decide before Phase 2 | Avoid premature lock-in; ARCHITECTURE.md recommendations are starting hypotheses |
+| Frontend framework | Next.js 16 App Router (confirmed in AGENTS.md) | Already chosen and documented; not re-evaluated |
+| Styling | Tailwind CSS v4 + Rosely palette (confirmed in AGENTS.md) | Already chosen and documented; not re-evaluated |
+| API strategy | REST-first (MVP), GraphQL added in Phase 12 | REST is simpler for vibe-coding agents; GraphQL deferred until schema is stable |
+| Custom fields | JSONB columns with validation | Avoids per-customer schema migrations; flexible for early product-market fit |
+| MVP boundary | Phases 1–13 are MVP; Phases 14–15 are Post-MVP | Core platform, six views, CRUD, governance, integrations, and reporting before enterprise SSO and advanced features |
+| Virtual workspace ACL | Post-MVP (Phase 14.4) | Complexity deferred unless pilot customer requires data segmentation |
+| MVP deployment cost | Zero monetary cost using free tiers | MVP must deploy without budget approval; validates product-market fit before spending |
+| Technology preference | Open-source first at every layer | Avoid vendor lock-in; commercial services only when free tier exists and no OSS alternative is viable |
+| Production hosting | Azure preferred, GCP second, AWS third | Enterprise alignment; application code is cloud-agnostic, only configuration differs |
+
+---
+
+### Verification Gates
+
+These gates from [docs/phase-0/gates.md](phase-0/gates.md) apply at phase boundaries:
+
+1. **Requirements Traceability** — every capability family from docs mapped to a step and tagged MVP or Post-MVP ✅
+2. **Architecture Review** — tech stack decisions documented in ADRs before Phase 2 begins (Gate at end of Phase 1)
+3. **MVP Scope** — persistent data model, RBAC, six views, CRUD, search, reporting, REST/GraphQL/webhooks included (Gate at end of Phase 12)
+4. **Technical Readiness** — feature-flag migration from static fixtures to API-backed data with no broken routes (Gate during Phase 7.2)
+5. **Instruction Governance** — instruction files updated to reflect architecture decisions and domain rules (Continuous; checked at each phase boundary)
+6. **Non-Functional Readiness** — NFR targets from [nfr.md](phase-0/nfr.md) validated via load test before MVP release (Gate at end of Phase 13)
+
+---
 
 ## Phase 0 Execution Status
 
-Phase 0 implementation has started with baseline planning artifacts and governance instructions.
+Phase 0 implementation has started with baseline planning artifacts and governance instructions. **Status: Complete.**
 
 ### Created Artifacts
 
-- [docs/phase-0/README.md](docs/phase-0/README.md)
-- [docs/phase-0/traceability-matrix.csv](docs/phase-0/traceability-matrix.csv)
-- [docs/phase-0/epic-catalog.md](docs/phase-0/epic-catalog.md)
-- [docs/phase-0/nfr.md](docs/phase-0/nfr.md)
-- [docs/phase-0/acceptance-criteria-templates.md](docs/phase-0/acceptance-criteria-templates.md)
-- [docs/phase-0/migration-plan.md](docs/phase-0/migration-plan.md)
-- [docs/phase-0/security-rbac.md](docs/phase-0/security-rbac.md)
-- [docs/phase-0/gates.md](docs/phase-0/gates.md)
-- [.github/instructions/requirements.instructions.md](.github/instructions/requirements.instructions.md)
+- [docs/phase-0/README.md](phase-0/README.md)
+- [docs/phase-0/traceability-matrix.csv](phase-0/traceability-matrix.csv)
+- [docs/phase-0/epic-catalog.md](phase-0/epic-catalog.md)
+- [docs/phase-0/nfr.md](phase-0/nfr.md)
+- [docs/phase-0/acceptance-criteria-templates.md](phase-0/acceptance-criteria-templates.md)
+- [docs/phase-0/migration-plan.md](phase-0/migration-plan.md)
+- [docs/phase-0/security-rbac.md](phase-0/security-rbac.md)
+- [docs/phase-0/gates.md](phase-0/gates.md)
+- [.github/instructions/requirements.instructions.md](../.github/instructions/requirements.instructions.md)
 
-### Immediate Next Work
+### Next Step
 
-1. Start Phase 1 platform bootstrap execution from Sprint 1 scope in [docs/phase-0/mvp-sprint-plan.md](docs/phase-0/mvp-sprint-plan.md).
-2. Convert OpenAPI skeletons in [docs/openapi-templates/facts-crud.yaml](docs/openapi-templates/facts-crud.yaml), [docs/openapi-templates/search.yaml](docs/openapi-templates/search.yaml), [docs/openapi-templates/relationships.yaml](docs/openapi-templates/relationships.yaml), [docs/openapi-templates/auth.yaml](docs/openapi-templates/auth.yaml), and [docs/openapi-templates/webhooks.yaml](docs/openapi-templates/webhooks.yaml) into implementation contracts.
-3. Break Sprint 1 and Sprint 2 scopes into engineering tasks with acceptance tests derived from [docs/phase-0/acceptance-criteria-templates.md](docs/phase-0/acceptance-criteria-templates.md).
-4. Run dependency and capacity check against target dates in [docs/phase-0/epic-catalog.md](docs/phase-0/epic-catalog.md).
+Begin **Phase 1 — Tech Stack Research** by executing steps 1.1–1.8 (parallelizable), then compile ADRs in step 1.9.
