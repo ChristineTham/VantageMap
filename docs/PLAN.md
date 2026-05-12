@@ -105,9 +105,19 @@ Implement the canonical data model from [MODEL.md](MODEL.md) as database tables 
 
 ---
 
-### Phase 4 — Backend API Foundation
+### Phase 4 — Backend API Foundation ⏳
 
-Build shared API infrastructure that all entity endpoints will use. Each step is a reusable middleware or utility layer.
+Build shared API infrastructure that all entity endpoints will use. Each step is a reusable middleware or utility layer. **Status: All utility modules written. Pending: type-check, lint, build verification in Codespaces. See [phase-4-codespaces.md](phase-4-codespaces.md).**
+
+**Decisions summary:**
+
+- Response envelope: `{ data: T }` for singles, `{ data: T[], meta }` for lists, `{ error: { code, message, details?, correlationId } }` for errors
+- Auth: pluggable `authenticate()` with dev-mode bypass (`x-dev-user-id` header); Bearer token and session cookie extraction ready for Better Auth in Phase 10
+- RBAC: static permission matrix mapping operations to roles; `checkPermission()` returns 403 with reason
+- Audit: fire-and-forget `writeAuditLog()` with diff computation; `writeFailedAuthLog()` for denied attempts
+- Pagination: offset-based with `page`/`pageSize` params (max 200); filtering via `filter[field]=value` and `search[field]=value`
+- Feature flags: environment-variable-backed `isFeatureEnabled()` / `isApiEnabled()` with typed flag definitions
+- Health check: `GET /api/health` — no auth required
 
 | Step | Title                                        | Scope                                                                                                                                                                                                                                     | Depends on |
 | ---- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
