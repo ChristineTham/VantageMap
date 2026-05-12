@@ -48,13 +48,15 @@ Translate product and platform requirements from the documentation corpus into:
 
 ## Revision History
 
+- **v3 (2026-05-12)**: Added zero-cost deployment and open-source-first constraints. Added REQ-071 through REQ-073 for deployment constraints. Updated EP-TECHSTACK-001 and EP-ID-003 readiness notes.
 - **v2 (2026-05-12)**: Aligned all artifacts with revised PLAN.md (16-phase step-based structure). Added `plan_steps` column to traceability matrix. Added plan step cross-references to all epics. Rewrote sprint plan as phase-sequenced execution plan for vibe coding. Updated migration plan for backend-first approach. Added Gate 7 (execution plan readiness). Added 10 new requirements (REQ-061 through REQ-070) covering frontend, tech stack, data quality, and adoption metrics. Added 5 new epics (EP-TECHSTACK-001, EP-FRONTEND-001/002/003, EP-PORTAL-001, EP-CONNECTOR-001). Promoted REQ-037 (Provider), REQ-047 (6R), REQ-050 (obsolescence risk) from Post-MVP to MVP scope.
 - **v1 (initial)**: Baseline artifacts from original 10-phase plan.
 
 ## Status
 
-**Phase 0: Complete.** All 7 gates pass. Ready for Phase 1 (Tech Stack Research).
+**Phase 0: Complete.** All 7 gates pass.  
+**Phase 1: Complete.** 8 ADRs produced in `docs/adr/`. Ready for Phase 2 (Project Bootstrap).
 
 ## Next Step
 
-Begin **Phase 1 — Tech Stack Research** by executing steps 1.1–1.8 (parallelizable research), then compile ADR documents in step 1.9.
+Begin **Phase 2 — Project Bootstrap** by executing step 2.1 (Initialize Next.js project), then parallelize steps 2.2–2.6.

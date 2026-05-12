@@ -23,12 +23,29 @@ Six integrated views:
 
 ## Tech Stack
 
+### Frontend (confirmed)
 - **Next.js 16.2.3** — App Router only. No Pages Router. No `getServerSideProps`/`getStaticProps`.
 - **TypeScript** — strict mode
 - **Tailwind CSS v4** — configured via `@import "tailwindcss"` in globals.css (NOT `@tailwind` directives)
-- **Rosely colour palette** — custom CSS variables + Tailwind theme; see `src/app/globals.css`
+- **Rosely colour palette** — custom CSS variables + Tailwind theme; see [DESIGN.md](DESIGN.md) and `src/app/globals.css`
+- **shadcn/ui (Base UI variant)** — open-code component library installed into `src/components/ui/`
 - **Lucide React** — icon set
 - **Recharts** — chart library
+
+### Backend (decided in Phase 1 — see `docs/adr/`)
+- **PostgreSQL 16** — primary database ([ADR-001](docs/adr/001-database.md))
+- **Drizzle ORM** — schema-as-code, SQL-like queries, zero dependencies ([ADR-002](docs/adr/002-orm.md))
+- **Better Auth** — authentication, sessions, RBAC, API tokens ([ADR-003](docs/adr/003-authentication.md))
+- **Next.js Route Handlers (REST)** — API layer; GraphQL added in Phase 12 ([ADR-004](docs/adr/004-api-layer.md))
+- **Inngest** — async job processing, event-driven functions ([ADR-005](docs/adr/005-async-processing.md))
+- **PostgreSQL Full-Text Search** — search engine for MVP ([ADR-006](docs/adr/006-search.md))
+- **Pino** — structured JSON logging
+- **Sentry** — error tracking and performance monitoring ([ADR-008](docs/adr/008-observability.md))
+
+### Hosting
+- **Vercel Hobby** — MVP deployment (zero-cost) ([ADR-007](docs/adr/007-hosting.md))
+- **Azure App Service** — production deployment target
+- **Neon Free** — PostgreSQL hosting for MVP
 
 ## Build and Test
 
@@ -50,7 +67,8 @@ npm run lint     # ESLint
 ## Key Conventions
 
 - Use `@/lib/data` imports for all data access — do not inline data in page files
-- Use Rosely colour tokens (`text-rosely-night`, `bg-rosely-cream`, etc.) — do not use raw hex or arbitrary Tailwind values
+- Use Rosely colour tokens (`text-rosely-night`, `bg-rosely-cream`, etc.) — do not use raw hex or arbitrary Tailwind values. See [DESIGN.md](DESIGN.md) for the full design system.
+- Use shadcn/ui components from `@/components/ui/` for buttons, cards, dialogs, tables, etc. — do not build custom primitives
 - Server Components by default; add `"use client"` only when state/effects/browser APIs are needed
 - Icon imports come from `lucide-react`
 - For new pages, follow the pattern in existing `page.tsx` files (see `src/app/capabilities/page.tsx`)

@@ -5,6 +5,8 @@ applyTo: "src/**/*.tsx,src/**/*.css"
 
 # Tailwind CSS v4 + Rosely Palette
 
+> Full design system specification: [DESIGN.md](../../DESIGN.md)
+
 ## Tailwind v4 Setup (Breaking Change)
 
 Tailwind v4 uses a CSS-first configuration. Do NOT use v3 directives:

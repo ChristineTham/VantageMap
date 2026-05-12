@@ -58,7 +58,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - **Next.js 16** (App Router)
 - **TypeScript**
-- **Tailwind CSS v4**
+- **Tailwind CSS v4** + **[Rosely design system](DESIGN.md)**
+- **shadcn/ui** (Base UI variant) — component library
 - **Lucide React** icons
 - **Recharts** (for future chart extensions)
 

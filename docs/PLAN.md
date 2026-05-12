@@ -18,9 +18,19 @@ Build a requirements traceability matrix from the docs corpus into epics/capabil
 
 ---
 
-### Phase 1 — Tech Stack Research and Architecture Decisions
+### Phase 1 — Tech Stack Research and Architecture Decisions ✅
 
-Evaluate technology choices against the requirements in [docs/ARCHITECTURE.md](ARCHITECTURE.md), [docs/DEVELOPER.md](DEVELOPER.md), and [docs/MODEL.md](MODEL.md). Each step produces a short decision record (problem, options evaluated, decision, rationale) saved to `docs/adr/`. The preliminary recommendations in ARCHITECTURE.md serve as starting hypotheses, not foregone conclusions.
+Evaluate technology choices against the requirements in [docs/ARCHITECTURE.md](ARCHITECTURE.md), [docs/DEVELOPER.md](DEVELOPER.md), and [docs/MODEL.md](MODEL.md). Each step produces a short decision record (problem, options evaluated, decision, rationale) saved to `docs/adr/`. **Status: Complete — 8 ADRs produced.**
+
+**Decisions summary:**
+- Database: PostgreSQL 16 ([ADR-001](adr/001-database.md))
+- ORM: Drizzle ORM ([ADR-002](adr/002-orm.md))
+- Auth: Better Auth ([ADR-003](adr/003-authentication.md))
+- API layer: Next.js Route Handlers / REST ([ADR-004](adr/004-api-layer.md))
+- Async processing: Inngest ([ADR-005](adr/005-async-processing.md))
+- Search: PostgreSQL Full-Text Search ([ADR-006](adr/006-search.md))
+- Hosting: Vercel Hobby (MVP), Azure App Service (production) ([ADR-007](adr/007-hosting.md))
+- Observability: Sentry + Pino + OpenTelemetry ([ADR-008](adr/008-observability.md))
 
 | Step | Title | Scope | Depends on |
 |------|-------|-------|------------|
@@ -43,8 +53,8 @@ Scaffold the project and establish the development baseline. All steps follow [A
 | Step | Title | Scope | Depends on |
 |------|-------|-------|------------|
 | 2.1 | Initialize Next.js project | Create Next.js 16 project with TypeScript strict mode. Configure `tsconfig.json` path alias `@/` → `src/`. Add `.gitignore`, `package.json` scripts (`dev`, `build`, `lint`). Create placeholder `src/app/layout.tsx` and `src/app/page.tsx`. | Phase 1 |
-| 2.2 | Configure Tailwind CSS v4 and Rosely palette | Set up `src/app/globals.css` with `@import "tailwindcss"` and `@theme inline {}` block defining all 16 Rosely colour tokens as CSS variables and Tailwind utilities. Reference [styling.instructions.md](../.github/instructions/styling.instructions.md). | 2.1 |
-| 2.3 | Set up database and ORM | Install chosen ORM, configure database connection via environment variables, create initial migration with empty schema, add migration scripts to `package.json`. Create `prisma/schema.prisma` (or equivalent). | 2.1 |
+| 2.2 | Configure Tailwind CSS v4, Rosely palette, and shadcn/ui | Set up `src/app/globals.css` with `@import "tailwindcss"` and `@theme inline {}` block defining all 16 Rosely colour tokens as CSS variables and Tailwind utilities. Initialise shadcn/ui (Base UI variant) and map Rosely tokens to shadcn/ui CSS variables. Reference [DESIGN.md](../DESIGN.md) and [styling.instructions.md](../.github/instructions/styling.instructions.md). | 2.1 |
+| 2.3 | Set up database and ORM | Install Drizzle ORM and `drizzle-kit`, configure Neon PostgreSQL connection via environment variables, create initial empty schema in `src/db/schema/`, add migration scripts to `package.json`. | 2.1 |
 | 2.4 | Linting, formatting, and CI | Configure ESLint (Next.js recommended rules + TypeScript strict), Prettier, and a GitHub Actions CI workflow for lint + build + type-check on every PR. | 2.1 |
 | 2.5 | Environment and secrets configuration | Create `.env.example` with documented variable stubs (database URL, auth secret, API keys). Add validation using `zod` or `@t3-oss/env-nextjs` to fail fast on missing config. | 2.1 |
 | 2.6 | Testing framework | Set up Vitest (or chosen test runner) for unit and integration tests. Add test scripts to `package.json`. Create a sample test to verify the pipeline works. | 2.1 |
@@ -118,13 +128,13 @@ Cross-entity operations that span multiple fact sheet types.
 
 ### Phase 7 — Frontend Shell and Shared Components
 
-Build the application shell and reusable UI component library before individual views. Follow [nextjs.instructions.md](../.github/instructions/nextjs.instructions.md) and [styling.instructions.md](../.github/instructions/styling.instructions.md).
+Build the application shell and reusable UI component library before individual views. Follow [DESIGN.md](../DESIGN.md), [nextjs.instructions.md](../.github/instructions/nextjs.instructions.md), and [styling.instructions.md](../.github/instructions/styling.instructions.md).
 
 | Step | Title | Scope | Depends on |
 |------|-------|-------|------------|
 | 7.1 | App layout and Sidebar | Create `src/app/layout.tsx` with `<Sidebar />` + `<main>` wrapper. Build `src/components/Sidebar.tsx` as a Client Component with navigation for all six routes, active state via `usePathname`. Install and configure Lucide React icons. | 2.1, 2.2 |
 | 7.2 | API client and data layer | Create `src/lib/api.ts` with typed fetch wrappers for all entity APIs. Create `src/lib/data.ts` with TypeScript types matching the database models. Support feature-flag toggle between static fixtures and API calls per [migration-plan.md](phase-0/migration-plan.md). | 4.1, Phase 5 (at least one API) |
-| 7.3 | Shared UI components | Build reusable components in `src/components/`: Card, DataTable, StatusBadge, HealthIndicator, LifecycleTag, SearchInput, FilterBar, EmptyState, LoadingSpinner, Pagination. All styled with Rosely tokens. | 2.2 |
+| 7.3 | Shared UI components | Install shadcn/ui components (Card, Table, Dialog, Tabs, Badge, Button, Input) into `src/components/ui/`. Build app-specific composed components in `src/components/`: DataTable, StatusBadge, HealthIndicator, LifecycleTag, SearchInput, FilterBar, EmptyState, LoadingSpinner, Pagination. All themed with Rosely tokens per [DESIGN.md](../DESIGN.md). | 2.2 |
 | 7.4 | Error and loading patterns | Create error boundary components, loading skeletons (`loading.tsx`), and `not-found.tsx` pages. Implement global error handling for API failures. | 7.1 |
 
 ---
@@ -319,9 +329,9 @@ Phase 5 + 12 → Phase 15 (Advanced Features)  — Post-MVP
 |----------|--------|-----------|
 | Delivery strategy | Incremental, backend-first | Each step produces working output; backend APIs stabilize before frontend consumes them |
 | Implementation mode | Vibe coding (AI agent per step) | Steps are self-contained with clear scope, inputs, outputs, and acceptance criteria |
-| Tech stack | Evaluate in Phase 1, decide before Phase 2 | Avoid premature lock-in; ARCHITECTURE.md recommendations are starting hypotheses |
+| Tech stack | Decided in Phase 1; see `docs/adr/` | PostgreSQL 16, Drizzle ORM, Better Auth, REST route handlers, Inngest, PG FTS, Sentry+Pino |
 | Frontend framework | Next.js 16 App Router (confirmed in AGENTS.md) | Already chosen and documented; not re-evaluated |
-| Styling | Tailwind CSS v4 + Rosely palette (confirmed in AGENTS.md) | Already chosen and documented; not re-evaluated |
+| Styling | Tailwind CSS v4 + Rosely palette + shadcn/ui Base UI (see [DESIGN.md](../DESIGN.md)) | Already chosen and documented; not re-evaluated |
 | API strategy | REST-first (MVP), GraphQL added in Phase 12 | REST is simpler for vibe-coding agents; GraphQL deferred until schema is stable |
 | Custom fields | JSONB columns with validation | Avoids per-customer schema migrations; flexible for early product-market fit |
 | MVP boundary | Phases 1–13 are MVP; Phases 14–15 are Post-MVP | Core platform, six views, CRUD, governance, integrations, and reporting before enterprise SSO and advanced features |
@@ -363,4 +373,4 @@ Phase 0 implementation has started with baseline planning artifacts and governan
 
 ### Next Step
 
-Begin **Phase 1 — Tech Stack Research** by executing steps 1.1–1.8 (parallelizable), then compile ADRs in step 1.9.
+Begin **Phase 2 — Project Bootstrap** by executing step 2.1 (Initialize Next.js project), then parallelize 2.2–2.6.

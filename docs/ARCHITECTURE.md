@@ -86,27 +86,28 @@ The current system is visualization-first. The target system must be data-first 
 7. Operational resilience as a feature  
    Retries, idempotency, observability, and backup/restore are part of the core architecture, not afterthoughts.
 
-## 5. Recommended Tech Stack and Justification
+## 5. Tech Stack — Final Decisions
 
-All choices below are preliminary hypotheses to be validated in Phase 1. Final decisions will be recorded as ADRs in `docs/adr/`.
+All choices were evaluated in Phase 1 and recorded as ADRs in `docs/adr/`. The table below reflects final decisions.
 
-| Layer | Recommendation | Open-source? | Free tier for MVP? | Production path | Why this direction |
+| Layer | Decision | ADR | Open-source? | Free tier for MVP? | Production path |
 |---|---|---|---|---|---|
-| Frontend | Next.js 16 App Router + React 19 + TypeScript | Yes (MIT) | Yes (self-hosted or Vercel Hobby) | Azure App Service / Vercel Pro | Reuses existing codebase; strong SSR/RSC model |
-| Backend API | Next.js route handlers for MVP | Yes (MIT) | Yes (same deployment) | Same as frontend | Low-friction full-stack TypeScript |
-| Database | PostgreSQL 16 | Yes (PostgreSQL License) | Yes (Neon Free, Supabase Free, or local) | Azure Database for PostgreSQL | ACID, JSONB, mature ecosystem |
-| ORM/Data access | Prisma or Drizzle ORM | Yes (Apache 2.0 / MIT) | Yes (library only) | Same | Type-safe queries, migrations |
-| Authentication | Auth.js (NextAuth) v5 or Lucia | Yes (MIT) | Yes (self-hosted, no external service) | Same | Standards-based; no vendor dependency |
-| Enterprise SSO | SAML via open-source library (phase-aligned) | Yes | Yes (library only) | Keycloak or Azure AD | Enterprise identity federation |
-| Provisioning | SCIM endpoint (phase-aligned) | Yes (custom implementation) | Yes | Same | Automated user lifecycle |
-| Authorization | RBAC with workspace scoping | Yes (custom) | Yes | Same | Module/entity-level permissions |
-| Cache/session | Redis-compatible (Upstash free or local) | Yes (BSD) | Yes (Upstash Free or local) | Azure Cache for Redis | Read performance, sessions, rate limiting |
-| Async processing | BullMQ with Redis, or Inngest (free tier) | Yes (MIT) / freemium | Yes | Same or Azure Queue Storage | Imports, webhooks, reports |
-| Search | PostgreSQL full-text search (MVP); Meilisearch (if needed) | Yes | Yes (built-in / self-hosted) | Azure Cognitive Search or Meilisearch Cloud | Cross-entity queries |
-| API docs | OpenAPI for REST | Yes (standard) | Yes | Same | Explicit, testable contracts |
-| Observability | Sentry Free + Grafana Cloud Free, or OpenTelemetry → self-hosted | Yes (MIT) / freemium | Yes (free tiers) | Azure Monitor or Grafana Cloud | SLO-driven operations |
-| Storage | Cloudflare R2 Free or Supabase Storage | Yes / freemium | Yes | Azure Blob Storage | Exports, imports, audit bundles |
-| Hosting | Vercel Hobby, Netlify Free, or self-hosted Docker | Mixed | Yes | Azure App Service | Fast deployment for MVP |
+| Frontend | Next.js 16 App Router + React 19 + TypeScript | — (confirmed in AGENTS.md) | Yes (MIT) | Yes (Vercel Hobby) | Azure App Service |
+| Design system | Rosely palette + shadcn/ui (Base UI variant) | — (see [DESIGN.md](../DESIGN.md)) | Yes (MIT) | Yes (library only) | Same |
+| Backend API | Next.js Route Handlers (REST) | [ADR-004](adr/004-api-layer.md) | Yes (MIT) | Yes (same deployment) | Same |
+| Database | PostgreSQL 16 | [ADR-001](adr/001-database.md) | Yes (PostgreSQL License) | Yes (Neon Free) | Azure Database for PostgreSQL |
+| ORM | Drizzle ORM | [ADR-002](adr/002-orm.md) | Yes (Apache 2.0) | Yes (library only) | Same |
+| Authentication | Better Auth | [ADR-003](adr/003-authentication.md) | Yes (MIT) | Yes (self-hosted) | Same |
+| Enterprise SSO | Better Auth Enterprise SSO plugin (SAML/OIDC) | [ADR-003](adr/003-authentication.md) | Yes | Yes | Keycloak or Azure AD |
+| Authorization | Better Auth Organizations plugin + custom RBAC | [ADR-003](adr/003-authentication.md) | Yes | Yes | Same |
+| Async processing | Inngest | [ADR-005](adr/005-async-processing.md) | Yes (Apache 2.0 SDK) | Yes (50K runs/mo free) | Self-hosted Inngest or Azure |
+| Search | PostgreSQL Full-Text Search (MVP) | [ADR-006](adr/006-search.md) | Yes | Yes (built-in) | Meilisearch or Azure Cognitive Search |
+| Logging | Pino (structured JSON) | [ADR-008](adr/008-observability.md) | Yes (MIT) | Yes | Same |
+| Error tracking | Sentry | [ADR-008](adr/008-observability.md) | Yes (BSL/MIT SDK) | Yes (5K errors/mo free) | Sentry Team or Azure Monitor |
+| Tracing | OpenTelemetry SDK | [ADR-008](adr/008-observability.md) | Yes (Apache 2.0) | Yes | Azure Monitor or Grafana |
+| Hosting (MVP) | Vercel Hobby | [ADR-007](adr/007-hosting.md) | No (platform) | Yes (free tier) | — |
+| Hosting (Prod) | Azure App Service | [ADR-007](adr/007-hosting.md) | No (platform) | — | Azure App Service |
+| Database hosting (MVP) | Neon Free | [ADR-001](adr/001-database.md) | Yes (Neon is OSS) | Yes (0.5 GB free) | Azure Database for PostgreSQL |
 
 Why not microservices first:
 - Higher operational complexity with limited early payoff
@@ -118,7 +119,7 @@ Why PostgreSQL full-text search before a dedicated search engine:
 - Sufficient for early entity volumes (< 10K fact sheets)
 - Upgrade path to Meilisearch or managed search when metrics justify it
 
-## 5. Target Logical Architecture
+## 6. Target Logical Architecture
 
 Client layer:
 - Next.js pages and components
@@ -194,9 +195,9 @@ REST accelerates delivery and integration clarity. GraphQL is introduced where i
 ## 9. Security and UAM Architecture
 
 Authentication:
-- Auth.js (NextAuth) v5 or Lucia with OAuth 2.0 flows (open-source, self-hosted)
-- SAML federation for enterprise SSO (Post-MVP; open-source library or Keycloak)
-- Technical/service users for machine-to-machine integrations
+- Better Auth with email/password, OAuth 2.0 social providers, and database sessions ([ADR-003](adr/003-authentication.md))
+- SAML federation for enterprise SSO via Better Auth Enterprise SSO plugin (Post-MVP)
+- Technical/service users via Better Auth Bearer token plugin for machine-to-machine integrations
 
 Authorization:
 - Workspace-scoped RBAC
@@ -247,18 +248,20 @@ Integration breadth is central to LeanIX parity and enterprise adoption. A stabl
 ## 12. Deployment Topology
 
 MVP topology (zero-cost):
-- Vercel Hobby (or Netlify Free / self-hosted Docker) for web app and API routes
-- Neon Free or Supabase Free for PostgreSQL (or local PostgreSQL for dev)
-- Upstash Free for Redis-compatible cache/queue (or local Redis for dev)
-- Cloudflare R2 Free for object storage (or local filesystem for dev)
-- Sentry Free + Grafana Cloud Free for observability
+- Vercel Hobby for web app and API routes
+- Neon Free for PostgreSQL
+- Inngest Cloud free tier for async job processing (50K runs/month)
+- Sentry Free for error tracking and performance monitoring (5K errors/month)
+- Pino structured logs → stdout → Vercel Logs (built-in)
+- No separate Redis, cache, or object storage needed for MVP
 
 Production topology (Azure-preferred):
 - Azure App Service for web app and API routes
 - Azure Database for PostgreSQL Flexible Server
-- Azure Cache for Redis
+- Azure Cache for Redis (if caching needs grow)
 - Azure Blob Storage for artifacts
 - Azure Monitor + Application Insights for observability
+- Self-hosted Inngest or Azure Queue Storage for async jobs
 
 Alternative production paths:
 - Google Cloud: Cloud Run + Cloud SQL + Memorystore + Cloud Storage
@@ -353,10 +356,11 @@ Phases 14–15 (Post-MVP):
 7. Security and audit capabilities introduced before broad feature expansion  
    Chosen because enterprise adoption requires governance and trust as foundational attributes.
 
-## Data Platform Decision (Updated)
+## Data Platform Decision (Final)
 
-Primary system of record: PostgreSQL 16 (open-source; free-tier hosting via Neon or Supabase for MVP; Azure Database for PostgreSQL for production).  
-ORM: Prisma or Drizzle (to be evaluated in Phase 1 step 1.3).  
+Primary system of record: PostgreSQL 16 via Drizzle ORM ([ADR-001](adr/001-database.md), [ADR-002](adr/002-orm.md)).  
+MVP hosting: Neon Free (autoscale-to-zero, 0.5 GB storage).  
+Production hosting: Azure Database for PostgreSQL Flexible Server.  
 Supporting stores are introduced only when measurable needs emerge (search index, graph projection/read model, cache).
 
 ### Why PostgreSQL is the primary datastore
