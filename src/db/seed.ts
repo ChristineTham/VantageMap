@@ -102,28 +102,83 @@ async function seed() {
 
   const capData = [
     // Level 1
-    { name: "Customer Management", level: "1" as const, health: "Excellent" as const, description: "Manage customer relationships and interactions" },
-    { name: "Product Development", level: "1" as const, health: "Good" as const, description: "Design, develop, and deliver products" },
-    { name: "Financial Management", level: "1" as const, health: "Good" as const, description: "Financial planning, accounting, and reporting" },
-    { name: "Human Resources", level: "1" as const, health: "Fair" as const, description: "Workforce management and talent development" },
-    { name: "Supply Chain", level: "1" as const, health: "Good" as const, description: "End-to-end supply chain operations" },
-    { name: "IT Management", level: "1" as const, health: "Fair" as const, description: "Technology infrastructure and service delivery" },
-    { name: "Marketing", level: "1" as const, health: "Good" as const, description: "Marketing strategy and campaign management" },
-    { name: "Sales", level: "1" as const, health: "Excellent" as const, description: "Sales operations and revenue generation" },
+    {
+      name: "Customer Management",
+      level: "1" as const,
+      health: "Excellent" as const,
+      description: "Manage customer relationships and interactions",
+    },
+    {
+      name: "Product Development",
+      level: "1" as const,
+      health: "Good" as const,
+      description: "Design, develop, and deliver products",
+    },
+    {
+      name: "Financial Management",
+      level: "1" as const,
+      health: "Good" as const,
+      description: "Financial planning, accounting, and reporting",
+    },
+    {
+      name: "Human Resources",
+      level: "1" as const,
+      health: "Fair" as const,
+      description: "Workforce management and talent development",
+    },
+    {
+      name: "Supply Chain",
+      level: "1" as const,
+      health: "Good" as const,
+      description: "End-to-end supply chain operations",
+    },
+    {
+      name: "IT Management",
+      level: "1" as const,
+      health: "Fair" as const,
+      description: "Technology infrastructure and service delivery",
+    },
+    {
+      name: "Marketing",
+      level: "1" as const,
+      health: "Good" as const,
+      description: "Marketing strategy and campaign management",
+    },
+    {
+      name: "Sales",
+      level: "1" as const,
+      health: "Excellent" as const,
+      description: "Sales operations and revenue generation",
+    },
   ];
 
-  const l1Caps = await db
-    .insert(schema.businessCapabilities)
-    .values(capData)
-    .returning();
+  const l1Caps = await db.insert(schema.businessCapabilities).values(capData).returning();
 
   // Level 2 under Customer Management
   const l2CustMgmt = await db
     .insert(schema.businessCapabilities)
     .values([
-      { name: "Customer Acquisition", level: "2" as const, parentId: l1Caps[0].id, health: "Good" as const, description: "Attract and onboard new customers" },
-      { name: "Customer Retention", level: "2" as const, parentId: l1Caps[0].id, health: "Excellent" as const, description: "Retain and grow existing customer relationships" },
-      { name: "Customer Analytics", level: "2" as const, parentId: l1Caps[0].id, health: "Fair" as const, description: "Analyse customer behaviour and preferences" },
+      {
+        name: "Customer Acquisition",
+        level: "2" as const,
+        parentId: l1Caps[0].id,
+        health: "Good" as const,
+        description: "Attract and onboard new customers",
+      },
+      {
+        name: "Customer Retention",
+        level: "2" as const,
+        parentId: l1Caps[0].id,
+        health: "Excellent" as const,
+        description: "Retain and grow existing customer relationships",
+      },
+      {
+        name: "Customer Analytics",
+        level: "2" as const,
+        parentId: l1Caps[0].id,
+        health: "Fair" as const,
+        description: "Analyse customer behaviour and preferences",
+      },
     ])
     .returning();
 
@@ -131,29 +186,89 @@ async function seed() {
   const l2ProdDev = await db
     .insert(schema.businessCapabilities)
     .values([
-      { name: "Product Design", level: "2" as const, parentId: l1Caps[1].id, health: "Good" as const, description: "Design new products and features" },
-      { name: "Product Engineering", level: "2" as const, parentId: l1Caps[1].id, health: "Good" as const, description: "Build and test product implementations" },
-      { name: "Product Launch", level: "2" as const, parentId: l1Caps[1].id, health: "Fair" as const, description: "Go-to-market planning and execution" },
+      {
+        name: "Product Design",
+        level: "2" as const,
+        parentId: l1Caps[1].id,
+        health: "Good" as const,
+        description: "Design new products and features",
+      },
+      {
+        name: "Product Engineering",
+        level: "2" as const,
+        parentId: l1Caps[1].id,
+        health: "Good" as const,
+        description: "Build and test product implementations",
+      },
+      {
+        name: "Product Launch",
+        level: "2" as const,
+        parentId: l1Caps[1].id,
+        health: "Fair" as const,
+        description: "Go-to-market planning and execution",
+      },
     ])
     .returning();
 
   // Level 2 under Financial Management
   await db.insert(schema.businessCapabilities).values([
-    { name: "Financial Planning & Analysis", level: "2" as const, parentId: l1Caps[2].id, health: "Good" as const, description: "Budgeting, forecasting, and financial analysis" },
-    { name: "Accounts Payable", level: "2" as const, parentId: l1Caps[2].id, health: "Fair" as const, description: "Invoice processing and vendor payments" },
-    { name: "Accounts Receivable", level: "2" as const, parentId: l1Caps[2].id, health: "Good" as const, description: "Revenue collection and billing" },
+    {
+      name: "Financial Planning & Analysis",
+      level: "2" as const,
+      parentId: l1Caps[2].id,
+      health: "Good" as const,
+      description: "Budgeting, forecasting, and financial analysis",
+    },
+    {
+      name: "Accounts Payable",
+      level: "2" as const,
+      parentId: l1Caps[2].id,
+      health: "Fair" as const,
+      description: "Invoice processing and vendor payments",
+    },
+    {
+      name: "Accounts Receivable",
+      level: "2" as const,
+      parentId: l1Caps[2].id,
+      health: "Good" as const,
+      description: "Revenue collection and billing",
+    },
   ]);
 
   // Level 3 under Customer Retention
   await db.insert(schema.businessCapabilities).values([
-    { name: "Loyalty Programme Management", level: "3" as const, parentId: l2CustMgmt[1].id, health: "Good" as const, description: "Design and operate customer loyalty programs" },
-    { name: "Churn Prevention", level: "3" as const, parentId: l2CustMgmt[1].id, health: "Fair" as const, description: "Identify and mitigate customer attrition risk" },
+    {
+      name: "Loyalty Programme Management",
+      level: "3" as const,
+      parentId: l2CustMgmt[1].id,
+      health: "Good" as const,
+      description: "Design and operate customer loyalty programs",
+    },
+    {
+      name: "Churn Prevention",
+      level: "3" as const,
+      parentId: l2CustMgmt[1].id,
+      health: "Fair" as const,
+      description: "Identify and mitigate customer attrition risk",
+    },
   ]);
 
   // Level 3 under Product Design
   await db.insert(schema.businessCapabilities).values([
-    { name: "UX Research", level: "3" as const, parentId: l2ProdDev[0].id, health: "Good" as const, description: "User experience research and usability testing" },
-    { name: "UI Design", level: "3" as const, parentId: l2ProdDev[0].id, health: "Excellent" as const, description: "Visual and interaction design" },
+    {
+      name: "UX Research",
+      level: "3" as const,
+      parentId: l2ProdDev[0].id,
+      health: "Good" as const,
+      description: "User experience research and usability testing",
+    },
+    {
+      name: "UI Design",
+      level: "3" as const,
+      parentId: l2ProdDev[0].id,
+      health: "Excellent" as const,
+      description: "Visual and interaction design",
+    },
   ]);
 
   // ── 3. Organizations ───────────────────────────────────────────────────
@@ -162,19 +277,63 @@ async function seed() {
 
   const [orgHQ] = await db
     .insert(schema.organizations)
-    .values({ name: "Headquarters", subtype: "Business Unit", level: 1, description: "Global headquarters" })
+    .values({
+      name: "Headquarters",
+      subtype: "Business Unit",
+      level: 1,
+      description: "Global headquarters",
+    })
     .returning();
 
   await db.insert(schema.organizations).values([
-    { name: "Engineering", subtype: "Business Unit", level: 2, parentId: orgHQ.id, description: "Software engineering division" },
-    { name: "Marketing", subtype: "Business Unit", level: 2, parentId: orgHQ.id, description: "Marketing and communications" },
-    { name: "Sales", subtype: "Business Unit", level: 2, parentId: orgHQ.id, description: "Sales and business development" },
+    {
+      name: "Engineering",
+      subtype: "Business Unit",
+      level: 2,
+      parentId: orgHQ.id,
+      description: "Software engineering division",
+    },
+    {
+      name: "Marketing",
+      subtype: "Business Unit",
+      level: 2,
+      parentId: orgHQ.id,
+      description: "Marketing and communications",
+    },
+    {
+      name: "Sales",
+      subtype: "Business Unit",
+      level: 2,
+      parentId: orgHQ.id,
+      description: "Sales and business development",
+    },
     { name: "Europe", subtype: "Region", level: 1, description: "European operations" },
-    { name: "North America", subtype: "Region", level: 1, description: "North American operations" },
+    {
+      name: "North America",
+      subtype: "Region",
+      level: 1,
+      description: "North American operations",
+    },
     { name: "Asia Pacific", subtype: "Region", level: 1, description: "APAC operations" },
-    { name: "Enterprise Customers", subtype: "Customer", level: 1, description: "Large enterprise customer segment" },
-    { name: "SMB Customers", subtype: "Customer", level: 1, description: "Small and medium business segment" },
-    { name: "Platform Team", subtype: "Team", level: 2, parentId: orgHQ.id, description: "Cross-functional platform engineering team" },
+    {
+      name: "Enterprise Customers",
+      subtype: "Customer",
+      level: 1,
+      description: "Large enterprise customer segment",
+    },
+    {
+      name: "SMB Customers",
+      subtype: "Customer",
+      level: 1,
+      description: "Small and medium business segment",
+    },
+    {
+      name: "Platform Team",
+      subtype: "Team",
+      level: 2,
+      parentId: orgHQ.id,
+      description: "Cross-functional platform engineering team",
+    },
   ]);
 
   // ── 4. Business Contexts ──────────────────────────────────────────────
@@ -182,13 +341,41 @@ async function seed() {
   console.log("  → Business Contexts");
 
   await db.insert(schema.businessContexts).values([
-    { name: "Online Purchase Journey", subtype: "Customer Journey", description: "End-to-end e-commerce customer experience" },
-    { name: "Hire to Retire", subtype: "Value Stream", description: "Employee lifecycle from hiring to retirement" },
-    { name: "Source to Pay", subtype: "Value Stream", description: "Procurement through payment processing" },
-    { name: "Order Fulfilment", subtype: "Process", description: "Order processing and delivery workflow" },
-    { name: "Mobile Banking App", subtype: "Business Product", description: "Consumer mobile banking application" },
-    { name: "Life Insurance", subtype: "Business Product", description: "Life insurance product line" },
-    { name: "Energy Efficiency Management", subtype: "ESG Capability", description: "Energy consumption tracking and optimization" },
+    {
+      name: "Online Purchase Journey",
+      subtype: "Customer Journey",
+      description: "End-to-end e-commerce customer experience",
+    },
+    {
+      name: "Hire to Retire",
+      subtype: "Value Stream",
+      description: "Employee lifecycle from hiring to retirement",
+    },
+    {
+      name: "Source to Pay",
+      subtype: "Value Stream",
+      description: "Procurement through payment processing",
+    },
+    {
+      name: "Order Fulfilment",
+      subtype: "Process",
+      description: "Order processing and delivery workflow",
+    },
+    {
+      name: "Mobile Banking App",
+      subtype: "Business Product",
+      description: "Consumer mobile banking application",
+    },
+    {
+      name: "Life Insurance",
+      subtype: "Business Product",
+      description: "Life insurance product line",
+    },
+    {
+      name: "Energy Efficiency Management",
+      subtype: "ESG Capability",
+      description: "Energy consumption tracking and optimization",
+    },
   ]);
 
   // ── 5. Applications ───────────────────────────────────────────────────
@@ -319,9 +506,17 @@ async function seed() {
     { name: "Customer", description: "Customer master data", dataClassification: "Confidential" },
     { name: "Order", description: "Purchase order data", dataClassification: "Internal" },
     { name: "Invoice", description: "Billing invoice records", dataClassification: "Confidential" },
-    { name: "Employee", description: "Employee personal and job data", dataClassification: "Restricted" },
+    {
+      name: "Employee",
+      description: "Employee personal and job data",
+      dataClassification: "Restricted",
+    },
     { name: "Product", description: "Product catalog information", dataClassification: "Internal" },
-    { name: "Contract", description: "Vendor and customer contracts", dataClassification: "Confidential" },
+    {
+      name: "Contract",
+      description: "Vendor and customer contracts",
+      dataClassification: "Confidential",
+    },
   ]);
 
   // ── 7. Interfaces ────────────────────────────────────────────────────
@@ -364,25 +559,97 @@ async function seed() {
   const objRows = await db
     .insert(schema.strategicObjectives)
     .values([
-      { name: "Increase Revenue", perspective: "Financial", description: "Grow top-line revenue through new channels" },
-      { name: "Reduce Operating Costs", perspective: "Financial", description: "Optimise operations to reduce cost base" },
-      { name: "Improve Customer Satisfaction", perspective: "Customer", description: "Increase NPS and reduce churn" },
-      { name: "Accelerate Time to Market", perspective: "Internal Process", description: "Reduce product delivery cycle time" },
-      { name: "Build Digital Capabilities", perspective: "Learning & Growth", description: "Develop cloud-native and AI skills across the org" },
-      { name: "Enhance Data-Driven Decision Making", perspective: "Internal Process", description: "Improve analytics and reporting capabilities" },
+      {
+        name: "Increase Revenue",
+        perspective: "Financial",
+        description: "Grow top-line revenue through new channels",
+      },
+      {
+        name: "Reduce Operating Costs",
+        perspective: "Financial",
+        description: "Optimise operations to reduce cost base",
+      },
+      {
+        name: "Improve Customer Satisfaction",
+        perspective: "Customer",
+        description: "Increase NPS and reduce churn",
+      },
+      {
+        name: "Accelerate Time to Market",
+        perspective: "Internal Process",
+        description: "Reduce product delivery cycle time",
+      },
+      {
+        name: "Build Digital Capabilities",
+        perspective: "Learning & Growth",
+        description: "Develop cloud-native and AI skills across the org",
+      },
+      {
+        name: "Enhance Data-Driven Decision Making",
+        perspective: "Internal Process",
+        description: "Improve analytics and reporting capabilities",
+      },
     ])
     .returning();
 
   // KPIs
   await db.insert(schema.kpis).values([
-    { objectiveId: objRows[0].id, name: "Annual Revenue Growth", targetValue: "15", currentValue: "11", unit: "%" },
-    { objectiveId: objRows[0].id, name: "New Customer Acquisition", targetValue: "500", currentValue: "320", unit: "count" },
-    { objectiveId: objRows[1].id, name: "Cost Reduction", targetValue: "10", currentValue: "6", unit: "%" },
-    { objectiveId: objRows[2].id, name: "Net Promoter Score", targetValue: "60", currentValue: "48", unit: "points" },
-    { objectiveId: objRows[2].id, name: "Customer Churn Rate", targetValue: "5", currentValue: "8", unit: "%" },
-    { objectiveId: objRows[3].id, name: "Release Cycle Time", targetValue: "14", currentValue: "21", unit: "days" },
-    { objectiveId: objRows[4].id, name: "Cloud Certification Rate", targetValue: "80", currentValue: "45", unit: "%" },
-    { objectiveId: objRows[5].id, name: "Dashboard Adoption", targetValue: "90", currentValue: "60", unit: "%" },
+    {
+      objectiveId: objRows[0].id,
+      name: "Annual Revenue Growth",
+      targetValue: "15",
+      currentValue: "11",
+      unit: "%",
+    },
+    {
+      objectiveId: objRows[0].id,
+      name: "New Customer Acquisition",
+      targetValue: "500",
+      currentValue: "320",
+      unit: "count",
+    },
+    {
+      objectiveId: objRows[1].id,
+      name: "Cost Reduction",
+      targetValue: "10",
+      currentValue: "6",
+      unit: "%",
+    },
+    {
+      objectiveId: objRows[2].id,
+      name: "Net Promoter Score",
+      targetValue: "60",
+      currentValue: "48",
+      unit: "points",
+    },
+    {
+      objectiveId: objRows[2].id,
+      name: "Customer Churn Rate",
+      targetValue: "5",
+      currentValue: "8",
+      unit: "%",
+    },
+    {
+      objectiveId: objRows[3].id,
+      name: "Release Cycle Time",
+      targetValue: "14",
+      currentValue: "21",
+      unit: "days",
+    },
+    {
+      objectiveId: objRows[4].id,
+      name: "Cloud Certification Rate",
+      targetValue: "80",
+      currentValue: "45",
+      unit: "%",
+    },
+    {
+      objectiveId: objRows[5].id,
+      name: "Dashboard Adoption",
+      targetValue: "90",
+      currentValue: "60",
+      unit: "%",
+    },
   ]);
 
   // ── 9. Initiatives ───────────────────────────────────────────────────
@@ -455,12 +722,32 @@ async function seed() {
   const providerRows = await db
     .insert(schema.providers)
     .values([
-      { name: "Amazon Web Services", description: "Cloud infrastructure provider", location: "Seattle, WA" },
-      { name: "Microsoft Azure", description: "Cloud platform and services", location: "Redmond, WA" },
+      {
+        name: "Amazon Web Services",
+        description: "Cloud infrastructure provider",
+        location: "Seattle, WA",
+      },
+      {
+        name: "Microsoft Azure",
+        description: "Cloud platform and services",
+        location: "Redmond, WA",
+      },
       { name: "SAP", description: "Enterprise software vendor", location: "Walldorf, Germany" },
-      { name: "Salesforce", description: "CRM and cloud platform vendor", location: "San Francisco, CA" },
-      { name: "Atlassian", description: "Collaboration and project management tools", location: "Sydney, Australia" },
-      { name: "OpenAI", description: "AI research and deployment company", location: "San Francisco, CA" },
+      {
+        name: "Salesforce",
+        description: "CRM and cloud platform vendor",
+        location: "San Francisco, CA",
+      },
+      {
+        name: "Atlassian",
+        description: "Collaboration and project management tools",
+        location: "Sydney, Australia",
+      },
+      {
+        name: "OpenAI",
+        description: "AI research and deployment company",
+        location: "San Francisco, CA",
+      },
     ])
     .returning();
 
@@ -475,12 +762,20 @@ async function seed() {
 
   const [catHosting] = await db
     .insert(schema.techCategories)
-    .values({ name: "Hosting / Operations", description: "Infrastructure and hosting services", level: 1 })
+    .values({
+      name: "Hosting / Operations",
+      description: "Infrastructure and hosting services",
+      level: 1,
+    })
     .returning();
 
   const [catLang] = await db
     .insert(schema.techCategories)
-    .values({ name: "Programming Language", description: "Software development languages", level: 1 })
+    .values({
+      name: "Programming Language",
+      description: "Software development languages",
+      level: 1,
+    })
     .returning();
 
   const [catFramework] = await db
@@ -490,28 +785,56 @@ async function seed() {
 
   const [catTool] = await db
     .insert(schema.techCategories)
-    .values({ name: "Development Tool", description: "Software development and CI/CD tools", level: 1 })
+    .values({
+      name: "Development Tool",
+      description: "Software development and CI/CD tools",
+      level: 1,
+    })
     .returning();
 
   const [catAI] = await db
     .insert(schema.techCategories)
-    .values({ name: "AI / ML", description: "Artificial intelligence and machine learning", level: 1 })
+    .values({
+      name: "AI / ML",
+      description: "Artificial intelligence and machine learning",
+      level: 1,
+    })
     .returning();
 
   // Level 2 under Database
   const [catRelDB] = await db
     .insert(schema.techCategories)
-    .values({ name: "Relational Database", description: "SQL-based relational databases", level: 2, parentId: catDB.id })
+    .values({
+      name: "Relational Database",
+      description: "SQL-based relational databases",
+      level: 2,
+      parentId: catDB.id,
+    })
     .returning();
 
   await db.insert(schema.techCategories).values([
-    { name: "NoSQL Database", description: "Non-relational databases", level: 2, parentId: catDB.id },
+    {
+      name: "NoSQL Database",
+      description: "Non-relational databases",
+      level: 2,
+      parentId: catDB.id,
+    },
   ]);
 
   // Level 2 under Hosting
   await db.insert(schema.techCategories).values([
-    { name: "Public Cloud", description: "Public cloud platforms", level: 2, parentId: catHosting.id },
-    { name: "Container Orchestration", description: "Container management platforms", level: 2, parentId: catHosting.id },
+    {
+      name: "Public Cloud",
+      description: "Public cloud platforms",
+      level: 2,
+      parentId: catHosting.id,
+    },
+    {
+      name: "Container Orchestration",
+      description: "Container management platforms",
+      level: 2,
+      parentId: catHosting.id,
+    },
   ]);
 
   // ── 12. IT Components ────────────────────────────────────────────────
@@ -646,9 +969,21 @@ async function seed() {
   console.log("  → Platforms");
 
   await db.insert(schema.platforms).values([
-    { name: "E-Commerce Platform", description: "B2C e-commerce capabilities and applications", lifecycle: "Active" },
-    { name: "Data Analytics Platform", description: "Enterprise data lake, warehouse, and BI tools", lifecycle: "Phase In" },
-    { name: "Cloud Infrastructure", description: "Core cloud hosting and compute services", lifecycle: "Active" },
+    {
+      name: "E-Commerce Platform",
+      description: "B2C e-commerce capabilities and applications",
+      lifecycle: "Active",
+    },
+    {
+      name: "Data Analytics Platform",
+      description: "Enterprise data lake, warehouse, and BI tools",
+      lifecycle: "Phase In",
+    },
+    {
+      name: "Cloud Infrastructure",
+      description: "Core cloud hosting and compute services",
+      lifecycle: "Active",
+    },
   ]);
 
   // ── 14. Relationships ────────────────────────────────────────────────
@@ -657,35 +992,137 @@ async function seed() {
 
   // Application → Business Capability (supports)
   await db.insert(schema.relationships).values([
-    { sourceType: "Application", sourceId: appRows[0].id, targetType: "BusinessCapability", targetId: l1Caps[2].id, relationshipType: "supports" },
-    { sourceType: "Application", sourceId: appRows[0].id, targetType: "BusinessCapability", targetId: l1Caps[4].id, relationshipType: "supports" },
-    { sourceType: "Application", sourceId: appRows[1].id, targetType: "BusinessCapability", targetId: l1Caps[0].id, relationshipType: "supports" },
-    { sourceType: "Application", sourceId: appRows[1].id, targetType: "BusinessCapability", targetId: l1Caps[7].id, relationshipType: "supports" },
-    { sourceType: "Application", sourceId: appRows[2].id, targetType: "BusinessCapability", targetId: l1Caps[3].id, relationshipType: "supports" },
-    { sourceType: "Application", sourceId: appRows[5].id, targetType: "BusinessCapability", targetId: l1Caps[1].id, relationshipType: "supports" },
+    {
+      sourceType: "Application",
+      sourceId: appRows[0].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[2].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Application",
+      sourceId: appRows[0].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[4].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Application",
+      sourceId: appRows[1].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[0].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Application",
+      sourceId: appRows[1].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[7].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Application",
+      sourceId: appRows[2].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[3].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Application",
+      sourceId: appRows[5].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[1].id,
+      relationshipType: "supports",
+    },
   ]);
 
   // Initiative → Objective (supports)
   await db.insert(schema.relationships).values([
-    { sourceType: "Initiative", sourceId: initRows[0].id, targetType: "StrategicObjective", targetId: objRows[1].id, relationshipType: "supports" },
-    { sourceType: "Initiative", sourceId: initRows[0].id, targetType: "StrategicObjective", targetId: objRows[4].id, relationshipType: "supports" },
-    { sourceType: "Initiative", sourceId: initRows[1].id, targetType: "StrategicObjective", targetId: objRows[2].id, relationshipType: "supports" },
-    { sourceType: "Initiative", sourceId: initRows[2].id, targetType: "StrategicObjective", targetId: objRows[1].id, relationshipType: "supports" },
-    { sourceType: "Initiative", sourceId: initRows[3].id, targetType: "StrategicObjective", targetId: objRows[3].id, relationshipType: "supports" },
-    { sourceType: "Initiative", sourceId: initRows[4].id, targetType: "StrategicObjective", targetId: objRows[5].id, relationshipType: "supports" },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[0].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[1].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[0].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[4].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[1].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[2].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[2].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[1].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[3].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[3].id,
+      relationshipType: "supports",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[4].id,
+      targetType: "StrategicObjective",
+      targetId: objRows[5].id,
+      relationshipType: "supports",
+    },
   ]);
 
   // Initiative → Application (impacts)
   await db.insert(schema.relationships).values([
-    { sourceType: "Initiative", sourceId: initRows[1].id, targetType: "Application", targetId: appRows[1].id, relationshipType: "impacts" },
-    { sourceType: "Initiative", sourceId: initRows[2].id, targetType: "Application", targetId: appRows[4].id, relationshipType: "impacts" },
-    { sourceType: "Initiative", sourceId: initRows[3].id, targetType: "Application", targetId: appRows[8].id, relationshipType: "impacts" },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[1].id,
+      targetType: "Application",
+      targetId: appRows[1].id,
+      relationshipType: "impacts",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[2].id,
+      targetType: "Application",
+      targetId: appRows[4].id,
+      relationshipType: "impacts",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[3].id,
+      targetType: "Application",
+      targetId: appRows[8].id,
+      relationshipType: "impacts",
+    },
   ]);
 
   // Initiative → BusinessCapability (improves)
   await db.insert(schema.relationships).values([
-    { sourceType: "Initiative", sourceId: initRows[0].id, targetType: "BusinessCapability", targetId: l1Caps[5].id, relationshipType: "improves" },
-    { sourceType: "Initiative", sourceId: initRows[1].id, targetType: "BusinessCapability", targetId: l1Caps[0].id, relationshipType: "improves" },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[0].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[5].id,
+      relationshipType: "improves",
+    },
+    {
+      sourceType: "Initiative",
+      sourceId: initRows[1].id,
+      targetType: "BusinessCapability",
+      targetId: l1Caps[0].id,
+      relationshipType: "improves",
+    },
   ]);
 
   // ── 15. Tag Groups and Tags ──────────────────────────────────────────
@@ -702,9 +1139,7 @@ async function seed() {
     .values({ name: "Business Domain", mode: "hybrid" })
     .returning();
 
-  await db
-    .insert(schema.tagGroups)
-    .values({ name: "Custom Labels", mode: "on-the-fly" });
+  await db.insert(schema.tagGroups).values({ name: "Custom Labels", mode: "on-the-fly" });
 
   await db.insert(schema.tags).values([
     { tagGroupId: tgEnv.id, name: "Production", color: "green" },
@@ -721,10 +1156,30 @@ async function seed() {
   console.log("  → Subscriptions");
 
   await db.insert(schema.subscriptions).values([
-    { userId: adminUser.id, factSheetType: "Application", factSheetId: appRows[0].id, role: "Responsible" },
-    { userId: adminUser.id, factSheetType: "Application", factSheetId: appRows[1].id, role: "Accountable" },
-    { userId: memberUser.id, factSheetType: "Application", factSheetId: appRows[0].id, role: "Observer" },
-    { userId: memberUser.id, factSheetType: "BusinessCapability", factSheetId: l1Caps[0].id, role: "Responsible" },
+    {
+      userId: adminUser.id,
+      factSheetType: "Application",
+      factSheetId: appRows[0].id,
+      role: "Responsible",
+    },
+    {
+      userId: adminUser.id,
+      factSheetType: "Application",
+      factSheetId: appRows[1].id,
+      role: "Accountable",
+    },
+    {
+      userId: memberUser.id,
+      factSheetType: "Application",
+      factSheetId: appRows[0].id,
+      role: "Observer",
+    },
+    {
+      userId: memberUser.id,
+      factSheetType: "BusinessCapability",
+      factSheetId: l1Caps[0].id,
+      role: "Responsible",
+    },
   ]);
 
   // ── 17. Audit Entries (sample) ───────────────────────────────────────

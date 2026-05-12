@@ -6,20 +6,8 @@
  * Includes relationship type, direction, and metadata columns.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  jsonb,
-  index,
-  unique,
-} from "drizzle-orm/pg-core";
-import {
-  factSheetTypeEnum,
-  relationshipTypeEnum,
-} from "./enums";
+import { pgTable, uuid, text, timestamp, jsonb, index, unique } from "drizzle-orm/pg-core";
+import { factSheetTypeEnum, relationshipTypeEnum } from "./enums";
 
 // ── Generic Relationship Edge Table ─────────────────────────────────────────
 
@@ -43,9 +31,7 @@ export const relationships = pgTable(
     // Relation-level attributes (e.g. annual cost, CRUD usage, usage type)
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
 
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()

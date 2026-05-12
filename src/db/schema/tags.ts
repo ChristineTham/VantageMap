@@ -6,21 +6,9 @@
  * Custom fields are handled via JSONB columns on each fact sheet table.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  index,
-  unique,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, index, unique } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import {
-  factSheetTypeEnum,
-  tagModeEnum,
-  subscriptionRoleEnum,
-} from "./enums";
+import { factSheetTypeEnum, tagModeEnum, subscriptionRoleEnum } from "./enums";
 
 // ── Tag Group ───────────────────────────────────────────────────────────────
 
@@ -29,9 +17,7 @@ export const tagGroups = pgTable("tag_groups", {
   name: varchar("name", { length: 255 }).notNull().unique(),
   description: text("description"),
   mode: tagModeEnum("mode").notNull().default("on-the-fly"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -53,13 +39,9 @@ export const tags = pgTable(
       .references(() => tagGroups.id, { onDelete: "cascade" }),
     name: varchar("name", { length: 255 }).notNull(),
     color: varchar("color", { length: 50 }), // e.g. hex or Tailwind token
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [
-    unique("uq_tag_group_name").on(table.tagGroupId, table.name),
-  ]
+  (table) => [unique("uq_tag_group_name").on(table.tagGroupId, table.name)]
 );
 
 export const tagsRelations = relations(tags, ({ one, many }) => ({
@@ -81,20 +63,11 @@ export const tagAssignments = pgTable(
       .references(() => tags.id, { onDelete: "cascade" }),
     factSheetType: factSheetTypeEnum("fact_sheet_type").notNull(),
     factSheetId: uuid("fact_sheet_id").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    index("idx_tag_assignments_entity").on(
-      table.factSheetType,
-      table.factSheetId
-    ),
-    unique("uq_tag_assignment").on(
-      table.tagId,
-      table.factSheetType,
-      table.factSheetId
-    ),
+    index("idx_tag_assignments_entity").on(table.factSheetType, table.factSheetId),
+    unique("uq_tag_assignment").on(table.tagId, table.factSheetType, table.factSheetId),
   ]
 );
 
@@ -115,25 +88,15 @@ export const subscriptions = pgTable(
     factSheetType: factSheetTypeEnum("fact_sheet_type").notNull(),
     factSheetId: uuid("fact_sheet_id").notNull(),
     role: subscriptionRoleEnum("role").notNull().default("Observer"),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
   (table) => [
-    index("idx_subscriptions_entity").on(
-      table.factSheetType,
-      table.factSheetId
-    ),
+    index("idx_subscriptions_entity").on(table.factSheetType, table.factSheetId),
     index("idx_subscriptions_user").on(table.userId),
-    unique("uq_subscription").on(
-      table.userId,
-      table.factSheetType,
-      table.factSheetId,
-      table.role
-    ),
+    unique("uq_subscription").on(table.userId, table.factSheetType, table.factSheetId, table.role),
   ]
 );

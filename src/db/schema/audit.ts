@@ -5,19 +5,8 @@
  * Indexed for p95 <1 s retrieval per nfr.md.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  jsonb,
-  index,
-} from "drizzle-orm/pg-core";
-import {
-  auditActionEnum,
-  factSheetTypeEnum,
-} from "./enums";
+import { pgTable, uuid, varchar, text, timestamp, jsonb, index } from "drizzle-orm/pg-core";
+import { auditActionEnum, factSheetTypeEnum } from "./enums";
 
 export const auditEntries = pgTable(
   "audit_entries",
@@ -52,9 +41,7 @@ export const auditEntries = pgTable(
     reason: text("reason"),
 
     // When (immutable — no updatedAt)
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     // p95 <1 s retrieval: filter by target entity

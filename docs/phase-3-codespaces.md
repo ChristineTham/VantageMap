@@ -40,17 +40,17 @@ This runs `drizzle-kit generate` and creates SQL migration files in `./drizzle/`
 
 **Expected tables:**
 
-| File                | Tables                                                    |
-| ------------------- | --------------------------------------------------------- |
-| `enums.ts`          | 25 PostgreSQL enums                                       |
-| `business.ts`       | `business_capabilities`, `organizations`, `business_contexts` |
-| `applications.ts`   | `applications`, `data_objects`, `interfaces`              |
-| `strategy.ts`       | `strategic_objectives`, `kpis`, `initiatives`, `platforms` |
-| `technology.ts`     | `tech_categories`, `it_components`, `providers`           |
-| `relationships.ts`  | `relationships`                                           |
-| `tags.ts`           | `tag_groups`, `tags`, `tag_assignments`, `subscriptions`  |
-| `audit.ts`          | `audit_entries`                                           |
-| `users.ts`          | `users`, `workspaces`, `user_workspace_roles`             |
+| File               | Tables                                                        |
+| ------------------ | ------------------------------------------------------------- |
+| `enums.ts`         | 25 PostgreSQL enums                                           |
+| `business.ts`      | `business_capabilities`, `organizations`, `business_contexts` |
+| `applications.ts`  | `applications`, `data_objects`, `interfaces`                  |
+| `strategy.ts`      | `strategic_objectives`, `kpis`, `initiatives`, `platforms`    |
+| `technology.ts`    | `tech_categories`, `it_components`, `providers`               |
+| `relationships.ts` | `relationships`                                               |
+| `tags.ts`          | `tag_groups`, `tags`, `tag_assignments`, `subscriptions`      |
+| `audit.ts`         | `audit_entries`                                               |
+| `users.ts`         | `users`, `workspaces`, `user_workspace_roles`                 |
 
 ### 4. Apply Migration to Database
 
@@ -146,24 +146,24 @@ Ensure the Next.js build succeeds with the new schema files.
 
 ### New files (Step 3.1–3.9):
 
-| File                           | Phase Step | Description                                  |
-| ------------------------------ | ---------- | -------------------------------------------- |
-| `src/db/schema/enums.ts`       | 3.1–3.8    | All PostgreSQL enums (shared)                |
-| `src/db/schema/business.ts`    | 3.1        | BusinessCapability, Organization, BusinessContext |
-| `src/db/schema/applications.ts`| 3.2        | Application, DataObject, Interface           |
-| `src/db/schema/strategy.ts`    | 3.3        | StrategicObjective, KPI, Initiative, Platform |
-| `src/db/schema/technology.ts`  | 3.4        | TechCategory, ITComponent, Provider          |
-| `src/db/schema/relationships.ts`| 3.5       | Generic typed edge table                     |
-| `src/db/schema/tags.ts`        | 3.6        | TagGroup, Tag, TagAssignment, Subscription   |
-| `src/db/schema/audit.ts`       | 3.7        | AuditEntry (immutable log)                   |
-| `src/db/schema/users.ts`       | 3.8        | User, Workspace, UserWorkspaceRole           |
-| `src/db/seed.ts`               | 3.9        | Dev seed script with sample data             |
+| File                             | Phase Step | Description                                       |
+| -------------------------------- | ---------- | ------------------------------------------------- |
+| `src/db/schema/enums.ts`         | 3.1–3.8    | All PostgreSQL enums (shared)                     |
+| `src/db/schema/business.ts`      | 3.1        | BusinessCapability, Organization, BusinessContext |
+| `src/db/schema/applications.ts`  | 3.2        | Application, DataObject, Interface                |
+| `src/db/schema/strategy.ts`      | 3.3        | StrategicObjective, KPI, Initiative, Platform     |
+| `src/db/schema/technology.ts`    | 3.4        | TechCategory, ITComponent, Provider               |
+| `src/db/schema/relationships.ts` | 3.5        | Generic typed edge table                          |
+| `src/db/schema/tags.ts`          | 3.6        | TagGroup, Tag, TagAssignment, Subscription        |
+| `src/db/schema/audit.ts`         | 3.7        | AuditEntry (immutable log)                        |
+| `src/db/schema/users.ts`         | 3.8        | User, Workspace, UserWorkspaceRole                |
+| `src/db/seed.ts`                 | 3.9        | Dev seed script with sample data                  |
 
 ### Modified files:
 
-| File                           | Change                                        |
-| ------------------------------ | --------------------------------------------- |
-| `src/db/schema/index.ts`       | Updated barrel to re-export all schema files  |
+| File                     | Change                                       |
+| ------------------------ | -------------------------------------------- |
+| `src/db/schema/index.ts` | Updated barrel to re-export all schema files |
 
 ## Troubleshooting
 

@@ -75,9 +75,21 @@ Scaffold the project and establish the development baseline. All steps follow [A
 
 ---
 
-### Phase 3 — Database Schema and Core Domain Models ⏳
+### Phase 3 — Database Schema and Core Domain Models ✅
 
-Implement the canonical data model from [MODEL.md](MODEL.md) as database tables with typed ORM models. Each step creates the tables, migration, and TypeScript types for one bounded context. **Status: Schema files and seed script written. Pending: migration generation, database push, seed execution, and verification in Codespaces. See [phase-3-codespaces.md](phase-3-codespaces.md).**
+Implement the canonical data model from [MODEL.md](MODEL.md) as database tables with typed ORM models. Each step creates the tables, migration, and TypeScript types for one bounded context. **Status: Complete.**
+
+**Decisions summary:**
+
+- 22 tables across 9 schema files (`enums.ts`, `business.ts`, `applications.ts`, `strategy.ts`, `technology.ts`, `relationships.ts`, `tags.ts`, `audit.ts`, `users.ts`)
+- 28 PostgreSQL enums for all domain-specific value sets
+- All tables use `uuid` primary keys, `created_at`/`updated_at` timestamps, `quality_seal` and `custom_fields jsonb` for governance
+- Typed edge table (`relationships`) with 35-value `relationship_type` enum; indexed on source, target, and type
+- `audit_entries` is append-only (no `updated_at`); 5 indexes for p95 &lt;1 s retrieval requirement from [nfr.md](phase-0/nfr.md)
+- `subscriptions` and `tag_assignments` use unique constraints to prevent duplicates
+- User/workspace tables are separate from Better Auth session tables (Better Auth adds its own tables in Phase 10)
+- Seed script (`src/db/seed.ts`) is idempotent via `TRUNCATE … CASCADE`; populates all 22 tables
+- Migration file generated at `drizzle/0000_wakeful_iron_patriot.sql`; schema pushed to Neon free-tier database
 
 | Step | Title                                  | Scope                                                                                                                                                                                                                                                                                                    | Depends on |
 | ---- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -394,29 +406,29 @@ Project bootstrap scaffolded and all pipelines verified green. **Status: Complet
 
 ### Created / Modified Files
 
-| File | Purpose |
-| ---- | ------- |
-| `package.json` | All runtime and dev dependencies; `dev`, `build`, `lint`, `format`, `type-check`, `db:*`, `test` scripts |
-| `tsconfig.json` | TypeScript strict mode; `@/` → `src/` path alias |
-| `next.config.ts` | Next.js 16 config |
-| `postcss.config.mjs` | `@tailwindcss/postcss` plugin |
-| `eslint.config.mjs` | ESLint 9 with core-web-vitals + TypeScript + prettier conflict disable |
-| `.prettierrc` / `.prettierignore` | Prettier 3; 100-char width; ignores `.agents/`, `drizzle/`, generated files |
-| `.npmrc` | `legacy-peer-deps=true` (resolves better-auth Svelte peer conflict) |
-| `.env.example` | Documented stubs for `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` |
-| `.vscode/extensions.json` | Recommended VS Code extensions for the project |
-| `components.json` | shadcn/ui config pointing at `src/app/globals.css` and `@/components/ui` |
-| `drizzle.config.ts` | Drizzle Kit config; dialect `postgresql`; migrations output `./drizzle/` |
-| `vitest.config.ts` | Vitest 3 with React plugin and tsconfig paths |
-| `src/app/globals.css` | Tailwind v4 `@import` + all 16 Rosely CSS variables + `@theme inline {}` tokens + shadcn/ui semantic mappings |
-| `src/app/layout.tsx` | Root layout with Noto Sans / Noto Serif / Noto Sans Mono fonts via `next/font/google` |
-| `src/app/page.tsx` | Placeholder home page (full Dashboard implemented in Phase 8) |
-| `src/env.ts` | `@t3-oss/env-nextjs` + Zod env validation; `SKIP_ENV_VALIDATION` flag for CI |
-| `src/lib/utils.ts` | `cn()` helper (clsx + tailwind-merge) for shadcn/ui |
-| `src/db/index.ts` | Neon serverless HTTP driver + `drizzle()` export |
-| `src/db/schema/index.ts` | Barrel for Phase 3 entity table modules |
-| `src/__tests__/setup.test.ts` | Smoke test verifying Vitest pipeline |
-| `.github/workflows/ci.yml` | GitHub Actions CI: type-check → lint → format → test → build |
+| File                              | Purpose                                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `package.json`                    | All runtime and dev dependencies; `dev`, `build`, `lint`, `format`, `type-check`, `db:*`, `test` scripts      |
+| `tsconfig.json`                   | TypeScript strict mode; `@/` → `src/` path alias                                                              |
+| `next.config.ts`                  | Next.js 16 config                                                                                             |
+| `postcss.config.mjs`              | `@tailwindcss/postcss` plugin                                                                                 |
+| `eslint.config.mjs`               | ESLint 9 with core-web-vitals + TypeScript + prettier conflict disable                                        |
+| `.prettierrc` / `.prettierignore` | Prettier 3; 100-char width; ignores `.agents/`, `drizzle/`, generated files                                   |
+| `.npmrc`                          | `legacy-peer-deps=true` (resolves better-auth Svelte peer conflict)                                           |
+| `.env.example`                    | Documented stubs for `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`                                  |
+| `.vscode/extensions.json`         | Recommended VS Code extensions for the project                                                                |
+| `components.json`                 | shadcn/ui config pointing at `src/app/globals.css` and `@/components/ui`                                      |
+| `drizzle.config.ts`               | Drizzle Kit config; dialect `postgresql`; migrations output `./drizzle/`                                      |
+| `vitest.config.ts`                | Vitest 3 with React plugin and tsconfig paths                                                                 |
+| `src/app/globals.css`             | Tailwind v4 `@import` + all 16 Rosely CSS variables + `@theme inline {}` tokens + shadcn/ui semantic mappings |
+| `src/app/layout.tsx`              | Root layout with Noto Sans / Noto Serif / Noto Sans Mono fonts via `next/font/google`                         |
+| `src/app/page.tsx`                | Placeholder home page (full Dashboard implemented in Phase 8)                                                 |
+| `src/env.ts`                      | `@t3-oss/env-nextjs` + Zod env validation; `SKIP_ENV_VALIDATION` flag for CI                                  |
+| `src/lib/utils.ts`                | `cn()` helper (clsx + tailwind-merge) for shadcn/ui                                                           |
+| `src/db/index.ts`                 | Neon serverless HTTP driver + `drizzle()` export                                                              |
+| `src/db/schema/index.ts`          | Barrel for Phase 3 entity table modules                                                                       |
+| `src/__tests__/setup.test.ts`     | Smoke test verifying Vitest pipeline                                                                          |
+| `.github/workflows/ci.yml`        | GitHub Actions CI: type-check → lint → format → test → build                                                  |
 
 ### Pipeline Verification (all green)
 
@@ -428,6 +440,66 @@ npm test             ✓  (2 tests passed)
 npm run build        ✓  (Next.js 16.2.6)
 ```
 
+---
+
+## Phase 3 Execution Status ✅
+
+Database schema scaffolded, migration generated, pushed to Neon, and seed data loaded. **Status: Complete.**
+
+### Created / Modified Files
+
+| File                                    | Step    | Description                                                                                                                                     |
+| --------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/db/schema/enums.ts`                | 3.1–3.8 | 28 PostgreSQL enums shared across all bounded contexts                                                                                          |
+| `src/db/schema/business.ts`             | 3.1     | `business_capabilities` (hierarchical), `organizations`, `business_contexts`                                                                    |
+| `src/db/schema/applications.ts`         | 3.2     | `applications`, `data_objects`, `interfaces`                                                                                                    |
+| `src/db/schema/strategy.ts`             | 3.3     | `strategic_objectives`, `kpis`, `initiatives`, `platforms`                                                                                      |
+| `src/db/schema/technology.ts`           | 3.4     | `tech_categories`, `it_components`, `providers`                                                                                                 |
+| `src/db/schema/relationships.ts`        | 3.5     | `relationships` — generic typed edge table with 3 indexes                                                                                       |
+| `src/db/schema/tags.ts`                 | 3.6     | `tag_groups`, `tags`, `tag_assignments`, `subscriptions` with unique constraints                                                                |
+| `src/db/schema/audit.ts`                | 3.7     | `audit_entries` — append-only with 5 indexes for fast retrieval                                                                                 |
+| `src/db/schema/users.ts`                | 3.8     | `users`, `workspaces`, `user_workspace_roles` with FK cascade                                                                                   |
+| `src/db/schema/index.ts`                | 3.1–3.8 | Barrel re-exporting all schema modules                                                                                                          |
+| `src/db/seed.ts`                        | 3.9     | Idempotent seed: 2 users, 19 capabilities, 10 apps, 6 objectives, 8 KPIs, 6 initiatives, 12 IT components, 7 tags, relationships, audit entries |
+| `drizzle/0000_wakeful_iron_patriot.sql` | 3.1–3.8 | Generated SQL migration (22 tables, all enums, indexes, FKs)                                                                                    |
+
+### Pipeline Verification (all green)
+
+```
+npm run type-check   ✓
+npm run lint         ✓
+npm run format:check ✓
+npm test             ✓  (2 tests passed)
+npm run build        ✓  (Next.js 16.2.6)
+npm run db:generate  ✓  (22 tables, migration file generated)
+npm run db:migrate   ✓  (schema applied to Neon database)
+npm run db:seed      ✓  (all 17 data sections seeded)
+```
+
+### Neon Database
+
+| Field     | Value                                                         |
+| --------- | ------------------------------------------------------------- |
+| Claim URL | <https://neon.new/claim/019e1ae7-0ba4-7175-8692-14841e3d3485> |
+| Expires   | 2026-05-15T06:36:50Z (72 hours; permanent once claimed)       |
+| Endpoint  | `ep-sweet-…c-3.us-east-2.aws.neon.tech`                       |
+| Region    | US East 2 (AWS)                                               |
+
+**Claim steps:**
+
+1. Open <https://neon.new/claim/019e1ae7-0ba4-7175-8692-14841e3d3485> in a browser.
+2. Sign in with GitHub, Google, or email — no credit card required.
+3. The database transfers to your Neon account and never expires.
+4. In the Neon console, note the **Connection string** for your project.
+5. Update `.env.local`: replace `DATABASE_URL` with the string from the Neon console.
+6. Run `npm run db:seed` to re-populate the new permanent database.
+
+**If the claim link has expired (>72 h):**
+
+1. Create a free project at <https://console.neon.tech>.
+2. Copy the connection string into `.env.local` as `DATABASE_URL`.
+3. Run `npm run db:migrate` then `npm run db:seed`.
+
 ### Next Step
 
-Begin **Phase 3 — Database Schema and Core Domain Models**, starting with steps 3.1–3.4 in parallel (each is independent), then 3.5–3.6, then 3.7–3.8, and finally 3.9 (seed data).
+Begin **Phase 4 — Backend API Foundation**, starting with steps 4.1 and 4.5 (independent utilities), then 4.2 (auth middleware, depends on 3.8), then 4.3–4.4 (RBAC and audit, depend on 4.2), then 4.6 (feature flags).

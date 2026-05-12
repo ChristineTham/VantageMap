@@ -20,10 +20,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import {
-  userStatusEnum,
-  standardRoleEnum,
-} from "./enums";
+import { userStatusEnum, standardRoleEnum } from "./enums";
 
 // ── User (extends Better Auth user table) ───────────────────────────────────
 
@@ -34,9 +31,7 @@ export const users = pgTable("users", {
   avatarUrl: varchar("avatar_url", { length: 2048 }),
   status: userStatusEnum("status").notNull().default("Invited"),
   emailVerified: boolean("email_verified").notNull().default(false),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -54,9 +49,7 @@ export const workspaces = pgTable("workspaces", {
   name: varchar("name", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 100 }).notNull().unique(),
   description: text("description"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -80,9 +73,7 @@ export const userWorkspaceRoles = pgTable(
       .notNull()
       .references(() => workspaces.id, { onDelete: "cascade" }),
     role: standardRoleEnum("role").notNull().default("Viewer"),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()
@@ -95,16 +86,13 @@ export const userWorkspaceRoles = pgTable(
   ]
 );
 
-export const userWorkspaceRolesRelations = relations(
-  userWorkspaceRoles,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [userWorkspaceRoles.userId],
-      references: [users.id],
-    }),
-    workspace: one(workspaces, {
-      fields: [userWorkspaceRoles.workspaceId],
-      references: [workspaces.id],
-    }),
-  })
-);
+export const userWorkspaceRolesRelations = relations(userWorkspaceRoles, ({ one }) => ({
+  user: one(users, {
+    fields: [userWorkspaceRoles.userId],
+    references: [users.id],
+  }),
+  workspace: one(workspaces, {
+    fields: [userWorkspaceRoles.workspaceId],
+    references: [workspaces.id],
+  }),
+}));

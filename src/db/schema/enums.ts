@@ -55,11 +55,7 @@ export const applicationSubtypeEnum = pgEnum("application_subtype", [
   "AI Agent",
 ]);
 
-export const fitScoreEnum = pgEnum("fit_score", [
-  "Insufficient",
-  "Adequate",
-  "Full",
-]);
+export const fitScoreEnum = pgEnum("fit_score", ["Insufficient", "Adequate", "Full"]);
 
 export const businessCriticalityEnum = pgEnum("business_criticality", [
   "Administrative Service",
@@ -126,12 +122,7 @@ export const strategicPerspectiveEnum = pgEnum("strategic_perspective", [
 
 // ── Technology ──────────────────────────────────────────────────────────────
 
-export const techRingEnum = pgEnum("tech_ring", [
-  "Adopt",
-  "Trial",
-  "Assess",
-  "Hold",
-]);
+export const techRingEnum = pgEnum("tech_ring", ["Adopt", "Trial", "Assess", "Hold"]);
 
 export const techQuadrantEnum = pgEnum("tech_quadrant", [
   "Techniques",
@@ -158,11 +149,7 @@ export const technicalStandardEnum = pgEnum("technical_standard", [
 
 // ── Tags ────────────────────────────────────────────────────────────────────
 
-export const tagModeEnum = pgEnum("tag_mode", [
-  "on-the-fly",
-  "hybrid",
-  "predefined-only",
-]);
+export const tagModeEnum = pgEnum("tag_mode", ["on-the-fly", "hybrid", "predefined-only"]);
 
 // ── Subscriptions ───────────────────────────────────────────────────────────
 
@@ -174,11 +161,7 @@ export const subscriptionRoleEnum = pgEnum("subscription_role", [
 
 // ── Audit ───────────────────────────────────────────────────────────────────
 
-export const auditActionEnum = pgEnum("audit_action", [
-  "create",
-  "update",
-  "delete",
-]);
+export const auditActionEnum = pgEnum("audit_action", ["create", "update", "delete"]);
 
 // ── User ────────────────────────────────────────────────────────────────────
 
@@ -190,11 +173,7 @@ export const userStatusEnum = pgEnum("user_status", [
   "Archived",
 ]);
 
-export const standardRoleEnum = pgEnum("standard_role", [
-  "Viewer",
-  "Member",
-  "Admin",
-]);
+export const standardRoleEnum = pgEnum("standard_role", ["Viewer", "Member", "Admin"]);
 
 // ── Quality Seal ────────────────────────────────────────────────────────────
 

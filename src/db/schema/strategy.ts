@@ -5,16 +5,7 @@
  * Includes Balanced Scorecard perspectives, initiative subtypes, and KPI sub-entities.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  date,
-  numeric,
-  jsonb,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, date, numeric, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import {
   lifecyclePhaseEnum,
@@ -38,29 +29,24 @@ export const strategicObjectives = pgTable("strategic_objectives", {
   qualitySeal: qualitySealEnum("quality_seal").default("Draft"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const strategicObjectivesRelations = relations(
-  strategicObjectives,
-  ({ one, many }) => ({
-    parent: one(strategicObjectives, {
-      fields: [strategicObjectives.parentId],
-      references: [strategicObjectives.id],
-      relationName: "objective_hierarchy",
-    }),
-    children: many(strategicObjectives, {
-      relationName: "objective_hierarchy",
-    }),
-    kpis: many(kpis),
-  })
-);
+export const strategicObjectivesRelations = relations(strategicObjectives, ({ one, many }) => ({
+  parent: one(strategicObjectives, {
+    fields: [strategicObjectives.parentId],
+    references: [strategicObjectives.id],
+    relationName: "objective_hierarchy",
+  }),
+  children: many(strategicObjectives, {
+    relationName: "objective_hierarchy",
+  }),
+  kpis: many(kpis),
+}));
 
 // ── KPI (sub-entity of Strategic Objective) ─────────────────────────────────
 
@@ -74,9 +60,7 @@ export const kpis = pgTable("kpis", {
   targetValue: numeric("target_value"),
   currentValue: numeric("current_value"),
   unit: varchar("unit", { length: 50 }), // e.g. "%", "$", "count"
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -107,28 +91,23 @@ export const initiatives = pgTable("initiatives", {
   qualitySeal: qualitySealEnum("quality_seal").default("Draft"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const initiativesRelations = relations(
-  initiatives,
-  ({ one, many }) => ({
-    parent: one(initiatives, {
-      fields: [initiatives.parentId],
-      references: [initiatives.id],
-      relationName: "initiative_hierarchy",
-    }),
-    children: many(initiatives, {
-      relationName: "initiative_hierarchy",
-    }),
-  })
-);
+export const initiativesRelations = relations(initiatives, ({ one, many }) => ({
+  parent: one(initiatives, {
+    fields: [initiatives.parentId],
+    references: [initiatives.id],
+    relationName: "initiative_hierarchy",
+  }),
+  children: many(initiatives, {
+    relationName: "initiative_hierarchy",
+  }),
+}));
 
 // ── Platform ────────────────────────────────────────────────────────────────
 
@@ -141,9 +120,7 @@ export const platforms = pgTable("platforms", {
   qualitySeal: qualitySealEnum("quality_seal").default("Draft"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()

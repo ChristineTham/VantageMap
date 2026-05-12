@@ -5,16 +5,7 @@
  * Includes ring/quadrant for radar placement, lifecycle, end-of-life dates.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  date,
-  jsonb,
-  integer,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, date, jsonb, integer } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import {
   lifecyclePhaseEnum,
@@ -36,29 +27,24 @@ export const techCategories = pgTable("tech_categories", {
   parentId: uuid("parent_id"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const techCategoriesRelations = relations(
-  techCategories,
-  ({ one, many }) => ({
-    parent: one(techCategories, {
-      fields: [techCategories.parentId],
-      references: [techCategories.id],
-      relationName: "tech_category_hierarchy",
-    }),
-    children: many(techCategories, {
-      relationName: "tech_category_hierarchy",
-    }),
-    itComponents: many(itComponents),
-  })
-);
+export const techCategoriesRelations = relations(techCategories, ({ one, many }) => ({
+  parent: one(techCategories, {
+    fields: [techCategories.parentId],
+    references: [techCategories.id],
+    relationName: "tech_category_hierarchy",
+  }),
+  children: many(techCategories, {
+    relationName: "tech_category_hierarchy",
+  }),
+  itComponents: many(itComponents),
+}));
 
 // ── IT Component ────────────────────────────────────────────────────────────
 
@@ -86,36 +72,31 @@ export const itComponents = pgTable("it_components", {
   parentId: uuid("parent_id"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const itComponentsRelations = relations(
-  itComponents,
-  ({ one, many }) => ({
-    techCategory: one(techCategories, {
-      fields: [itComponents.techCategoryId],
-      references: [techCategories.id],
-    }),
-    provider: one(providers, {
-      fields: [itComponents.providerId],
-      references: [providers.id],
-    }),
-    parent: one(itComponents, {
-      fields: [itComponents.parentId],
-      references: [itComponents.id],
-      relationName: "it_component_hierarchy",
-    }),
-    children: many(itComponents, {
-      relationName: "it_component_hierarchy",
-    }),
-  })
-);
+export const itComponentsRelations = relations(itComponents, ({ one, many }) => ({
+  techCategory: one(techCategories, {
+    fields: [itComponents.techCategoryId],
+    references: [techCategories.id],
+  }),
+  provider: one(providers, {
+    fields: [itComponents.providerId],
+    references: [providers.id],
+  }),
+  parent: one(itComponents, {
+    fields: [itComponents.parentId],
+    references: [itComponents.id],
+    relationName: "it_component_hierarchy",
+  }),
+  children: many(itComponents, {
+    relationName: "it_component_hierarchy",
+  }),
+}));
 
 // ── Provider ────────────────────────────────────────────────────────────────
 
@@ -130,9 +111,7 @@ export const providers = pgTable("providers", {
   contactInfo: text("contact_info"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()

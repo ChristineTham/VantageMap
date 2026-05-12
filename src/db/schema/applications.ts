@@ -5,15 +5,7 @@
  * Includes lifecycle, fit scores, criticality, TIME/6R classification, subtypes.
  */
 
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
-  jsonb,
-  integer,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import {
   lifecyclePhaseEnum,
@@ -47,28 +39,23 @@ export const applications = pgTable("applications", {
   parentId: uuid("parent_id"), // suite → module hierarchy
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const applicationsRelations = relations(
-  applications,
-  ({ one, many }) => ({
-    parent: one(applications, {
-      fields: [applications.parentId],
-      references: [applications.id],
-      relationName: "application_hierarchy",
-    }),
-    children: many(applications, {
-      relationName: "application_hierarchy",
-    }),
-  })
-);
+export const applicationsRelations = relations(applications, ({ one, many }) => ({
+  parent: one(applications, {
+    fields: [applications.parentId],
+    references: [applications.id],
+    relationName: "application_hierarchy",
+  }),
+  children: many(applications, {
+    relationName: "application_hierarchy",
+  }),
+}));
 
 // ── Data Object ─────────────────────────────────────────────────────────────
 
@@ -83,28 +70,23 @@ export const dataObjects = pgTable("data_objects", {
   qualitySeal: qualitySealEnum("quality_seal").default("Draft"),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const dataObjectsRelations = relations(
-  dataObjects,
-  ({ one, many }) => ({
-    parent: one(dataObjects, {
-      fields: [dataObjects.parentId],
-      references: [dataObjects.id],
-      relationName: "data_object_hierarchy",
-    }),
-    children: many(dataObjects, {
-      relationName: "data_object_hierarchy",
-    }),
-  })
-);
+export const dataObjectsRelations = relations(dataObjects, ({ one, many }) => ({
+  parent: one(dataObjects, {
+    fields: [dataObjects.parentId],
+    references: [dataObjects.id],
+    relationName: "data_object_hierarchy",
+  }),
+  children: many(dataObjects, {
+    relationName: "data_object_hierarchy",
+  }),
+}));
 
 // ── Interface ───────────────────────────────────────────────────────────────
 
@@ -124,9 +106,7 @@ export const interfaces = pgTable("interfaces", {
   authProtocol: varchar("auth_protocol", { length: 100 }),
   owner: varchar("owner", { length: 255 }),
   customFields: jsonb("custom_fields").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
