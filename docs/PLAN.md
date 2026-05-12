@@ -75,9 +75,9 @@ Scaffold the project and establish the development baseline. All steps follow [A
 
 ---
 
-### Phase 3 — Database Schema and Core Domain Models
+### Phase 3 — Database Schema and Core Domain Models ⏳
 
-Implement the canonical data model from [MODEL.md](MODEL.md) as database tables with typed ORM models. Each step creates the tables, migration, and TypeScript types for one bounded context.
+Implement the canonical data model from [MODEL.md](MODEL.md) as database tables with typed ORM models. Each step creates the tables, migration, and TypeScript types for one bounded context. **Status: Schema files and seed script written. Pending: migration generation, database push, seed execution, and verification in Codespaces. See [phase-3-codespaces.md](phase-3-codespaces.md).**
 
 | Step | Title                                  | Scope                                                                                                                                                                                                                                                                                                    | Depends on |
 | ---- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
