@@ -1,0 +1,37 @@
+{
+  "recommendations": [
+    // ── TypeScript / JavaScript ──────────────────────────────────────────────
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // ── Next.js / React ──────────────────────────────────────────────────────
+    "bradlc.vscode-tailwindcss",
+
+    // ── Tailwind CSS ─────────────────────────────────────────────────────────
+    "csstools.postcss",
+
+    // ── PostgreSQL / Drizzle ─────────────────────────────────────────────────
+    "ckolkman.vscode-postgres",
+    "42crunch.vscode-openapi",
+
+    // ── Git / GitHub ─────────────────────────────────────────────────────────
+    "github.vscode-pull-request-github",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // ── Editor productivity ──────────────────────────────────────────────────
+    "editorconfig.editorconfig",
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+
+    // ── File / syntax support ────────────────────────────────────────────────
+    "redhat.vscode-yaml",
+    "tamasfe.even-better-toml",
+    "mikestead.dotenv",
+
+    // ── Docker (dev container tooling) ───────────────────────────────────────
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers"
+  ]
+}

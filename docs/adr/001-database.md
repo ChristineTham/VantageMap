@@ -3,11 +3,12 @@
 **Status:** Accepted  
 **Date:** 2026-05-12  
 **Revised:** 2026-05-12 — evaluated Neo4j and CosmosDB Gremlin; decision unchanged  
-**Decision:** PostgreSQL 16  
+**Decision:** PostgreSQL 16
 
 ## Context
 
 VantageMap requires a database that supports:
+
 - ACID transactions for entity lifecycle management, audit logging, and RBAC enforcement
 - JSONB columns for custom fields and tenant-specific schema extensions
 - Hierarchical queries for business capability trees and organization structures
@@ -21,95 +22,95 @@ VantageMap requires a database that supports:
 
 ### 1. PostgreSQL 16
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | PostgreSQL License (OSI-approved, permissive) |
-| ACID transactions | Full ACID with serializable isolation |
-| JSONB support | Native JSONB with GIN indexing, jsonpath queries |
-| Hierarchical queries | Recursive CTEs, ltree extension |
-| Full-text search | Built-in tsvector/tsquery with ranking |
-| Free tier hosting | Neon (0.5 GB, autoscale-to-zero), Supabase (500 MB, 50K rows) |
-| Azure production | Azure Database for PostgreSQL Flexible Server |
-| TypeScript ecosystem | Best-in-class ORM support (Prisma, Drizzle, Kysely) |
-| AI agent familiarity | Extremely high — most common DB in tutorials and docs |
+| Criterion            | Assessment                                                    |
+| -------------------- | ------------------------------------------------------------- |
+| License              | PostgreSQL License (OSI-approved, permissive)                 |
+| ACID transactions    | Full ACID with serializable isolation                         |
+| JSONB support        | Native JSONB with GIN indexing, jsonpath queries              |
+| Hierarchical queries | Recursive CTEs, ltree extension                               |
+| Full-text search     | Built-in tsvector/tsquery with ranking                        |
+| Free tier hosting    | Neon (0.5 GB, autoscale-to-zero), Supabase (500 MB, 50K rows) |
+| Azure production     | Azure Database for PostgreSQL Flexible Server                 |
+| TypeScript ecosystem | Best-in-class ORM support (Prisma, Drizzle, Kysely)           |
+| AI agent familiarity | Extremely high — most common DB in tutorials and docs         |
 
 ### 2. MySQL 8
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | GPL v2 (with FOSS exception) |
-| ACID transactions | Full ACID with InnoDB |
-| JSONB support | JSON type (less mature than PostgreSQL JSONB, no GIN) |
-| Hierarchical queries | Recursive CTEs (since 8.0) |
-| Full-text search | InnoDB full-text indexes (less flexible than PostgreSQL) |
-| Free tier hosting | PlanetScale removed free tier; limited free options |
-| Azure production | Azure Database for MySQL Flexible Server |
-| TypeScript ecosystem | Good ORM support but fewer serverless adapters |
-| AI agent familiarity | High, but PostgreSQL is more common in modern stacks |
+| Criterion            | Assessment                                               |
+| -------------------- | -------------------------------------------------------- |
+| License              | GPL v2 (with FOSS exception)                             |
+| ACID transactions    | Full ACID with InnoDB                                    |
+| JSONB support        | JSON type (less mature than PostgreSQL JSONB, no GIN)    |
+| Hierarchical queries | Recursive CTEs (since 8.0)                               |
+| Full-text search     | InnoDB full-text indexes (less flexible than PostgreSQL) |
+| Free tier hosting    | PlanetScale removed free tier; limited free options      |
+| Azure production     | Azure Database for MySQL Flexible Server                 |
+| TypeScript ecosystem | Good ORM support but fewer serverless adapters           |
+| AI agent familiarity | High, but PostgreSQL is more common in modern stacks     |
 
 ### 3. CockroachDB
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Business Source License (BSL) — **not open-source** |
-| ACID transactions | Distributed ACID |
-| JSONB support | PostgreSQL-compatible JSONB |
-| Hierarchical queries | Recursive CTEs |
-| Full-text search | Limited (trigram indexes only) |
-| Free tier hosting | CockroachDB Serverless (5 GB, 50M RUs) |
-| Azure production | CockroachDB Dedicated on Azure |
-| Complexity | Distributed architecture adds operational overhead unnecessary at MVP scale |
-| AI agent familiarity | Low — niche tool, fewer tutorials |
+| Criterion            | Assessment                                                                  |
+| -------------------- | --------------------------------------------------------------------------- |
+| License              | Business Source License (BSL) — **not open-source**                         |
+| ACID transactions    | Distributed ACID                                                            |
+| JSONB support        | PostgreSQL-compatible JSONB                                                 |
+| Hierarchical queries | Recursive CTEs                                                              |
+| Full-text search     | Limited (trigram indexes only)                                              |
+| Free tier hosting    | CockroachDB Serverless (5 GB, 50M RUs)                                      |
+| Azure production     | CockroachDB Dedicated on Azure                                              |
+| Complexity           | Distributed architecture adds operational overhead unnecessary at MVP scale |
+| AI agent familiarity | Low — niche tool, fewer tutorials                                           |
 
 ### 4. MongoDB 7
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Server Side Public License (SSPL) — **not OSI-approved** |
-| ACID transactions | Multi-document ACID (since 4.0, with caveats) |
-| JSONB support | Native document model |
-| Hierarchical queries | $graphLookup, aggregation pipeline |
-| Full-text search | Atlas Search (requires Atlas) |
-| Free tier hosting | Atlas M0 (512 MB) |
-| Azure production | MongoDB Atlas on Azure |
+| Criterion             | Assessment                                                               |
+| --------------------- | ------------------------------------------------------------------------ |
+| License               | Server Side Public License (SSPL) — **not OSI-approved**                 |
+| ACID transactions     | Multi-document ACID (since 4.0, with caveats)                            |
+| JSONB support         | Native document model                                                    |
+| Hierarchical queries  | $graphLookup, aggregation pipeline                                       |
+| Full-text search      | Atlas Search (requires Atlas)                                            |
+| Free tier hosting     | Atlas M0 (512 MB)                                                        |
+| Azure production      | MongoDB Atlas on Azure                                                   |
 | Referential integrity | **No foreign keys** — relationships must be enforced in application code |
-| AI agent familiarity | High, but worse fit for relational domain models |
+| AI agent familiarity  | High, but worse fit for relational domain models                         |
 
 **Why MongoDB is disqualified:** VantageMap's domain is fundamentally relational — typed relationships between fact sheets, referential integrity for audit trails, and RBAC enforcement all benefit from relational constraints. MongoDB's lack of foreign keys would require extensive application-level validation that increases bug surface and vibe-coding complexity.
 
 ### 5. Neo4j (Graph Database)
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Community: GPL v3 (**copyleft**); Enterprise: proprietary |
-| ACID transactions | Full ACID on single-node; distributed only on Enterprise |
-| JSONB support | Nodes/edges carry arbitrary properties natively |
-| Hierarchical queries | Native — graph traversal is the core paradigm |
-| Full-text search | Lucene-based indexes (manual configuration required) |
-| Free tier hosting | AuraDB Free: $0, but **limited node/relationship counts**, no RBAC, no backups, community support only |
-| Azure production | Neo4j on Azure Marketplace (self-managed) or AuraDB Professional ($65/GB/month min) |
-| TypeScript ecosystem | `neo4j-driver` (Apache 2.0) — **no ORM**, all queries are Cypher strings |
-| AI agent familiarity | Low — Cypher query generation has high error rates vs SQL |
-| Relationship traversal | Excellent for 5+ hop traversals and graph algorithms |
-| RBAC | Only on AuraDB Business Critical tier ($146/GB/month) |
+| Criterion              | Assessment                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ |
+| License                | Community: GPL v3 (**copyleft**); Enterprise: proprietary                                              |
+| ACID transactions      | Full ACID on single-node; distributed only on Enterprise                                               |
+| JSONB support          | Nodes/edges carry arbitrary properties natively                                                        |
+| Hierarchical queries   | Native — graph traversal is the core paradigm                                                          |
+| Full-text search       | Lucene-based indexes (manual configuration required)                                                   |
+| Free tier hosting      | AuraDB Free: $0, but **limited node/relationship counts**, no RBAC, no backups, community support only |
+| Azure production       | Neo4j on Azure Marketplace (self-managed) or AuraDB Professional ($65/GB/month min)                    |
+| TypeScript ecosystem   | `neo4j-driver` (Apache 2.0) — **no ORM**, all queries are Cypher strings                               |
+| AI agent familiarity   | Low — Cypher query generation has high error rates vs SQL                                              |
+| Relationship traversal | Excellent for 5+ hop traversals and graph algorithms                                                   |
+| RBAC                   | Only on AuraDB Business Critical tier ($146/GB/month)                                                  |
 
 **Why Neo4j is not selected:** See "Graph Database Evaluation" below.
 
 ### 6. Azure Cosmos DB (Gremlin API)
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | **Proprietary** (Azure managed service) |
-| ACID transactions | Limited — no multi-document transactions on Gremlin API |
-| JSONB support | Native document/property model |
-| Hierarchical queries | Native graph traversal via Apache TinkerPop/Gremlin |
-| Full-text search | Not available on Gremlin API (requires NoSQL API) |
-| Free tier hosting | 1,000 RU/s + 25 GB free per subscription |
-| Azure production | Cosmos DB is Azure-native, but **no equivalent on GCP/AWS** |
-| TypeScript ecosystem | `@azure/cosmos` SDK — **no ORM**, Gremlin query strings |
-| AI agent familiarity | Very low — Gremlin is the least familiar query language |
-| Portability | None — vendor lock-in to Azure; TinkerPop compatibility gaps |
-| Cost model | Request Unit billing; graph operations consume more RUs than document reads |
+| Criterion            | Assessment                                                                  |
+| -------------------- | --------------------------------------------------------------------------- |
+| License              | **Proprietary** (Azure managed service)                                     |
+| ACID transactions    | Limited — no multi-document transactions on Gremlin API                     |
+| JSONB support        | Native document/property model                                              |
+| Hierarchical queries | Native graph traversal via Apache TinkerPop/Gremlin                         |
+| Full-text search     | Not available on Gremlin API (requires NoSQL API)                           |
+| Free tier hosting    | 1,000 RU/s + 25 GB free per subscription                                    |
+| Azure production     | Cosmos DB is Azure-native, but **no equivalent on GCP/AWS**                 |
+| TypeScript ecosystem | `@azure/cosmos` SDK — **no ORM**, Gremlin query strings                     |
+| AI agent familiarity | Very low — Gremlin is the least familiar query language                     |
+| Portability          | None — vendor lock-in to Azure; TinkerPop compatibility gaps                |
+| Cost model           | Request Unit billing; graph operations consume more RUs than document reads |
 
 **Why CosmosDB Gremlin is not selected:** See "Graph Database Evaluation" below.
 
@@ -152,15 +153,15 @@ VantageMap's domain is relationship-heavy: 12 fact sheet types connected by 40+ 
 
 Every documented EA query pattern (from [MODEL.md](../MODEL.md) §6) maps cleanly to SQL:
 
-| EA Query Pattern | Hops | PostgreSQL Implementation |
-|-----------------|------|--------------------------|
-| Application rationalization (apps by capability × org) | 2–3 | JOINs on `relationships` table + GROUP BY |
-| Technology risk (apps → IT components → EOL dates) | 2 | 2-table JOIN + WHERE filter |
-| Strategic portfolio (objectives → initiatives → apps) | 2–3 | 2-3 table JOINs |
-| Integration architecture (app → interface → app) | 2 | Self-join via `relationships` |
-| Capability coverage (capabilities without apps) | 1 | LEFT JOIN + IS NULL |
-| Initiative impact analysis (initiative → apps → capabilities) | 2 | 2-table JOIN |
-| Hierarchy rollup (parent capability totals) | variable | Recursive CTE |
+| EA Query Pattern                                              | Hops     | PostgreSQL Implementation                 |
+| ------------------------------------------------------------- | -------- | ----------------------------------------- |
+| Application rationalization (apps by capability × org)        | 2–3      | JOINs on `relationships` table + GROUP BY |
+| Technology risk (apps → IT components → EOL dates)            | 2        | 2-table JOIN + WHERE filter               |
+| Strategic portfolio (objectives → initiatives → apps)         | 2–3      | 2-3 table JOINs                           |
+| Integration architecture (app → interface → app)              | 2        | Self-join via `relationships`             |
+| Capability coverage (capabilities without apps)               | 1        | LEFT JOIN + IS NULL                       |
+| Initiative impact analysis (initiative → apps → capabilities) | 2        | 2-table JOIN                              |
+| Hierarchy rollup (parent capability totals)                   | variable | Recursive CTE                             |
 
 At 100K entities with indexed foreign keys, all of these execute in **< 10ms**. The performance advantage of graph databases over SQL JOINs does not materialize until traversal depth exceeds 5 hops or entity count exceeds millions.
 
@@ -196,6 +197,7 @@ At 100K entities with indexed foreign keys, all of these execute in **< 10ms**. 
 **The ORM gap:** There is no TypeScript ORM for Neo4j or Gremlin comparable to Drizzle. Every graph query would be an untyped string (`session.run("MATCH (a:Application)...")`), losing compile-time type safety, IDE autocompletion, and refactoring support. For a vibe-coded project where AI agents write most of the code, untyped query strings dramatically increase error rates.
 
 **The "right tool" fallacy:** VantageMap's queries are relationship queries, not graph algorithm queries. The distinction matters:
+
 - **Relationship queries** (JOINs): "Find all applications supporting the Finance capability" → SQL JOIN, 1 hop
 - **Graph algorithm queries** (PageRank, shortest path, community detection): Not in VantageMap's requirements
 
@@ -204,6 +206,7 @@ PostgreSQL's `relationships` edge table with indexed `(source_type, source_id, r
 ### When Would We Reconsider?
 
 A graph database becomes justified if any of these conditions emerge:
+
 - Traversal depth regularly exceeds 5 hops
 - Users need to create arbitrary/dynamic relationship types at runtime
 - Graph algorithms (centrality, community detection, path finding) become core features
@@ -252,10 +255,12 @@ None of these conditions are present in VantageMap's requirements or roadmap (th
 7. **Azure production path** — Azure Database for PostgreSQL Flexible Server is a mature managed offering
 
 ### MVP deployment:
+
 - **Development:** Local PostgreSQL via Docker or Neon free tier
 - **Staging/MVP:** Neon free tier (autoscale-to-zero, branching for preview environments)
 
 ### Production deployment:
+
 - **Azure:** Azure Database for PostgreSQL Flexible Server
 - **GCP:** Cloud SQL for PostgreSQL
 - **AWS:** Amazon RDS for PostgreSQL

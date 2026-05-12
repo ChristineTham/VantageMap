@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* ── Rosely Core Palette Variables ──────────────────────────────────── */
+:root {
+  --rosely0: #27272a; /* Velvet Night   — primary text, headings     */
+  --rosely1: #615f5f; /* Granite Gray   — secondary text, labels     */
+  --rosely2: #85677b; /* Opal Mauve     — accent text, emphasis       */
+  --rosely3: #a49e9e; /* Mist           — placeholder, captions       */
+  --rosely4: #f7caca; /* Blush          — borders, dividers           */
+  --rosely5: #f4dede; /* Petal          — hover backgrounds           */
+  --rosely6: #f4eee8; /* Cream          — page / card backgrounds     */
+  --rosely7: #93a9d1; /* Periwinkle     — info / neutral accent       */
+  --rosely8: #be9cc1; /* Lilac          — hover borders, active state */
+  --rosely9: #b0879b; /* Dusty Rose     — dusty rose accent           */
+  --rosely10: #b565a7; /* Plum           — strong purple accent        */
+  --rosely11: #d2386c; /* Rose           — error, critical, end-of-life*/
+  --rosely12: #ec809e; /* Flamingo       — warning, accent highlight   */
+  --rosely13: #eada4f; /* Golden         — at-risk highlight           */
+  --rosely14: #64bfa4; /* Teal           — success, good health        */
+  --rosely15: #919bc9; /* Cornflower     — blue accent                 */
+
+  /* shadcn/ui semantic variables mapped to Rosely */
+  --background: var(--rosely6);
+  --foreground: var(--rosely0);
+  --card: #ffffff;
+  --card-foreground: var(--rosely0);
+  --popover: #ffffff;
+  --popover-foreground: var(--rosely0);
+  --primary: var(--rosely10);
+  --primary-foreground: #ffffff;
+  --secondary: var(--rosely5);
+  --secondary-foreground: var(--rosely0);
+  --muted: var(--rosely5);
+  --muted-foreground: var(--rosely3);
+  --accent: var(--rosely8);
+  --accent-foreground: var(--rosely0);
+  --destructive: var(--rosely11);
+  --destructive-foreground: #ffffff;
+  --border: var(--rosely4);
+  --input: var(--rosely4);
+  --ring: var(--rosely8);
+  --radius: 0.5rem;
+}
+
+/* ── Tailwind v4 Theme Registration ─────────────────────────────────── */
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-noto-sans);
+  --font-serif: var(--font-noto-serif);
+  --font-mono: var(--font-noto-sans-mono);
+
+  /* ── Rosely colour tokens ── */
+  --color-rosely-night: var(--rosely0);
+  --color-rosely-dusk: var(--rosely1);
+  --color-rosely-mauve: var(--rosely2);
+  --color-rosely-mist: var(--rosely3);
+  --color-rosely-blush: var(--rosely4);
+  --color-rosely-petal: var(--rosely5);
+  --color-rosely-cream: var(--rosely6);
+  --color-rosely-periwinkle: var(--rosely7);
+  --color-rosely-lilac: var(--rosely8);
+  --color-rosely-dusty: var(--rosely9);
+  --color-rosely-plum: var(--rosely10);
+  --color-rosely-rose: var(--rosely11);
+  --color-rosely-flamingo: var(--rosely12);
+  --color-rosely-golden: var(--rosely13);
+  --color-rosely-teal: var(--rosely14);
+  --color-rosely-cornflower: var(--rosely15);
+
+  /* ── shadcn/ui semantic tokens ── */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* ── Base Styles ─────────────────────────────────────────────────────── */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}

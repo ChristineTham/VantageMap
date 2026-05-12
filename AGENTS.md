@@ -1,7 +1,9 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+
 <!-- END:nextjs-agent-rules -->
 
 # VantageMap — Project Guidelines
@@ -12,18 +14,19 @@ VantageMap is an enterprise architecture and business strategy platform. It give
 
 Six integrated views:
 
-| Route | View |
-|-------|------|
-| `/` | Dashboard |
-| `/capabilities` | Business Capability Map |
-| `/applications` | Application Portfolio |
-| `/strategy` | Strategy Map (Balanced Scorecard) |
-| `/radar` | Technology Radar |
-| `/roadmap` | Strategic Roadmap (Gantt) |
+| Route           | View                              |
+| --------------- | --------------------------------- |
+| `/`             | Dashboard                         |
+| `/capabilities` | Business Capability Map           |
+| `/applications` | Application Portfolio             |
+| `/strategy`     | Strategy Map (Balanced Scorecard) |
+| `/radar`        | Technology Radar                  |
+| `/roadmap`      | Strategic Roadmap (Gantt)         |
 
 ## Tech Stack
 
 ### Frontend (confirmed)
+
 - **Next.js 16.2.3** — App Router only. No Pages Router. No `getServerSideProps`/`getStaticProps`.
 - **TypeScript** — strict mode
 - **Tailwind CSS v4** — configured via `@import "tailwindcss"` in globals.css (NOT `@tailwind` directives)
@@ -33,6 +36,7 @@ Six integrated views:
 - **Recharts** — chart library
 
 ### Backend (decided in Phase 1 — see `docs/adr/`)
+
 - **PostgreSQL 16** — primary database ([ADR-001](docs/adr/001-database.md))
 - **Drizzle ORM** — schema-as-code, SQL-like queries, zero dependencies ([ADR-002](docs/adr/002-orm.md))
 - **Better Auth** — authentication, sessions, RBAC, API tokens ([ADR-003](docs/adr/003-authentication.md))
@@ -43,6 +47,7 @@ Six integrated views:
 - **Sentry** — error tracking and performance monitoring ([ADR-008](docs/adr/008-observability.md))
 
 ### Hosting
+
 - **Vercel Hobby** — MVP deployment (zero-cost) ([ADR-007](docs/adr/007-hosting.md))
 - **Azure App Service** — production deployment target
 - **Neon Free** — PostgreSQL hosting for MVP

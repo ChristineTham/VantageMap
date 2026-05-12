@@ -2,11 +2,12 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-12  
-**Decision:** Sentry (error tracking) + Pino (structured logging) + OpenTelemetry (tracing)  
+**Decision:** Sentry (error tracking) + Pino (structured logging) + OpenTelemetry (tracing)
 
 ## Context
 
 VantageMap requires observability that supports:
+
 - Error tracking with stack traces and context
 - Structured JSON logging on all service boundaries
 - Distributed tracing across API routes, database queries, and async jobs
@@ -15,6 +16,7 @@ VantageMap requires observability that supports:
 - Zero-cost for MVP
 
 From [nfr.md](../phase-0/nfr.md):
+
 - Structured logs on all service boundaries
 - Distributed tracing across API, persistence, and async jobs
 - Alerting thresholds for latency, error rate, queue backlog, webhook failures
@@ -24,50 +26,50 @@ From [nfr.md](../phase-0/nfr.md):
 
 ### 1. Sentry + Pino + OpenTelemetry
 
-| Criterion | Assessment |
-|-----------|------------|
-| Error tracking | Sentry Free: 5K errors/month, source maps, breadcrumbs |
-| Structured logging | Pino: fastest Node.js JSON logger, zero-dep |
-| Distributed tracing | OpenTelemetry SDK → Sentry or Grafana Cloud |
-| Performance monitoring | Sentry Performance: transaction tracing, p95/p99 |
-| Alerting | Sentry alerts on error rate, latency; configurable |
-| Next.js integration | `@sentry/nextjs` with App Router support |
-| Cost | **Free** — Sentry Free tier + Pino (OSS) + OTel (OSS) |
-| AI familiarity | High — Sentry is the most common error tracker in tutorials |
-| Vendor lock-in | Low — OTel is vendor-neutral; Sentry can be replaced |
+| Criterion              | Assessment                                                  |
+| ---------------------- | ----------------------------------------------------------- |
+| Error tracking         | Sentry Free: 5K errors/month, source maps, breadcrumbs      |
+| Structured logging     | Pino: fastest Node.js JSON logger, zero-dep                 |
+| Distributed tracing    | OpenTelemetry SDK → Sentry or Grafana Cloud                 |
+| Performance monitoring | Sentry Performance: transaction tracing, p95/p99            |
+| Alerting               | Sentry alerts on error rate, latency; configurable          |
+| Next.js integration    | `@sentry/nextjs` with App Router support                    |
+| Cost                   | **Free** — Sentry Free tier + Pino (OSS) + OTel (OSS)       |
+| AI familiarity         | High — Sentry is the most common error tracker in tutorials |
+| Vendor lock-in         | Low — OTel is vendor-neutral; Sentry can be replaced        |
 
 ### 2. Datadog
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary |
-| Free tier | 14-day trial only — **no sustainable free tier** |
-| Features | Excellent — best-in-class APM, logging, tracing, dashboards |
-| Cost | Starts at $15/host/month |
+| Criterion | Assessment                                                  |
+| --------- | ----------------------------------------------------------- |
+| License   | Proprietary                                                 |
+| Free tier | 14-day trial only — **no sustainable free tier**            |
+| Features  | Excellent — best-in-class APM, logging, tracing, dashboards |
+| Cost      | Starts at $15/host/month                                    |
 
 **Disqualified:** No free tier. Enterprise pricing violates zero-cost MVP constraint.
 
 ### 3. Grafana Cloud Free
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | AGPL v3 (Grafana), Apache 2.0 (Loki, Tempo, Mimir) |
-| Free tier | 10K metrics, 50GB logs, 50GB traces per month |
-| Features | Dashboards, alerting, log aggregation, trace visualization |
-| Complexity | Requires OpenTelemetry Collector setup; more configuration |
-| AI familiarity | Low — complex setup for AI agents |
+| Criterion      | Assessment                                                 |
+| -------------- | ---------------------------------------------------------- |
+| License        | AGPL v3 (Grafana), Apache 2.0 (Loki, Tempo, Mimir)         |
+| Free tier      | 10K metrics, 50GB logs, 50GB traces per month              |
+| Features       | Dashboards, alerting, log aggregation, trace visualization |
+| Complexity     | Requires OpenTelemetry Collector setup; more configuration |
+| AI familiarity | Low — complex setup for AI agents                          |
 
 **Concerns:** Grafana Cloud Free is generous but requires significant setup: OTel Collector configuration, dashboard creation, alert rule authoring. This is operational complexity that doesn't fit the vibe-coding approach for MVP. Better suited as a production upgrade.
 
 ### 4. Vercel Analytics + Speed Insights
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary (Vercel platform) |
-| Free tier | Included with Vercel Hobby |
-| Features | Web Vitals, page-level analytics only |
-| Limitations | **No error tracking, no API monitoring, no tracing** |
-| Backend visibility | None |
+| Criterion          | Assessment                                           |
+| ------------------ | ---------------------------------------------------- |
+| License            | Proprietary (Vercel platform)                        |
+| Free tier          | Included with Vercel Hobby                           |
+| Features           | Web Vitals, page-level analytics only                |
+| Limitations        | **No error tracking, no API monitoring, no tracing** |
+| Backend visibility | None                                                 |
 
 **Disqualified:** Web analytics only. No backend observability, error tracking, or distributed tracing. Insufficient for NFR requirements.
 
@@ -75,7 +77,7 @@ From [nfr.md](../phase-0/nfr.md):
 
 **Sentry Free** for error tracking and performance monitoring.  
 **Pino** for structured JSON logging.  
-**OpenTelemetry SDK** for vendor-neutral instrumentation (traces flow to Sentry).  
+**OpenTelemetry SDK** for vendor-neutral instrumentation (traces flow to Sentry).
 
 Upgrade to **Grafana Cloud** for production dashboards and log aggregation.
 
@@ -151,7 +153,7 @@ Upgrade to **Grafana Cloud** for production dashboards and log aggregation.
 
 ```typescript
 // sentry.client.config.ts
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -162,10 +164,10 @@ Sentry.init({
 
 ```typescript
 // src/lib/logger.ts
-import pino from 'pino';
+import pino from "pino";
 
 export const logger = pino({
-  level: process.env.LOG_LEVEL || 'info',
+  level: process.env.LOG_LEVEL || "info",
   // JSON output for structured logging
   // Vercel and Azure both capture stdout
 });
@@ -173,13 +175,13 @@ export const logger = pino({
 
 ### Production upgrade path:
 
-| Component | MVP | Production |
-|-----------|-----|------------|
-| Error tracking | Sentry Free | Sentry Team or Business |
-| Logging | Pino → stdout → Vercel Logs | Pino → Azure Monitor / Grafana Loki |
-| Tracing | OTel → Sentry | OTel → Azure Monitor / Grafana Tempo |
-| Dashboards | Sentry dashboard | Grafana Cloud or Azure Monitor |
-| Alerting | Sentry alerts | Sentry + Grafana alerting |
+| Component      | MVP                         | Production                           |
+| -------------- | --------------------------- | ------------------------------------ |
+| Error tracking | Sentry Free                 | Sentry Team or Business              |
+| Logging        | Pino → stdout → Vercel Logs | Pino → Azure Monitor / Grafana Loki  |
+| Tracing        | OTel → Sentry               | OTel → Azure Monitor / Grafana Tempo |
+| Dashboards     | Sentry dashboard            | Grafana Cloud or Azure Monitor       |
+| Alerting       | Sentry alerts               | Sentry + Grafana alerting            |
 
 ## Consequences
 

@@ -4,16 +4,16 @@ This directory contains Architecture Decision Records (ADRs) produced during Pha
 
 ## Index
 
-| ADR | Title | Decision | Date |
-|-----|-------|----------|------|
-| [ADR-001](001-database.md) | Database | PostgreSQL 16 | 2026-05-12 |
-| [ADR-002](002-orm.md) | ORM and Migration Tooling | Drizzle ORM | 2026-05-12 |
-| [ADR-003](003-authentication.md) | Authentication and Session Management | Better Auth | 2026-05-12 |
-| [ADR-004](004-api-layer.md) | API Layer Strategy | Next.js Route Handlers (REST) | 2026-05-12 |
-| [ADR-005](005-async-processing.md) | Async Job Processing | Inngest | 2026-05-12 |
-| [ADR-006](006-search.md) | Search Engine | PostgreSQL Full-Text Search | 2026-05-12 |
-| [ADR-007](007-hosting.md) | Hosting and Deployment | Vercel (MVP), Azure (Production) | 2026-05-12 |
-| [ADR-008](008-observability.md) | Observability and Monitoring | Sentry + Pino + OpenTelemetry | 2026-05-12 |
+| ADR                                | Title                                 | Decision                         | Date       |
+| ---------------------------------- | ------------------------------------- | -------------------------------- | ---------- |
+| [ADR-001](001-database.md)         | Database                              | PostgreSQL 16                    | 2026-05-12 |
+| [ADR-002](002-orm.md)              | ORM and Migration Tooling             | Drizzle ORM                      | 2026-05-12 |
+| [ADR-003](003-authentication.md)   | Authentication and Session Management | Better Auth                      | 2026-05-12 |
+| [ADR-004](004-api-layer.md)        | API Layer Strategy                    | Next.js Route Handlers (REST)    | 2026-05-12 |
+| [ADR-005](005-async-processing.md) | Async Job Processing                  | Inngest                          | 2026-05-12 |
+| [ADR-006](006-search.md)           | Search Engine                         | PostgreSQL Full-Text Search      | 2026-05-12 |
+| [ADR-007](007-hosting.md)          | Hosting and Deployment                | Vercel (MVP), Azure (Production) | 2026-05-12 |
+| [ADR-008](008-observability.md)    | Observability and Monitoring          | Sentry + Pino + OpenTelemetry    | 2026-05-12 |
 
 ## Decision Criteria
 

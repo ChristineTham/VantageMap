@@ -18,19 +18,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookSubscriptionCreateRequest'
+              $ref: "#/components/schemas/WebhookSubscriptionCreateRequest"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebhookSubscription'
-        '400':
+                $ref: "#/components/schemas/WebhookSubscription"
+        "400":
           description: Validation error
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Permission denied
   /v1/webhooks/subscriptions/{subscriptionId}:
     delete:
@@ -46,13 +46,13 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Deleted
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Permission denied
-        '404':
+        "404":
           description: Not found
   /v1/webhooks/subscriptions/{subscriptionId}/test:
     post:
@@ -68,11 +68,11 @@ paths:
           schema:
             type: string
       responses:
-        '202':
+        "202":
           description: Test event accepted
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Permission denied
 components:
   securitySchemes:

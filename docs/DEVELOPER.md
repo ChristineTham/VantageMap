@@ -27,16 +27,19 @@ The landing page itself is intentionally high-level. Operational details are spr
 ### 2.1 Core Building Blocks
 
 1. Authentication and credentials
+
 - Technical users issue API tokens
 - OAuth 2.0 exchange provides short-lived access tokens
 
 2. API interaction models
+
 - REST APIs for broad platform resources
 - GraphQL API for fact sheets and relations
 - Integration API for LDIF-based connector processing
 - Webhooks for event-driven integrations
 
 3. Tooling and implementation surfaces
+
 - OpenAPI Explorer for REST endpoints
 - GraphiQL for schema/query exploration
 - Reporting Framework + CLI for custom reports
@@ -56,26 +59,31 @@ The landing page itself is intentionally high-level. Operational details are spr
 Recommended sequence synthesized from the docs:
 
 1. Determine integration type and constraints
+
 - Real-time events vs scheduled sync
 - Build-vs-configure preference
 - Data domains (fact sheets, users, surveys, metrics)
 
 2. Establish authentication baseline
+
 - Create technical user
 - Secure API token handling
 - Implement OAuth token acquisition and refresh
 
 3. Select API/model per use case
+
 - GraphQL for fact-sheet-centric querying/updating
 - REST for non-fact-sheet resources and admin operations
 - Integration API for LDIF connector pipelines
 - Webhooks for asynchronous event triggering
 
 4. Add developer tooling
+
 - OpenAPI Explorer for REST discovery and testing
 - GraphiQL for schema-driven GraphQL development
 
 5. Operationalize
+
 - Logging and error handling
 - Permission-scoped technical users
 - Token rotation/revocation process
@@ -444,21 +452,27 @@ Pattern:
 ## 12. Decision Matrix for Common Developer Scenarios
 
 1. Need to query/update fact sheets and relations interactively
+
 - Choose GraphQL API + GraphiQL
 
 2. Need broad admin/resource operations (users, settings, surveys, metrics)
+
 - Choose REST APIs + OpenAPI Explorer
 
 3. Need configurable connector pipelines and LDIF-based transformations
+
 - Choose Integration API
 
 4. Need near real-time event reactions
+
 - Choose PUSH webhooks
 
 5. Need custom in-product visual analytics
+
 - Choose Reporting Framework + CLI
 
 6. Need AI assistant/tooling integration
+
 - Choose MCP server with scoped toolsets and permissioned technical user
 
 ---
@@ -466,21 +480,27 @@ Pattern:
 ## 13. Reliability, Governance, and Security Recommendations
 
 1. Principle of least privilege
+
 - Assign narrow roles to technical users and MCP tokens
 
 2. Credential hygiene
+
 - Rotate API tokens, store secrets in managed vaults, and revoke stale tokens
 
 3. Query and load control
+
 - Use pagination and bounded query complexity in GraphQL
 
 4. Eventing resilience
+
 - Explicitly design retry/error handling for webhook consumers
 
 5. Config governance
+
 - Treat Integration API processor configs as versioned assets with change review
 
 6. Operational observability
+
 - Use synchronization logs, API responses, and webhook delivery diagnostics as standard runbook inputs
 
 ---

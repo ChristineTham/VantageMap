@@ -48,16 +48,16 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Search results
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+                $ref: "#/components/schemas/SearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 components:
   securitySchemes:
     bearerAuth:
@@ -77,9 +77,9 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/SearchResultItem'
+            $ref: "#/components/schemas/SearchResultItem"
         pageInfo:
-          $ref: '#/components/schemas/PageInfo'
+          $ref: "#/components/schemas/PageInfo"
     SearchResultItem:
       type: object
       required: [id, type, name]

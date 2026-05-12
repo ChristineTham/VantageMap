@@ -2,11 +2,12 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-12  
-**Decision:** Next.js Route Handlers (REST-first)  
+**Decision:** Next.js Route Handlers (REST-first)
 
 ## Context
 
 VantageMap needs an API layer that supports:
+
 - CRUD operations for 12+ fact sheet entity types
 - Typed request/response contracts
 - OpenAPI specification generation for external integrations
@@ -20,30 +21,31 @@ VantageMap needs an API layer that supports:
 
 ### 1. Next.js Route Handlers (REST)
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | MIT (part of Next.js) |
-| Pattern | `src/app/api/[resource]/route.ts` with `GET`, `POST`, `PUT`, `DELETE` exports |
-| Type safety | Manual Zod validation on request bodies; typed responses |
-| OpenAPI generation | Via `next-swagger-doc` or manual YAML; can auto-generate with tools |
-| Middleware | Composable function wrappers for auth, RBAC, audit |
-| Serverless | Native — each route is a serverless function |
-| Learning curve | Minimal — standard HTTP request/response |
-| AI familiarity | Extremely high — most common Next.js API pattern |
+| Criterion          | Assessment                                                                    |
+| ------------------ | ----------------------------------------------------------------------------- |
+| License            | MIT (part of Next.js)                                                         |
+| Pattern            | `src/app/api/[resource]/route.ts` with `GET`, `POST`, `PUT`, `DELETE` exports |
+| Type safety        | Manual Zod validation on request bodies; typed responses                      |
+| OpenAPI generation | Via `next-swagger-doc` or manual YAML; can auto-generate with tools           |
+| Middleware         | Composable function wrappers for auth, RBAC, audit                            |
+| Serverless         | Native — each route is a serverless function                                  |
+| Learning curve     | Minimal — standard HTTP request/response                                      |
+| AI familiarity     | Extremely high — most common Next.js API pattern                              |
 
 ### 2. tRPC
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | MIT |
-| Pattern | Procedure-based RPC with router composition |
-| Type safety | End-to-end type inference (server → client) without code generation |
-| OpenAPI generation | Via `trpc-to-openapi` plugin (community-maintained) |
-| Middleware | Built-in middleware chain |
-| External consumers | **Poor** — tRPC is designed for same-codebase TypeScript clients |
-| AI familiarity | Moderate — less tutorial coverage for API design patterns |
+| Criterion          | Assessment                                                          |
+| ------------------ | ------------------------------------------------------------------- |
+| License            | MIT                                                                 |
+| Pattern            | Procedure-based RPC with router composition                         |
+| Type safety        | End-to-end type inference (server → client) without code generation |
+| OpenAPI generation | Via `trpc-to-openapi` plugin (community-maintained)                 |
+| Middleware         | Built-in middleware chain                                           |
+| External consumers | **Poor** — tRPC is designed for same-codebase TypeScript clients    |
+| AI familiarity     | Moderate — less tutorial coverage for API design patterns           |
 
 **Concerns:**
+
 - tRPC is optimized for full-stack TypeScript monorepos where client and server share types. VantageMap needs external API consumers (webhooks, third-party integrations, MCP).
 - OpenAPI generation is a community plugin, not first-class.
 - tRPC's procedure-based model is less familiar to AI agents than REST patterns.
@@ -51,16 +53,17 @@ VantageMap needs an API layer that supports:
 
 ### 3. GraphQL-first (Apollo Server / Yoga)
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | MIT |
-| Pattern | Schema-first or code-first with resolvers |
-| Type safety | Strong with code generation (GraphQL Codegen) |
-| External consumers | Good — GraphQL is a standard |
-| Complexity | **High** — resolver N+1 problems, query complexity limits, caching |
-| AI familiarity | Moderate — GraphQL resolver patterns are more complex than REST |
+| Criterion          | Assessment                                                         |
+| ------------------ | ------------------------------------------------------------------ |
+| License            | MIT                                                                |
+| Pattern            | Schema-first or code-first with resolvers                          |
+| Type safety        | Strong with code generation (GraphQL Codegen)                      |
+| External consumers | Good — GraphQL is a standard                                       |
+| Complexity         | **High** — resolver N+1 problems, query complexity limits, caching |
+| AI familiarity     | Moderate — GraphQL resolver patterns are more complex than REST    |
 
 **Concerns:**
+
 - GraphQL-first adds significant complexity for CRUD operations that are naturally RESTful.
 - N+1 query problems require DataLoader patterns that are error-prone in vibe coding.
 - Query complexity limits must be implemented to prevent abuse.

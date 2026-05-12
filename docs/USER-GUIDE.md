@@ -447,21 +447,27 @@ This closes the loop between editing events and accountable review.
 ## 10. Common Pitfalls and Mitigations
 
 1. Treating "user guides" as only end-user clicks
+
 - Mitigation: include identity and role governance since user experience depends on access model.
 
 2. Over-granting write permissions
+
 - Mitigation: keep least-privilege role design and adjust by business need.
 
 3. Ignoring subscription/accountability model
+
 - Mitigation: define responsible/accountable subscriptions early.
 
 4. Heavy relation constraints too early
+
 - Mitigation: start simple, constrain only where business-critical.
 
 5. Assuming SCIM replaces SSO
+
 - Mitigation: treat SCIM as lifecycle sync and SSO as auth/authz gateway.
 
 6. Not defining default-role behavior for SSO edge cases
+
 - Mitigation: document role-mapping scenarios to avoid accidental lockouts.
 
 ---

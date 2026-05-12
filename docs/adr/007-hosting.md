@@ -2,11 +2,12 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-12  
-**Decision:** Vercel (MVP free tier), Azure App Service (Production)  
+**Decision:** Vercel (MVP free tier), Azure App Service (Production)
 
 ## Context
 
 VantageMap needs a hosting platform that supports:
+
 - Next.js 16 App Router with Server Components and route handlers
 - Zero-cost deployment for MVP
 - Preview deployments for PR review workflows
@@ -19,75 +20,75 @@ VantageMap needs a hosting platform that supports:
 
 ### 1. Vercel
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary platform (Next.js is MIT) |
-| Next.js 16 support | **First-class** — Vercel is the creator of Next.js |
-| Free tier | Hobby plan: 100 GB bandwidth, 100 hrs serverless, unlimited deployments |
-| Preview deployments | Automatic on every PR |
-| Serverless | Native serverless and edge functions |
-| CI/CD | Automatic from GitHub push |
-| Custom domains | 1 custom domain on free tier |
-| Limitations | 10s function timeout on free tier, 1 team member |
-| Azure path | Export to standalone Node.js for Azure App Service |
+| Criterion           | Assessment                                                              |
+| ------------------- | ----------------------------------------------------------------------- |
+| License             | Proprietary platform (Next.js is MIT)                                   |
+| Next.js 16 support  | **First-class** — Vercel is the creator of Next.js                      |
+| Free tier           | Hobby plan: 100 GB bandwidth, 100 hrs serverless, unlimited deployments |
+| Preview deployments | Automatic on every PR                                                   |
+| Serverless          | Native serverless and edge functions                                    |
+| CI/CD               | Automatic from GitHub push                                              |
+| Custom domains      | 1 custom domain on free tier                                            |
+| Limitations         | 10s function timeout on free tier, 1 team member                        |
+| Azure path          | Export to standalone Node.js for Azure App Service                      |
 
 ### 2. Netlify
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary platform |
-| Next.js 16 support | Supported via `@netlify/next` adapter, but historically lags Vercel |
-| Free tier | 100 GB bandwidth, 300 build minutes/month |
-| Preview deployments | Deploy Previews on PRs |
-| Serverless | Netlify Functions (AWS Lambda-based) |
-| Limitations | Some Next.js features may not work due to adapter translation layer |
+| Criterion           | Assessment                                                          |
+| ------------------- | ------------------------------------------------------------------- |
+| License             | Proprietary platform                                                |
+| Next.js 16 support  | Supported via `@netlify/next` adapter, but historically lags Vercel |
+| Free tier           | 100 GB bandwidth, 300 build minutes/month                           |
+| Preview deployments | Deploy Previews on PRs                                              |
+| Serverless          | Netlify Functions (AWS Lambda-based)                                |
+| Limitations         | Some Next.js features may not work due to adapter translation layer |
 
 **Concerns:** Netlify's Next.js support relies on a translation layer that occasionally breaks with new Next.js features. Less reliable for bleeding-edge Next.js 16.
 
 ### 3. Railway
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary platform |
-| Next.js 16 support | Full support (runs as Node.js server) |
-| Free tier | **Removed** — $5/month minimum (Trial: $5 credit, expires) |
-| Preview deployments | Manual setup |
-| Execution model | Container-based (not serverless) |
+| Criterion           | Assessment                                                 |
+| ------------------- | ---------------------------------------------------------- |
+| License             | Proprietary platform                                       |
+| Next.js 16 support  | Full support (runs as Node.js server)                      |
+| Free tier           | **Removed** — $5/month minimum (Trial: $5 credit, expires) |
+| Preview deployments | Manual setup                                               |
+| Execution model     | Container-based (not serverless)                           |
 
 **Disqualified:** No sustainable free tier. $5/month minimum violates zero-cost MVP constraint.
 
 ### 4. Fly.io
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary platform |
-| Next.js 16 support | Full support via Docker |
-| Free tier | 3 shared VMs (256 MB), 160 GB bandwidth |
-| Preview deployments | Manual setup |
-| Execution model | Container-based with auto-scaling |
-| Complexity | Requires Dockerfile, `fly.toml`, manual configuration |
+| Criterion           | Assessment                                            |
+| ------------------- | ----------------------------------------------------- |
+| License             | Proprietary platform                                  |
+| Next.js 16 support  | Full support via Docker                               |
+| Free tier           | 3 shared VMs (256 MB), 160 GB bandwidth               |
+| Preview deployments | Manual setup                                          |
+| Execution model     | Container-based with auto-scaling                     |
+| Complexity          | Requires Dockerfile, `fly.toml`, manual configuration |
 
 **Concerns:** Fly.io requires Docker knowledge and manual deployment configuration. Higher operational complexity for vibe coding. Less seamless GitHub integration.
 
 ### 5. AWS Amplify
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Proprietary platform |
-| Next.js 16 support | Supported, but historically slower to adopt new features |
-| Free tier | 12 months: 1000 build minutes, 15 GB hosting |
-| Preview deployments | Supported |
-| Complexity | AWS account setup, IAM configuration |
+| Criterion           | Assessment                                               |
+| ------------------- | -------------------------------------------------------- |
+| License             | Proprietary platform                                     |
+| Next.js 16 support  | Supported, but historically slower to adopt new features |
+| Free tier           | 12 months: 1000 build minutes, 15 GB hosting             |
+| Preview deployments | Supported                                                |
+| Complexity          | AWS account setup, IAM configuration                     |
 
 **Concerns:** AWS Amplify's Next.js support lags behind Vercel. AWS account setup and IAM configuration adds friction. Free tier expires after 12 months.
 
 ### 6. Self-hosted Docker (VPS)
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | Open-source (Docker) |
-| Next.js 16 support | Full support |
-| Free tier | No free VPS options suitable for production |
+| Criterion          | Assessment                                        |
+| ------------------ | ------------------------------------------------- |
+| License            | Open-source (Docker)                              |
+| Next.js 16 support | Full support                                      |
+| Free tier          | No free VPS options suitable for production       |
 | Operational burden | **High** — server management, updates, monitoring |
 
 **Disqualified:** No free hosting option. High operational burden contradicts vibe-coding approach.
@@ -149,7 +150,7 @@ VantageMap needs a hosting platform that supports:
 
 ```typescript
 const nextConfig = {
-  output: 'standalone', // Produces self-contained Node.js server
+  output: "standalone", // Produces self-contained Node.js server
   // Same code deploys to Vercel (auto-detected) or Azure (standalone)
 };
 ```

@@ -46,7 +46,7 @@ export const myEntities: MyEntity[] = [
 
 // 4. Add helper colour map if displaying status badges
 export const myStatusColour: Record<MyStatus, string> = {
-  Active:   "bg-rosely-teal/20 text-rosely-teal",
+  Active: "bg-rosely-teal/20 text-rosely-teal",
   Inactive: "bg-rosely-mist/20 text-rosely-mist",
 };
 ```
@@ -66,9 +66,7 @@ export default function MyViewPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">View Title</h1>
-        <p className="text-sm text-rosely-mist mt-1">
-          Short description of what this view shows.
-        </p>
+        <p className="text-sm text-rosely-mist mt-1">Short description of what this view shows.</p>
       </div>
 
       {/* Content */}
@@ -85,7 +83,9 @@ export default function MyViewPage() {
               <tr key={e.id} className="hover:bg-rosely-petal/40 transition-colors">
                 <td className="px-4 py-3 font-medium text-rosely-night">{e.name}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${myStatusColour[e.status]}`}>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${myStatusColour[e.status]}`}
+                  >
                     {e.status}
                   </span>
                 </td>
@@ -102,6 +102,7 @@ export default function MyViewPage() {
 > **Server Component by default.** Only add `"use client"` if you need hooks, state, or event handlers.
 
 > **Optional metadata:**
+>
 > ```tsx
 > import type { Metadata } from "next";
 > export const metadata: Metadata = {

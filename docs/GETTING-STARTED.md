@@ -51,15 +51,18 @@ Getting Started introduces three products as a layered capability stack.
 Role: Base product and foundation.
 
 Core purpose:
+
 - Build and maintain the architecture inventory
 - Understand as-is landscape
 - Assess lifecycle, functional fit, technical fit, and business relevance
 
 Typical use cases:
+
 - Application Portfolio Assessment
 - Application Rationalization
 
 What you can do first with APM:
+
 - Create a single source of truth for applications and key relationships
 - Run baseline reports to identify redundancy and risk
 - Establish ownership and governance over architecture data
@@ -69,17 +72,20 @@ What you can do first with APM:
 Role: Transformation planning extension (formerly BTM).
 
 Core purpose:
+
 - Model to-be architecture changes without cloning whole landscapes
 - Plan and compare transformation scenarios
 - Track and execute roadmap impacts over time
 
 Key capabilities:
+
 - Predefined and custom transformations
 - Milestones in initiative/project roadmaps
 - Impact views and timeline projections in reports
 - Transformation Explorer for centralized management
 
 Primary use cases:
+
 - Application Modernization
 - ERP Transformation
 
@@ -88,17 +94,20 @@ Primary use cases:
 Role: Technology risk and standards extension.
 
 Core purpose:
+
 - Build technology inventory depth
 - Detect and manage obsolescence risk
 - Govern tech standards and lifecycle compliance
 
 Key capabilities:
+
 - Discovery of IT components/infrastructure relationships
 - Lifecycle and support transparency
 - Obsolescence-focused dashboards and report views
 - Integrations (for example ServiceNow, Jira Service Management) and reference catalog support
 
 Primary use case:
+
 - Obsolescence Risk Management
 
 ---
@@ -110,6 +119,7 @@ Primary use case:
 Fact sheets are the core data objects in SAP LeanIX. Each architectural element (application, business capability, IT component, etc.) is represented as a typed fact sheet with attributes and relationships.
 
 Important implication:
+
 - Data quality is architecture quality. Weak fact sheet ownership leads to weak decisions.
 
 ### 5.2 Meta Model
@@ -117,6 +127,7 @@ Important implication:
 The meta model defines how fact sheet types are related. Getting Started emphasizes the standard model as well-designed and warns that customization should be deliberate.
 
 Practical takeaway:
+
 - Start with standard model semantics; customize only for concrete use-case needs.
 
 ### 5.3 Inventory and Collaboration
@@ -124,6 +135,7 @@ Practical takeaway:
 Inventory is the operational repository for finding, creating, and maintaining fact sheets.
 
 Collaboration mechanisms highlighted by SAP:
+
 - Surveys
 - Subscriptions
 - Comments
@@ -132,6 +144,7 @@ Collaboration mechanisms highlighted by SAP:
 - Quality Seal concept (in role guides)
 
 Practical takeaway:
+
 - LeanIX is not just a data store; it is a governed collaboration workflow.
 
 ### 5.4 Reports and Diagrams
@@ -139,12 +152,14 @@ Practical takeaway:
 Reports and diagrams are the decision surfaces built on top of fact sheet data.
 
 Examples referenced in docs:
+
 - Landscape reports for architecture overviews
 - Matrix reports for cross-domain correlations
 - Roadmap reports for planned transformation timelines
 - Diagramming for visual dependency and flow analysis
 
 Practical takeaway:
+
 - Reporting value scales with relationship completeness, not just record count.
 
 ---
@@ -153,17 +168,18 @@ Practical takeaway:
 
 Getting Started and linked role guides frame usage by role:
 
-| Role | Typical Focus |
-|------|---------------|
-| Enterprise Architects | Meta model design, governance, use-case execution, transformation planning |
-| CIO / IT Leadership | Portfolio transparency, strategic alignment, risk and investment decisions |
-| Application Owners | Application fact sheet accuracy, lifecycle and fit maintenance |
-| Business Owners | Capability and business context relevance, business impact alignment |
-| Security / Risk Teams | Obsolescence and compliance exposure management |
-| Transformation / Project Managers | Initiative visibility, roadmap sequencing, impact monitoring |
-| Solution Architects | Integration and target-state architecture design |
+| Role                              | Typical Focus                                                              |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| Enterprise Architects             | Meta model design, governance, use-case execution, transformation planning |
+| CIO / IT Leadership               | Portfolio transparency, strategic alignment, risk and investment decisions |
+| Application Owners                | Application fact sheet accuracy, lifecycle and fit maintenance             |
+| Business Owners                   | Capability and business context relevance, business impact alignment       |
+| Security / Risk Teams             | Obsolescence and compliance exposure management                            |
+| Transformation / Project Managers | Initiative visibility, roadmap sequencing, impact monitoring               |
+| Solution Architects               | Integration and target-state architecture design                           |
 
 Key insight from SAP role pages:
+
 - Enterprise architecture management is collaborative by design; no single role can maintain trustworthy architecture data alone.
 
 ---
@@ -183,6 +199,7 @@ This sequence combines Getting Started with linked operational guides.
 7. Configure roles and permissions (Viewer, Member, Admin, optional custom roles with SSO)
 
 Why this matters:
+
 - Early access model choices shape governance and scaling.
 
 ### Phase 1: Model Foundation and Scope
@@ -196,17 +213,20 @@ Why this matters:
 4. Define naming and hierarchy conventions
 
 Why this matters:
+
 - These three types create immediate business-IT traceability with manageable effort.
 
 ### Phase 2: Bring Data into Inventory
 
 Supported ingestion channels:
+
 - Integrations and discovery
 - Inventory Builder (AI extraction from diagrams/images)
 - Excel import/export
 - Manual creation/editing
 
 SAP guidance emphasizes:
+
 - Relevance and accuracy over volume
 - Simple hierarchies (2-3 levels)
 - Stakeholder validation of relationships and ownership
@@ -223,21 +243,25 @@ SAP guidance emphasizes:
 5. Use reference data and integrations to enrich and standardize
 
 Why this matters:
+
 - High-quality onboarding is not a one-time import; it is an operating model.
 
 ### Phase 4: Baseline Analysis
 
 Start with Application Portfolio Assessment:
+
 - Assess application inventory and relationships
 - Evaluate business criticality and fit
 - Identify dependencies and obvious portfolio risks
 
 Outcome:
+
 - Shared, evidence-based as-is understanding.
 
 ### Phase 5: Advanced Use Cases
 
 Then progress to:
+
 - Application Rationalization
 - Application Modernization
 - ERP Transformation
@@ -254,11 +278,13 @@ From "Getting Data into Your Workspace":
 ### 8.1 Recommended Starting Point
 
 Start with:
+
 - Applications
 - Business capabilities
 - Organizations
 
 Then link them:
+
 - Applications <-> Business Capabilities
 - Applications <-> Organizations
 
@@ -266,12 +292,12 @@ This delivers immediate analytical value and avoids over-scoping.
 
 ### 8.2 Import Methods and Best Fit
 
-| Method | Best For | Trade-Offs |
-|--------|----------|------------|
-| Integrations / Discovery | Ongoing automated sync from source systems | Requires connector setup and source quality |
-| Inventory Builder | Fast extraction from existing architecture visuals | May need manual normalization post-extraction |
-| Excel import | Structured bulk bootstrap | Requires disciplined template preparation |
-| Manual editing | Targeted curation and corrections | Slow at scale |
+| Method                   | Best For                                           | Trade-Offs                                    |
+| ------------------------ | -------------------------------------------------- | --------------------------------------------- |
+| Integrations / Discovery | Ongoing automated sync from source systems         | Requires connector setup and source quality   |
+| Inventory Builder        | Fast extraction from existing architecture visuals | May need manual normalization post-extraction |
+| Excel import             | Structured bulk bootstrap                          | Requires disciplined template preparation     |
+| Manual editing           | Targeted curation and corrections                  | Slow at scale                                 |
 
 ### 8.3 Inventory Modeling Principles
 
@@ -284,6 +310,7 @@ This delivers immediate analytical value and avoids over-scoping.
 ### 8.4 Expansion Path
 
 After baseline maturity:
+
 - Add IT components (often via ServiceNow or SAP discovery paths)
 - Add business context/process (for example via SAP Signavio integration)
 - Add data objects (for example via Collibra integration)
@@ -296,6 +323,7 @@ After baseline maturity:
 ### 9.1 Enterprise Architects
 
 Primary path:
+
 1. Access workspace and admin setup
 2. Understand meta model deeply
 3. Prioritize first use case (usually Application Portfolio Assessment)
@@ -304,6 +332,7 @@ Primary path:
 6. Guide transformation and risk programs after baseline maturity
 
 Key linked guides:
+
 - For Enterprise Architects
 - Set Up User Access
 - Getting Data into Your Workspace
@@ -312,6 +341,7 @@ Key linked guides:
 ### 9.2 Application and Business Owners
 
 Primary path:
+
 1. Access workspace and complete user profile
 2. Locate assigned/subscribed fact sheets
 3. Learn inventory filtering and fact sheet navigation
@@ -320,6 +350,7 @@ Primary path:
 6. Participate in quality and completeness cycles
 
 Key practical actions documented by SAP:
+
 - Find apps supporting capabilities in specific regions/business units via inventory filters
 - Open fact sheets and maintain section-specific attributes
 - Use subscriptions to monitor ownership scope
@@ -333,22 +364,27 @@ Getting Started links to multiple use-case playbooks. Their onboarding intent ca
 ### 10.1 Application Portfolio Assessment (APM Foundation)
 
 Goal:
+
 - Build transparent as-is understanding and governance baseline
 
 Core steps:
+
 1. Add data
 2. Collect and maintain data
 3. Assess portfolio
 
 Dependency:
+
 - Requires APM product
 
 ### 10.2 Application Rationalization
 
 Goal:
+
 - Reduce complexity and cost; remove redundancy and poor-fit apps
 
 Typical data preconditions:
+
 - Lifecycle
 - Business criticality
 - Functional fit
@@ -356,53 +392,65 @@ Typical data preconditions:
 - Core relationships to capabilities and organizations
 
 Process shape:
+
 - 7-step guide from strategy definition through scope, enrichment, evaluation, roadmap, initiative launch, and KPI reporting
 
 Product dependency:
+
 - APM mandatory; Architecture and Road Map Planning recommended for roadmap/transformation execution
 - Total Cost of Ownership extension requirements depend on tenant vintage
 
 ### 10.3 Application Modernization
 
 Goal:
+
 - Continuously evolve landscape to meet changing business/technology goals
 
 Key preconditions:
+
 - Application and IT component inventory
 - Capability map
 - Relationship completeness
 - TIME classification baseline
 
 Process shape:
+
 - 7-step flow similar to rationalization, with stronger to-be design focus
 
 Product dependency:
+
 - APM + Architecture and Road Map Planning + Technology Risk and Compliance (recommended stack in docs)
 
 ### 10.4 ERP Transformation
 
 Goal:
+
 - Support multi-year ERP programs with architecture transparency and decision support
 
 Why LeanIX is used:
+
 - Shared as-is baseline
 - To-be scenario modeling and comparison
 - Roadmap and milestone transparency
 - Cross-stakeholder communication
 
 Product dependency:
+
 - APM for as-is assessment
 - Architecture and Road Map Planning for to-be and transformation execution
 
 Important SAP note:
+
 - LeanIX complements project management tools (for example Jira); it does not replace them.
 
 ### 10.5 Obsolescence Risk Management
 
 Goal:
+
 - Identify, prioritize, and mitigate technology obsolescence risk with business context
 
 Core shape:
+
 1. Build software/IT component inventory
 2. Enrich lifecycle and relationship data
 3. Discover and prioritize risk
@@ -410,9 +458,11 @@ Core shape:
 5. Monitor and report
 
 Product dependency:
+
 - APM baseline + Technology Risk and Compliance for specialized capabilities
 
 Important modeling dependency:
+
 - Risk aggregation quality depends on correct IT component relationships to applications and surrounding model.
 
 ---
@@ -422,9 +472,11 @@ Important modeling dependency:
 From the dedicated product guide linked in Getting Started:
 
 Main concept:
+
 - Model changes as transformations tied to initiatives/objectives, then project/report those impacts over time.
 
 Highlighted capabilities:
+
 - Transformation templates (plus custom transformations)
 - Milestones inside initiative roadmaps
 - Impact views in reports
@@ -432,6 +484,7 @@ Highlighted capabilities:
 - Transformation Explorer for bulk management and execution
 
 Operational pattern:
+
 1. Define objective
 2. Decompose into initiatives/projects
 3. Model transformations and impacts
@@ -447,9 +500,11 @@ Operational pattern:
 From the dedicated product guide linked in Getting Started:
 
 Main concept:
+
 - Proactively manage technology lifecycle risk and standards adoption.
 
 Capabilities emphasized:
+
 - Infrastructure/IT component discovery
 - Lifecycle and support visibility
 - Obsolescence views and dashboards
@@ -457,6 +512,7 @@ Capabilities emphasized:
 - Integration-driven inventory enrichment
 
 Practical value:
+
 - Moves risk management from ad-hoc to measurable, repeatable portfolio process.
 
 ---
@@ -466,15 +522,18 @@ Practical value:
 The onboarding guide for APM introduces an in-product progress system:
 
 Structure:
+
 - Goals -> Milestones -> Tasks
 - Optional skip/reopen mechanics
 - Best-practice metrics for data quality benchmarking
 
 Version notes in documentation:
+
 - Version 3 available in new workspaces and self-service activation from Feb 4, 2026
 - Version 2 had earlier rollout windows in 2024
 
 Practical implication:
+
 - Teams can use onboarding artifacts not only for enablement but for governance checkpoints.
 
 ---
@@ -482,21 +541,27 @@ Practical implication:
 ## 14. Common Getting Started Pitfalls (Inferred from SAP Guidance)
 
 1. Over-scoping too early
+
 - Trying to model every fact sheet type before baseline governance exists
 
 2. Data volume over data quality
+
 - Large imports without ownership or relationship quality
 
 3. Weak access strategy
+
 - Delaying role/SSO decisions causes governance drift
 
 4. Missing relationship backbone
+
 - Capturing applications without capability and organization links limits analysis
 
 5. Treating LeanIX as project task manager
+
 - Transformation planning is architectural; detailed delivery tracking stays in PM tools
 
 6. Neglecting collaboration features
+
 - Without subscriptions/surveys/comments, data freshness declines quickly
 
 ---
@@ -534,15 +599,16 @@ Practical implication:
 
 How this Getting Started research maps to VantageMap's current architecture app design:
 
-| LeanIX Getting Started Theme | VantageMap Equivalent |
-|------------------------------|-----------------------|
-| Application Portfolio Management baseline | Applications view + Dashboard |
-| Capability to application traceability | Capabilities view + Applications linking |
-| Strategy alignment | Strategy view (objectives/KPIs/initiatives) |
-| Transformation roadmap | Roadmap view |
-| Technology risk and standards | Radar view |
+| LeanIX Getting Started Theme              | VantageMap Equivalent                       |
+| ----------------------------------------- | ------------------------------------------- |
+| Application Portfolio Management baseline | Applications view + Dashboard               |
+| Capability to application traceability    | Capabilities view + Applications linking    |
+| Strategy alignment                        | Strategy view (objectives/KPIs/initiatives) |
+| Transformation roadmap                    | Roadmap view                                |
+| Technology risk and standards             | Radar view                                  |
 
 Gaps to consider in VantageMap if aiming closer LeanIX parity:
+
 - Explicit Organization entity and relationships
 - Subscription/governance workflow concepts
 - Data quality indicators/completeness scoring
@@ -554,9 +620,11 @@ Gaps to consider in VantageMap if aiming closer LeanIX parity:
 ## 17. Source Index
 
 Core Getting Started:
+
 - https://help.sap.com/docs/leanix/ea/getting-started
 
 Role and onboarding pages:
+
 - https://help.sap.com/docs/leanix/ea/for-enterprise-architects
 - https://help.sap.com/docs/leanix/ea/for-application-and-business-owners
 - https://help.sap.com/docs/leanix/ea/set-up-user-access
@@ -564,10 +632,12 @@ Role and onboarding pages:
 - https://help.sap.com/docs/leanix/ea/onboarding-guide-application-portfolio-management
 
 Product pages:
+
 - https://help.sap.com/docs/leanix/ea/sap-leanix-architecture-and-road-map-planning
 - https://help.sap.com/docs/leanix/ea/sap-leanix-technology-risk-and-compliance
 
 Use-case pages linked from Getting Started:
+
 - https://help.sap.com/docs/leanix/ea/application-portfolio-assessment
 - https://help.sap.com/docs/leanix/ea/application-rationalization
 - https://help.sap.com/docs/leanix/ea/application-modernization
@@ -575,4 +645,5 @@ Use-case pages linked from Getting Started:
 - https://help.sap.com/docs/leanix/ea/obsolescence-risk-management
 
 Additional resources hub:
+
 - https://help.sap.com/docs/leanix/ea/resources

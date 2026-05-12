@@ -16,15 +16,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRequest'
+              $ref: "#/components/schemas/TokenRequest"
       responses:
-        '200':
+        "200":
           description: Token issued
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
-        '401':
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
           description: Invalid credentials
   /v1/auth/refresh:
     post:
@@ -36,15 +36,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RefreshRequest'
+              $ref: "#/components/schemas/RefreshRequest"
       responses:
-        '200':
+        "200":
           description: Token refreshed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
-        '401':
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
           description: Invalid refresh token
 components:
   schemas:

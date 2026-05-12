@@ -95,30 +95,36 @@ What this category controls:
 A practical sequence synthesized from the docs:
 
 1. Access and bootstrap
+
 - Confirm primary admin ownership and initial workspace access
 - Invite core admin team
 
 2. Identity and authorization model
+
 - Decide where roles are managed: LeanIX or IdP
 - Configure SSO and optionally SCIM
 - Establish role and permission policy
 
 3. Governance foundation
+
 - Define subscription roles and subscription visibility rules
 - Define tagging governance mode
 - Set key general settings (idle timeout, fiscal year, maintenance posture)
 
 4. Meta model alignment
+
 - Confirm standard model usage
 - Apply minimal safe customization
 - Configure fact sheet permissions and quality controls
 
 5. Automation and integration
+
 - Introduce no-code automations for governance workflows
 - Migrate integration credentials to technical users
 - Configure webhooks and integration observability
 
 6. Experience scoping
+
 - Configure workspace views and portals for persona-based consumption
 - Configure dashboard defaults and external-content policy
 
@@ -156,9 +162,11 @@ Custom roles:
 Permissions are split into:
 
 1. Fact-sheet permissions
+
 - Configured in Meta Model Configuration
 
 2. Non-fact-sheet permissions
+
 - Configured in User Roles and Permissions
 - Includes modules such as surveys, portals, transformations, SBOM, developer tools, and architecture decisions
 
@@ -590,21 +598,27 @@ SSO synergy:
 ## 15. Common Pitfalls and Mitigations
 
 1. Over-customizing meta model early
+
 - Mitigation: keep close to standard model unless a concrete use case requires divergence.
 
 2. Role ambiguity between IdP and workspace
+
 - Mitigation: define one source of truth for authorization and test edge scenarios.
 
 3. Ignoring technical user hygiene
+
 - Mitigation: enforce token rotation, ownership, and incident-ready revocation process.
 
 4. Silent automation overload
+
 - Mitigation: watch quota thresholds, batch-change behavior, and owner fallback coverage.
 
 5. Weak taxonomy governance
+
 - Mitigation: use predefined tag groups and change-control for scope/mode transitions.
 
 6. Incomplete subscription governance
+
 - Mitigation: define accountable/responsible model and enforce role selection where appropriate.
 
 ---

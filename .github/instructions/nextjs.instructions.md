@@ -42,6 +42,7 @@ export default function CapabilitiesPage() {
 ## Client Components
 
 Add `"use client"` only when you need:
+
 - `useState` / `useReducer` / `useContext`
 - `useEffect` / `useRef` / lifecycle hooks
 - Browser APIs (`window`, `document`, `localStorage`)

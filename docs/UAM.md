@@ -70,27 +70,33 @@ Mechanism:
 ## 3. UAM Setup Journey (Recommended Sequence)
 
 1. Bootstrap workspace access
+
 - First registrant is default admin
 - Form initial core admin team manually
 
 2. Decide operating model
+
 - Authentication source: LeanIX vs SSO
 - Authorization source: LeanIX vs IdP
 
 3. Establish baseline role governance
+
 - Validate standard role assignments
 - Define non-fact-sheet permissions per role
 - Define fact-sheet permissions in meta model configuration
 
 4. Enable SSO
+
 - Implement SAML 2.0 trust and claim mapping
 - Choose role management approach and default role behavior
 
 5. Add SCIM (optional but recommended at scale)
+
 - Automate create/update/archive user states
 - Validate attribute mapping and Invite-only caveats
 
 6. Add virtual workspaces (optional advanced control)
+
 - Define ACE taxonomy and IdP group mapping
 - Configure ACL behavior for new and existing fact sheets
 
@@ -124,9 +130,11 @@ Key mechanics:
 Role permissions are split into two domains:
 
 1. Fact-sheet permissions
+
 - Configured in meta model configuration (per fact-sheet type/section/field/relation controls)
 
 2. Non-fact-sheet permissions
+
 - Configured in User Roles and Permissions
 - Includes modules such as KPIs, Portals, Surveys, Collections, Diagram Templates, Presentations, Discovery Inbox, Architecture Decisions, SBOM, Tech Stack Discovery, Transformations, and Developer Tools
 
@@ -183,12 +191,15 @@ Option B: Roles managed in IdP
 ### 6.3 Critical Role Resolution Scenarios (IdP-Managed Authorization)
 
 1. IdP sends role
+
 - IdP role overwrites existing LeanIX role
 
 2. IdP does not send role, LeanIX default role exists
+
 - Default role is assigned and can overwrite current role
 
 3. IdP does not send role, no default role configured
+
 - User loses workspace access
 
 ### 6.4 Invite-Only with SSO
@@ -402,24 +413,31 @@ Key outcome:
 ## 12. Common Failure Modes and Mitigations
 
 1. Role-source ambiguity (LeanIX vs IdP)
+
 - Mitigation: explicitly define source of truth for authorization and test role-overwrite scenarios before rollout.
 
 2. Missing role claims with no default role
+
 - Mitigation: configure a safe default role or enforce role-claim integrity in IdP.
 
 3. Invite-only + SCIM misunderstanding
+
 - Mitigation: document that SCIM won’t create permissions in Invite-only mode; maintain invite workflow.
 
 4. Attribute mismatch (case/name/value)
+
 - Mitigation: enforce uppercase/identifier conventions and validate with SAML traces.
 
 5. Long-lived token exposure risk
+
 - Mitigation: treat as secret, store in secret manager, rotate and invalidate during offboarding/incidents.
 
 6. Overly complex ACE model
+
 - Mitigation: keep ACE taxonomy minimal and aligned with organizational boundaries to reduce maintenance burden.
 
 7. Unrestricted admin-created records in virtual workspaces
+
 - Mitigation: enforce admin checklist to set ACL values during creation and run periodic ACL audits.
 
 ---

@@ -27,41 +27,44 @@ Theme customisation is done with `@theme inline { }` in `globals.css`, not `tail
 
 Always use Rosely semantic tokens. Never use raw hex values or arbitrary Tailwind values like `text-[#27272a]`.
 
-| Token | Colour | CSS Variable | Typical Use |
-|-------|--------|-------------|-------------|
-| `rosely-night` | `#27272a` Velvet Night | `--rosely0` | Primary text, headings |
-| `rosely-dusk` | `#615f5f` | `--rosely1` | Secondary text labels |
-| `rosely-mauve` | `#85677b` | `--rosely2` | Accent text |
-| `rosely-mist` | `#a49e9e` | `--rosely3` | Placeholder, captions |
-| `rosely-blush` | `#f7caca` | `--rosely4` | Borders, dividers |
-| `rosely-petal` | `#f4dede` | `--rosely5` | Hover backgrounds |
-| `rosely-cream` | `#f4eee8` | `--rosely6` | Page/card backgrounds |
-| `rosely-periwinkle` | `#93a9d1` | `--rosely7` | Info / neutral accent |
-| `rosely-lilac` | `#be9cc1` | `--rosely8` | Purple accent, hover borders |
-| `rosely-dusty` | `#b0879b` | `--rosely9` | Dusty rose accent |
-| `rosely-plum` | `#b565a7` | `--rosely10` | Strong purple |
-| `rosely-rose` | `#d2386c` | `--rosely11` | Error, critical status |
-| `rosely-flamingo` | `#ec809e` | `--rosely12` | Warning |
-| `rosely-golden` | `#eada4f` | `--rosely13` | Highlight, at-risk |
-| `rosely-teal` | `#64bfa4` | `--rosely14` | Success, good health |
-| `rosely-cornflower` | `#919bc9` | `--rosely15` | Blue accent |
+| Token               | Colour                 | CSS Variable | Typical Use                  |
+| ------------------- | ---------------------- | ------------ | ---------------------------- |
+| `rosely-night`      | `#27272a` Velvet Night | `--rosely0`  | Primary text, headings       |
+| `rosely-dusk`       | `#615f5f`              | `--rosely1`  | Secondary text labels        |
+| `rosely-mauve`      | `#85677b`              | `--rosely2`  | Accent text                  |
+| `rosely-mist`       | `#a49e9e`              | `--rosely3`  | Placeholder, captions        |
+| `rosely-blush`      | `#f7caca`              | `--rosely4`  | Borders, dividers            |
+| `rosely-petal`      | `#f4dede`              | `--rosely5`  | Hover backgrounds            |
+| `rosely-cream`      | `#f4eee8`              | `--rosely6`  | Page/card backgrounds        |
+| `rosely-periwinkle` | `#93a9d1`              | `--rosely7`  | Info / neutral accent        |
+| `rosely-lilac`      | `#be9cc1`              | `--rosely8`  | Purple accent, hover borders |
+| `rosely-dusty`      | `#b0879b`              | `--rosely9`  | Dusty rose accent            |
+| `rosely-plum`       | `#b565a7`              | `--rosely10` | Strong purple                |
+| `rosely-rose`       | `#d2386c`              | `--rosely11` | Error, critical status       |
+| `rosely-flamingo`   | `#ec809e`              | `--rosely12` | Warning                      |
+| `rosely-golden`     | `#eada4f`              | `--rosely13` | Highlight, at-risk           |
+| `rosely-teal`       | `#64bfa4`              | `--rosely14` | Success, good health         |
+| `rosely-cornflower` | `#919bc9`              | `--rosely15` | Blue accent                  |
 
 Usage: `text-rosely-night`, `bg-rosely-cream`, `border-rosely-blush`, `ring-rosely-lilac`
 
 ## Common UI Patterns
 
 **Card / panel:**
+
 ```tsx
 <div className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all">
 ```
 
 **Section heading:**
+
 ```tsx
 <h1 className="text-2xl font-bold text-rosely-night">Title</h1>
 <p className="text-sm text-rosely-mist mt-1">Subtitle</p>
 ```
 
 **Table:**
+
 ```tsx
 <table className="w-full text-sm">
   <thead>
@@ -78,6 +81,7 @@ Usage: `text-rosely-night`, `bg-rosely-cream`, `border-rosely-blush`, `ring-rose
 ```
 
 **Status badge:**
+
 ```tsx
 <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-teal/20 text-rosely-teal">
   Active
@@ -85,6 +89,7 @@ Usage: `text-rosely-night`, `bg-rosely-cream`, `border-rosely-blush`, `ring-rose
 ```
 
 **Icon button:**
+
 ```tsx
 <button className="p-2 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors">
   <IconName className="w-4 h-4" />

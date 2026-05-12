@@ -23,8 +23,10 @@ yarn-error.log*
 
 # Editor
 .DS_Store
-.vscode/
 .idea/
+# Keep VS Code extension recommendations but ignore personal settings
+.vscode/*
+!.vscode/extensions.json
 
 # TypeScript
 *.tsbuildinfo

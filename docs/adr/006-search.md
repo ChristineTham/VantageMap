@@ -2,11 +2,12 @@
 
 **Status:** Accepted  
 **Date:** 2026-05-12  
-**Decision:** PostgreSQL Full-Text Search (MVP), upgrade path to Meilisearch  
+**Decision:** PostgreSQL Full-Text Search (MVP), upgrade path to Meilisearch
 
 ## Context
 
 VantageMap requires cross-entity search that supports:
+
 - Full-text search across all 12+ fact sheet types
 - Faceted filtering by type, lifecycle phase, health status, tags, and custom fields
 - Results grouped by entity type with relevance ranking
@@ -18,51 +19,51 @@ VantageMap requires cross-entity search that supports:
 
 ### 1. PostgreSQL Full-Text Search
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | PostgreSQL License (included with database) |
-| Cost | **Zero** — included with PostgreSQL (ADR-001) |
-| Infrastructure | **None additional** — uses existing database |
-| Full-text search | `tsvector`/`tsquery` with language-aware stemming |
-| Ranking | `ts_rank` and `ts_rank_cd` for relevance scoring |
-| Faceted filtering | SQL WHERE clauses (type, lifecycle, tags, etc.) |
-| Fuzzy matching | `pg_trgm` extension for trigram-based similarity |
-| Performance at 100K docs | Adequate with GIN indexes; p95 <300ms achievable |
-| Index maintenance | Automatic with GIN indexes; no sync pipeline needed |
-| AI familiarity | Moderate — less common in tutorials but well-documented |
+| Criterion                | Assessment                                              |
+| ------------------------ | ------------------------------------------------------- |
+| License                  | PostgreSQL License (included with database)             |
+| Cost                     | **Zero** — included with PostgreSQL (ADR-001)           |
+| Infrastructure           | **None additional** — uses existing database            |
+| Full-text search         | `tsvector`/`tsquery` with language-aware stemming       |
+| Ranking                  | `ts_rank` and `ts_rank_cd` for relevance scoring        |
+| Faceted filtering        | SQL WHERE clauses (type, lifecycle, tags, etc.)         |
+| Fuzzy matching           | `pg_trgm` extension for trigram-based similarity        |
+| Performance at 100K docs | Adequate with GIN indexes; p95 <300ms achievable        |
+| Index maintenance        | Automatic with GIN indexes; no sync pipeline needed     |
+| AI familiarity           | Moderate — less common in tutorials but well-documented |
 
 ### 2. Meilisearch
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | MIT |
-| Cost | Meilisearch Cloud free tier (100K docs, 10K searches/mo) |
-| Infrastructure | Separate service (self-hosted or cloud) |
-| Full-text search | Excellent — typo tolerance, relevance tuning, instant search |
-| Ranking | Customizable ranking rules |
-| Faceted filtering | Built-in faceted search with counts |
-| Performance | Sub-50ms searches, optimized for speed |
-| Index sync | **Requires sync pipeline** — data must be pushed to Meilisearch |
-| AI familiarity | Moderate |
+| Criterion         | Assessment                                                      |
+| ----------------- | --------------------------------------------------------------- |
+| License           | MIT                                                             |
+| Cost              | Meilisearch Cloud free tier (100K docs, 10K searches/mo)        |
+| Infrastructure    | Separate service (self-hosted or cloud)                         |
+| Full-text search  | Excellent — typo tolerance, relevance tuning, instant search    |
+| Ranking           | Customizable ranking rules                                      |
+| Faceted filtering | Built-in faceted search with counts                             |
+| Performance       | Sub-50ms searches, optimized for speed                          |
+| Index sync        | **Requires sync pipeline** — data must be pushed to Meilisearch |
+| AI familiarity    | Moderate                                                        |
 
 ### 3. Typesense
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | GPL v3 (server), Apache 2.0 (client) |
-| Cost | Typesense Cloud free tier (limited) |
-| Infrastructure | Separate service |
-| Full-text search | Excellent — similar to Meilisearch |
-| Index sync | Requires sync pipeline |
+| Criterion        | Assessment                           |
+| ---------------- | ------------------------------------ |
+| License          | GPL v3 (server), Apache 2.0 (client) |
+| Cost             | Typesense Cloud free tier (limited)  |
+| Infrastructure   | Separate service                     |
+| Full-text search | Excellent — similar to Meilisearch   |
+| Index sync       | Requires sync pipeline               |
 
 ### 4. Elasticsearch / OpenSearch
 
-| Criterion | Assessment |
-|-----------|------------|
-| License | SSPL (Elasticsearch 8+), Apache 2.0 (OpenSearch) |
-| Cost | **No free tier** for managed hosting; self-hosting is complex |
-| Infrastructure | Heavy — requires dedicated cluster |
-| Full-text search | Industry-leading |
+| Criterion            | Assessment                                                       |
+| -------------------- | ---------------------------------------------------------------- |
+| License              | SSPL (Elasticsearch 8+), Apache 2.0 (OpenSearch)                 |
+| Cost                 | **No free tier** for managed hosting; self-hosting is complex    |
+| Infrastructure       | Heavy — requires dedicated cluster                               |
+| Full-text search     | Industry-leading                                                 |
 | Operational overhead | **Very high** — cluster management, JVM tuning, shard management |
 
 **Disqualified:** Elasticsearch/OpenSearch is overkill for MVP. No free managed tier. Operational complexity contradicts zero-cost, serverless-first approach.
@@ -140,6 +141,7 @@ LIMIT 50;
 ### Upgrade trigger criteria:
 
 Move to Meilisearch when any of these are true:
+
 - Search p95 latency exceeds 300ms under production load
 - Users need typo-tolerant / fuzzy "instant search" UX
 - Entity volume exceeds 500K documents

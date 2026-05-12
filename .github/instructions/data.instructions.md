@@ -10,32 +10,32 @@ All data access goes through `src/lib/data.ts`. Do not inline data in page files
 ## Core Types
 
 ```ts
-type HealthStatus   = "Excellent" | "Good" | "Fair" | "Poor" | "Critical";
+type HealthStatus = "Excellent" | "Good" | "Fair" | "Poor" | "Critical";
 type LifecyclePhase = "Plan" | "Phase In" | "Active" | "Phase Out" | "End of Life";
-type TechRing       = "Adopt" | "Trial" | "Assess" | "Hold";
-type TechQuadrant   = "Techniques" | "Tools" | "Platforms" | "Languages & Frameworks";
+type TechRing = "Adopt" | "Trial" | "Assess" | "Hold";
+type TechQuadrant = "Techniques" | "Tools" | "Platforms" | "Languages & Frameworks";
 type StrategicPerspective = "Financial" | "Customer" | "Internal Process" | "Learning & Growth";
 type InitiativeStatus = "Not Started" | "In Progress" | "Completed" | "On Hold" | "Cancelled";
-type CapabilityLevel  = 1 | 2 | 3;
+type CapabilityLevel = 1 | 2 | 3;
 ```
 
 ## Exported Collections
 
-| Export | Type | Description |
-|--------|------|-------------|
-| `capabilities` | `BusinessCapability[]` | Hierarchical capability map (levels 1–3 via `parentId`) |
-| `applications` | `Application[]` | Application portfolio; linked to capabilities via `capabilityIds` |
+| Export                | Type                   | Description                                                                |
+| --------------------- | ---------------------- | -------------------------------------------------------------------------- |
+| `capabilities`        | `BusinessCapability[]` | Hierarchical capability map (levels 1–3 via `parentId`)                    |
+| `applications`        | `Application[]`        | Application portfolio; linked to capabilities via `capabilityIds`          |
 | `strategicObjectives` | `StrategicObjective[]` | Balanced Scorecard objectives with nested `kpis[]` and `initiatives[]` IDs |
-| `initiatives` | `Initiative[]` | Roadmap items; linked to objectives and capabilities |
-| `techRadar` | `TechEntry[]` | Technology Radar entries organised by ring and quadrant |
+| `initiatives`         | `Initiative[]`         | Roadmap items; linked to objectives and capabilities                       |
+| `techRadar`           | `TechEntry[]`          | Technology Radar entries organised by ring and quadrant                    |
 
 ## Helper Maps
 
-| Export | Type | Description |
-|--------|------|-------------|
-| `healthColour` | `Record<HealthStatus, string>` | Tailwind class for a `HealthStatus` value |
-| `healthBg` | `Record<HealthStatus, string>` | Tailwind background class for a `HealthStatus` value |
-| `initiativeStatusColour` | `Record<InitiativeStatus, string>` | Tailwind class for an `InitiativeStatus` value |
+| Export                   | Type                               | Description                                          |
+| ------------------------ | ---------------------------------- | ---------------------------------------------------- |
+| `healthColour`           | `Record<HealthStatus, string>`     | Tailwind class for a `HealthStatus` value            |
+| `healthBg`               | `Record<HealthStatus, string>`     | Tailwind background class for a `HealthStatus` value |
+| `initiativeStatusColour` | `Record<InitiativeStatus, string>` | Tailwind class for an `InitiativeStatus` value       |
 
 Use as dictionaries, not functions: `healthColour[cap.health]`, `healthBg[cap.health]`.
 Always use these maps rather than hardcoding colour classes for status values.
@@ -69,13 +69,13 @@ BusinessCapability     ──> children    (self-referential via parentId)
 
 ```ts
 // Filter by level
-const l1 = capabilities.filter(c => c.level === 1);
+const l1 = capabilities.filter((c) => c.level === 1);
 
 // Find children
-const children = capabilities.filter(c => c.parentId === parentId);
+const children = capabilities.filter((c) => c.parentId === parentId);
 
 // Cross-reference by ID
 const capNames = applications
-  .flatMap(a => a.capabilityIds)
-  .map(id => capabilities.find(c => c.id === id)?.name ?? "Unknown");
+  .flatMap((a) => a.capabilityIds)
+  .map((id) => capabilities.find((c) => c.id === id)?.name ?? "Unknown");
 ```

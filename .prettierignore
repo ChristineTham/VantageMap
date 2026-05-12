@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+drizzle/
+
+# Generated
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+
+# Agent skills (installed external content — not project code)
+.agents/
