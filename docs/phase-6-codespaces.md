@@ -6,15 +6,15 @@ Phase 6 implements cross-entity operations that span multiple fact sheet types: 
 
 ### New files created
 
-| File | Purpose |
-| --- | --- |
-| `src/lib/relationship-rules.ts` | Relationship validation rules — defines all valid (source, target, type) triples from MODEL.md §4.4 |
-| `src/app/api/relationships/route.ts` | Relationship collection (GET list, POST single or bulk create) |
-| `src/app/api/relationships/[id]/route.ts` | Relationship individual (GET, PATCH, DELETE) |
-| `src/app/api/search/route.ts` | Cross-entity full-text search using PostgreSQL `ts_rank` + `to_tsvector`/`plainto_tsquery` |
-| `src/app/api/facets/route.ts` | Facet values API (GET available filter values grouped by field) |
-| `src/app/api/facets/filter/route.ts` | Faceted filter API (GET filtered results across entity types) |
-| `src/app/api/bulk/route.ts` | Bulk operations (POST with `?action=` query param for update/delete/upsert) |
+| File                                      | Purpose                                                                                             |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/lib/relationship-rules.ts`           | Relationship validation rules — defines all valid (source, target, type) triples from MODEL.md §4.4 |
+| `src/app/api/relationships/route.ts`      | Relationship collection (GET list, POST single or bulk create)                                      |
+| `src/app/api/relationships/[id]/route.ts` | Relationship individual (GET, PATCH, DELETE)                                                        |
+| `src/app/api/search/route.ts`             | Cross-entity full-text search using PostgreSQL `ts_rank` + `to_tsvector`/`plainto_tsquery`          |
+| `src/app/api/facets/route.ts`             | Facet values API (GET available filter values grouped by field)                                     |
+| `src/app/api/facets/filter/route.ts`      | Faceted filter API (GET filtered results across entity types)                                       |
+| `src/app/api/bulk/route.ts`               | Bulk operations (POST with `?action=` query param for update/delete/upsert)                         |
 
 ### Architecture decisions
 
@@ -258,19 +258,19 @@ Or create a manual SQL migration in `drizzle/` adding GIN indexes.
 
 ## API Summary
 
-| Endpoint | Method | Purpose |
-| --- | --- | --- |
-| `/api/relationships` | GET | List/filter relationships |
-| `/api/relationships` | POST | Create single or bulk relationships |
-| `/api/relationships/[id]` | GET | Get single relationship |
-| `/api/relationships/[id]` | PATCH | Update relationship description/metadata |
-| `/api/relationships/[id]` | DELETE | Delete a relationship |
-| `/api/search` | GET | Full-text search across all entity types |
-| `/api/facets` | GET | Get available facet values for filtering |
-| `/api/facets/filter` | GET | Filter entities with faceted criteria |
-| `/api/bulk` | POST | Bulk update (default) |
-| `/api/bulk?action=delete` | POST | Bulk delete with cascade |
-| `/api/bulk?action=upsert` | POST | Idempotent upsert for imports |
+| Endpoint                  | Method | Purpose                                  |
+| ------------------------- | ------ | ---------------------------------------- |
+| `/api/relationships`      | GET    | List/filter relationships                |
+| `/api/relationships`      | POST   | Create single or bulk relationships      |
+| `/api/relationships/[id]` | GET    | Get single relationship                  |
+| `/api/relationships/[id]` | PATCH  | Update relationship description/metadata |
+| `/api/relationships/[id]` | DELETE | Delete a relationship                    |
+| `/api/search`             | GET    | Full-text search across all entity types |
+| `/api/facets`             | GET    | Get available facet values for filtering |
+| `/api/facets/filter`      | GET    | Filter entities with faceted criteria    |
+| `/api/bulk`               | POST   | Bulk update (default)                    |
+| `/api/bulk?action=delete` | POST   | Bulk delete with cascade                 |
+| `/api/bulk?action=upsert` | POST   | Idempotent upsert for imports            |
 
 ---
 

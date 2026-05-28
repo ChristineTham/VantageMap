@@ -122,9 +122,7 @@ const HIERARCHICAL_TYPES = new Set([
 
 // ── Lookup Index (built once for O(1) validation) ───────────────────────────
 
-const pairIndex = new Set(
-  VALID_RELATIONSHIP_PAIRS.map((p) => `${p.source}|${p.target}|${p.type}`)
-);
+const pairIndex = new Set(VALID_RELATIONSHIP_PAIRS.map((p) => `${p.source}|${p.target}|${p.type}`));
 
 // ── Validation Function ─────────────────────────────────────────────────────
 

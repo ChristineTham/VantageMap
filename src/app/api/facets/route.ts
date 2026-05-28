@@ -21,7 +21,6 @@ import { db } from "@/db";
 import { ok, badRequest, withErrorHandler } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
-import { parsePagination, buildPaginationMeta } from "@/lib/query";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -69,7 +68,7 @@ export const GET = withErrorHandler(async (request: Request) => {
   let tablesToQuery = [...FACETABLE_TABLES];
   if (typesParam) {
     const requestedTypes = typesParam.split(",").map((t) => t.trim());
-    const invalidTypes = requestedTypes.filter((t) => !VALID_TYPES.has(t));
+    const invalidTypes = requestedTypes.filter((t) => !(VALID_TYPES as Set<string>).has(t));
     if (invalidTypes.length > 0) {
       return badRequest(`Invalid entity types: ${invalidTypes.join(", ")}`);
     }

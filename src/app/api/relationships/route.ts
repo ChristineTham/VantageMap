@@ -12,15 +12,7 @@ import { z } from "zod";
 import { eq, and, count, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { relationships } from "@/db/schema";
-import {
-  ok,
-  created,
-  list,
-  badRequest,
-  conflict,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { created, list, badRequest, conflict, withErrorHandler } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import { writeAuditLog } from "@/lib/audit";
@@ -142,20 +134,17 @@ export const GET = withErrorHandler(async (request: Request) => {
   const targetId = url.searchParams.get("targetId");
   const relType = url.searchParams.get("relationshipType");
 
-  if (sourceType) conditions.push(eq(relationships.sourceType, sourceType));
+  if (sourceType) conditions.push(eq(relationships.sourceType, sourceType as never));
   if (sourceId) conditions.push(eq(relationships.sourceId, sourceId));
-  if (targetType) conditions.push(eq(relationships.targetType, targetType));
+  if (targetType) conditions.push(eq(relationships.targetType, targetType as never));
   if (targetId) conditions.push(eq(relationships.targetId, targetId));
-  if (relType) conditions.push(eq(relationships.relationshipType, relType));
+  if (relType) conditions.push(eq(relationships.relationshipType, relType as never));
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
   const orderBy = buildOrderBy(query.sort, columnMap);
 
   // Count total
-  const [countResult] = await db
-    .select({ value: count() })
-    .from(relationships)
-    .where(whereClause);
+  const [countResult] = await db.select({ value: count() }).from(relationships).where(whereClause);
   const total = countResult?.value ?? 0;
 
   // Fetch page

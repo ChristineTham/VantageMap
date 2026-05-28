@@ -42,13 +42,23 @@ interface GroupedResults {
 
 /** Tables to search with their entity type labels and table names. */
 const SEARCHABLE_TABLES = [
-  { type: "BusinessCapability", table: "business_capabilities", hasLifecycle: true, hasHealth: true },
+  {
+    type: "BusinessCapability",
+    table: "business_capabilities",
+    hasLifecycle: true,
+    hasHealth: true,
+  },
   { type: "Organization", table: "organizations", hasLifecycle: true, hasHealth: true },
   { type: "BusinessContext", table: "business_contexts", hasLifecycle: true, hasHealth: true },
   { type: "Application", table: "applications", hasLifecycle: true, hasHealth: true },
   { type: "DataObject", table: "data_objects", hasLifecycle: true, hasHealth: true },
   { type: "Interface", table: "interfaces", hasLifecycle: true, hasHealth: true },
-  { type: "StrategicObjective", table: "strategic_objectives", hasLifecycle: true, hasHealth: true },
+  {
+    type: "StrategicObjective",
+    table: "strategic_objectives",
+    hasLifecycle: true,
+    hasHealth: true,
+  },
   { type: "Initiative", table: "initiatives", hasLifecycle: true, hasHealth: true },
   { type: "Platform", table: "platforms", hasLifecycle: true, hasHealth: true },
   { type: "TechCategory", table: "tech_categories", hasLifecycle: false, hasHealth: false },
@@ -83,7 +93,7 @@ export const GET = withErrorHandler(async (request: Request) => {
   let requestedTypes: string[] = [];
   if (typesParam) {
     requestedTypes = typesParam.split(",").map((t) => t.trim());
-    const invalidTypes = requestedTypes.filter((t) => !VALID_TYPES.has(t));
+    const invalidTypes = requestedTypes.filter((t) => !(VALID_TYPES as Set<string>).has(t));
     if (invalidTypes.length > 0) {
       return badRequest(`Invalid entity types: ${invalidTypes.join(", ")}`);
     }

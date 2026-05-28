@@ -13,7 +13,7 @@ import { z } from "zod";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import { tagAssignments } from "@/db/schema";
-import { ok, badRequest, withErrorHandler, parseBody } from "@/lib/api-response";
+import { ok, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import { writeAuditLog } from "@/lib/audit";
@@ -38,14 +38,6 @@ const VALID_ENTITY_TYPES: Record<string, string> = {
 
 const VALID_TYPE_KEYS = Object.keys(VALID_ENTITY_TYPES);
 
-// Columns that are safe to bulk-update
-const UPDATABLE_COLUMNS = new Set([
-  "lifecycle",
-  "health",
-  "quality_seal",
-  "owner",
-]);
-
 // ── Schemas ─────────────────────────────────────────────────────────────────
 
 const entityRefSchema = z.object({
@@ -57,9 +49,7 @@ const bulkUpdateSchema = z.object({
   entities: z.array(entityRefSchema).min(1).max(100),
   fields: z
     .object({
-      lifecycle: z
-        .enum(["Plan", "Phase In", "Active", "Phase Out", "End of Life"])
-        .optional(),
+      lifecycle: z.enum(["Plan", "Phase In", "Active", "Phase Out", "End of Life"]).optional(),
       health: z.enum(["Excellent", "Good", "Fair", "Poor", "Critical"]).optional(),
       qualitySeal: z.enum(["Draft", "Check Needed", "Approved", "Rejected"]).optional(),
       owner: z.string().max(255).optional(),
@@ -78,9 +68,7 @@ const upsertItemSchema = z.object({
   externalId: z.string().max(255).optional(),
   name: z.string().min(1).max(255),
   description: z.string().nullish(),
-  lifecycle: z
-    .enum(["Plan", "Phase In", "Active", "Phase Out", "End of Life"])
-    .optional(),
+  lifecycle: z.enum(["Plan", "Phase In", "Active", "Phase Out", "End of Life"]).optional(),
   health: z.enum(["Excellent", "Good", "Fair", "Poor", "Critical"]).optional(),
   owner: z.string().max(255).nullish(),
 });
@@ -190,7 +178,7 @@ async function handleBulkUpdate(
             .insert(tagAssignments)
             .values({
               tagId,
-              factSheetType: entity.type,
+              factSheetType: entity.type as never,
               factSheetId: entity.id,
             })
             .onConflictDoNothing();

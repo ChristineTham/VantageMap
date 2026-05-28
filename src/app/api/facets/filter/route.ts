@@ -42,18 +42,90 @@ const FILTERABLE_TABLES: Record<
   string,
   { table: string; hasLifecycle: boolean; hasHealth: boolean; hasSeal: boolean; hasOwner: boolean }
 > = {
-  BusinessCapability: { table: "business_capabilities", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Organization: { table: "organizations", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  BusinessContext: { table: "business_contexts", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Application: { table: "applications", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  DataObject: { table: "data_objects", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Interface: { table: "interfaces", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  StrategicObjective: { table: "strategic_objectives", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Initiative: { table: "initiatives", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Platform: { table: "platforms", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  TechCategory: { table: "tech_categories", hasLifecycle: false, hasHealth: false, hasSeal: false, hasOwner: true },
-  ITComponent: { table: "it_components", hasLifecycle: true, hasHealth: true, hasSeal: true, hasOwner: true },
-  Provider: { table: "providers", hasLifecycle: false, hasHealth: false, hasSeal: false, hasOwner: true },
+  BusinessCapability: {
+    table: "business_capabilities",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Organization: {
+    table: "organizations",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  BusinessContext: {
+    table: "business_contexts",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Application: {
+    table: "applications",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  DataObject: {
+    table: "data_objects",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Interface: {
+    table: "interfaces",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  StrategicObjective: {
+    table: "strategic_objectives",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Initiative: {
+    table: "initiatives",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Platform: {
+    table: "platforms",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  TechCategory: {
+    table: "tech_categories",
+    hasLifecycle: false,
+    hasHealth: false,
+    hasSeal: false,
+    hasOwner: true,
+  },
+  ITComponent: {
+    table: "it_components",
+    hasLifecycle: true,
+    hasHealth: true,
+    hasSeal: true,
+    hasOwner: true,
+  },
+  Provider: {
+    table: "providers",
+    hasLifecycle: false,
+    hasHealth: false,
+    hasSeal: false,
+    hasOwner: true,
+  },
 };
 
 const VALID_TYPES = new Set(Object.keys(FILTERABLE_TABLES));
@@ -83,10 +155,26 @@ export const GET = withErrorHandler(async (request: Request) => {
   }
 
   // Parse optional filters
-  const lifecycleFilter = url.searchParams.get("lifecycle")?.split(",").map((v) => v.trim()) ?? [];
-  const healthFilter = url.searchParams.get("health")?.split(",").map((v) => v.trim()) ?? [];
-  const qualitySealFilter = url.searchParams.get("qualitySeal")?.split(",").map((v) => v.trim()) ?? [];
-  const tagFilter = url.searchParams.get("tags")?.split(",").map((v) => v.trim()) ?? [];
+  const lifecycleFilter =
+    url.searchParams
+      .get("lifecycle")
+      ?.split(",")
+      .map((v) => v.trim()) ?? [];
+  const healthFilter =
+    url.searchParams
+      .get("health")
+      ?.split(",")
+      .map((v) => v.trim()) ?? [];
+  const qualitySealFilter =
+    url.searchParams
+      .get("qualitySeal")
+      ?.split(",")
+      .map((v) => v.trim()) ?? [];
+  const tagFilter =
+    url.searchParams
+      .get("tags")
+      ?.split(",")
+      .map((v) => v.trim()) ?? [];
   const ownerFilter = url.searchParams.get("owner")?.trim() ?? "";
 
   // Parse sorting
@@ -148,14 +236,6 @@ export const GET = withErrorHandler(async (request: Request) => {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
-    // Map sort field to actual column name
-    const sortCol =
-      sortBy === "updatedAt"
-        ? "updated_at"
-        : sortBy === "qualitySeal"
-          ? "quality_seal"
-          : sortBy;
-
     subQueries.push(`
       SELECT
         id,
@@ -183,7 +263,9 @@ export const GET = withErrorHandler(async (request: Request) => {
 
   // Count total
   const countQuery = `SELECT COUNT(*)::int AS total FROM (${unionQuery}) AS filtered`;
-  const countResult = (await db.execute(sql.raw(countQuery))) as unknown as Array<{ total: number }>;
+  const countResult = (await db.execute(sql.raw(countQuery))) as unknown as Array<{
+    total: number;
+  }>;
   const total = Number(countResult[0]?.total ?? 0);
 
   // Map sort field for the outer query

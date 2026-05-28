@@ -51,11 +51,7 @@ export const GET = withErrorHandler(
       return badRequest("Invalid ID format");
     }
 
-    const [row] = await db
-      .select()
-      .from(relationships)
-      .where(eq(relationships.id, id))
-      .limit(1);
+    const [row] = await db.select().from(relationships).where(eq(relationships.id, id)).limit(1);
 
     if (!row) {
       return notFound("Relationship not found");
