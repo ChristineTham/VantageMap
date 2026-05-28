@@ -28,7 +28,7 @@ const createSchema = z.object({
   endpointUrl: z.string().url().max(2048).nullish(),
   authProtocol: z.string().max(100).nullish(),
   owner: z.string().max(255).nullish(),
-  customFields: z.record(z.unknown()).nullish(),
+  customFields: z.record(z.string(), z.unknown()).nullish(),
 });
 
 const updateSchema = createSchema.partial();

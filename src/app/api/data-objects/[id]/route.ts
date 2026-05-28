@@ -24,7 +24,7 @@ const createSchema = z.object({
   health: z.enum(["Good", "Adequate", "Insufficient", "Critical"]).optional(),
   qualitySeal: z.enum(["Draft", "Reviewed", "Approved"]).optional(),
   owner: z.string().max(255).nullish(),
-  customFields: z.record(z.unknown()).nullish(),
+  customFields: z.record(z.string(), z.unknown()).nullish(),
 });
 
 const updateSchema = createSchema.partial();

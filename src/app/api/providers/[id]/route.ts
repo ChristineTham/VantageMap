@@ -24,7 +24,7 @@ const createSchema = z.object({
   location: z.string().max(255).nullish(),
   contactInfo: z.string().nullish(),
   owner: z.string().max(255).nullish(),
-  customFields: z.record(z.unknown()).nullish(),
+  customFields: z.record(z.string(), z.unknown()).nullish(),
 });
 
 const updateSchema = createSchema.partial();

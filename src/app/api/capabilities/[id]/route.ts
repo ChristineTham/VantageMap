@@ -26,7 +26,7 @@ const createSchema = z.object({
   maturity: z.number().int().min(1).max(5).nullish(),
   strategicImportance: z.number().int().min(1).max(5).nullish(),
   owner: z.string().max(255).nullish(),
-  customFields: z.record(z.unknown()).nullish(),
+  customFields: z.record(z.string(), z.unknown()).nullish(),
 });
 
 const updateSchema = createSchema.partial();

@@ -21,7 +21,7 @@ const createSchema = z.object({
   level: z.number().int().min(1).optional(),
   parentId: z.string().uuid().nullish(),
   owner: z.string().max(255).nullish(),
-  customFields: z.record(z.unknown()).nullish(),
+  customFields: z.record(z.string(), z.unknown()).nullish(),
 });
 
 const updateSchema = createSchema.partial();
