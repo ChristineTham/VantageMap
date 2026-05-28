@@ -29,7 +29,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-const config: CrudConfig<typeof strategicObjectives> = {
+const config: CrudConfig = {
   table: strategicObjectives,
   entityType: "StrategicObjective",
   createSchema,

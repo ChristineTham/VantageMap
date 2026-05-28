@@ -29,7 +29,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-const config: CrudConfig<typeof providers> = {
+const config: CrudConfig = {
   table: providers,
   entityType: "Provider",
   createSchema,

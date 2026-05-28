@@ -130,9 +130,9 @@ Build shared API infrastructure that all entity endpoints will use. Each step is
 
 ---
 
-### Phase 5 — Entity CRUD APIs ⏳
+### Phase 5 — Entity CRUD APIs ✅
 
-One step per fact sheet type. All steps are independent and parallelizable. Each step creates the full REST endpoint suite (GET list, GET by ID, POST create, PATCH update, DELETE) with pagination, permission checks, audit logging, and tests. **Status: All 10 entity route handlers written using a shared CRUD factory (`src/lib/crud-factory.ts`). Pending: type-check, lint, build verification, and manual smoke-testing in Codespaces. See [phase-5-codespaces.md](phase-5-codespaces.md).**
+One step per fact sheet type. All steps are independent and parallelizable. Each step creates the full REST endpoint suite (GET list, GET by ID, POST create, PATCH update, DELETE) with pagination, permission checks, audit logging, and tests. **Status: Complete. All 10 entity route handlers implemented using a shared CRUD factory (`src/lib/crud-factory.ts`). Type-check, lint, and build all pass. Smoke-tested in Codespaces (all 11 endpoints, query parameters, RBAC, and audit logging verified). See [phase-5-codespaces.md](phase-5-codespaces.md).**
 
 | Step | Title                   | Entity                                                                                  | Depends on   |
 | ---- | ----------------------- | --------------------------------------------------------------------------------------- | ------------ |

@@ -8,10 +8,10 @@
  * Custom logic (hierarchical queries, sub-resources) is layered on top.
  */
 
-import { NextResponse } from "next/server";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { eq, and, count, type SQL, type Column } from "drizzle-orm";
 import type { PgTableWithColumns } from "drizzle-orm/pg-core";
-import { z, type ZodSchema } from "zod";
+import { type ZodSchema } from "zod";
 import { db } from "@/db";
 import {
   ok,
@@ -37,9 +37,9 @@ import {
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
-export interface CrudConfig<TTable extends PgTableWithColumns<any>> {
+export interface CrudConfig {
   /** The Drizzle table object. */
-  table: TTable;
+  table: PgTableWithColumns<any>;
   /** Fact sheet type name for audit logging. */
   entityType: FactSheetType;
   /** Zod schema for creating a new entity. */
@@ -59,9 +59,7 @@ export interface CrudConfig<TTable extends PgTableWithColumns<any>> {
 /**
  * Create a GET handler for listing entities with pagination, sorting, and filtering.
  */
-export function createListHandler<TTable extends PgTableWithColumns<any>>(
-  config: CrudConfig<TTable>
-) {
+export function createListHandler(config: CrudConfig) {
   return withErrorHandler(async (request: Request) => {
     const auth = await requireAuth(request);
     if (!auth.ok) return auth.response;
@@ -110,9 +108,7 @@ export function createListHandler<TTable extends PgTableWithColumns<any>>(
 /**
  * Create a GET handler for fetching a single entity by ID.
  */
-export function createGetByIdHandler<TTable extends PgTableWithColumns<any>>(
-  config: CrudConfig<TTable>
-) {
+export function createGetByIdHandler(config: CrudConfig) {
   return withErrorHandler(
     async (request: Request, context: { params: Promise<Record<string, string>> }) => {
       const auth = await requireAuth(request);
@@ -144,9 +140,7 @@ export function createGetByIdHandler<TTable extends PgTableWithColumns<any>>(
 /**
  * Create a POST handler for creating a new entity.
  */
-export function createCreateHandler<TTable extends PgTableWithColumns<any>>(
-  config: CrudConfig<TTable>
-) {
+export function createCreateHandler(config: CrudConfig) {
   return withErrorHandler(async (request: Request) => {
     const auth = await requireAuth(request);
     if (!auth.ok) return auth.response;
@@ -185,9 +179,7 @@ export function createCreateHandler<TTable extends PgTableWithColumns<any>>(
 /**
  * Create a PATCH handler for updating an entity.
  */
-export function createUpdateHandler<TTable extends PgTableWithColumns<any>>(
-  config: CrudConfig<TTable>
-) {
+export function createUpdateHandler(config: CrudConfig) {
   return withErrorHandler(
     async (request: Request, context: { params: Promise<Record<string, string>> }) => {
       const auth = await requireAuth(request);
@@ -246,9 +238,7 @@ export function createUpdateHandler<TTable extends PgTableWithColumns<any>>(
 /**
  * Create a DELETE handler for removing an entity.
  */
-export function createDeleteHandler<TTable extends PgTableWithColumns<any>>(
-  config: CrudConfig<TTable>
-) {
+export function createDeleteHandler(config: CrudConfig) {
   return withErrorHandler(
     async (request: Request, context: { params: Promise<Record<string, string>> }) => {
       const auth = await requireAuth(request);

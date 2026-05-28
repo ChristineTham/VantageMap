@@ -33,7 +33,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-const config: CrudConfig<typeof interfaces> = {
+const config: CrudConfig = {
   table: interfaces,
   entityType: "Interface",
   createSchema,

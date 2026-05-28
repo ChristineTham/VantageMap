@@ -23,7 +23,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-const config: CrudConfig<typeof dataObjects> = {
+const config: CrudConfig = {
   table: dataObjects,
   entityType: "DataObject",
   createSchema,

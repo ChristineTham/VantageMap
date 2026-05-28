@@ -39,7 +39,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-const config: CrudConfig<typeof itComponents> = {
+const config: CrudConfig = {
   table: itComponents,
   entityType: "ITComponent",
   createSchema,
