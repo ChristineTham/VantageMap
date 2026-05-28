@@ -6,31 +6,31 @@ All 10 entity CRUD route handlers have been implemented using a **shared CRUD fa
 
 ### New files created
 
-| File | Purpose |
-|------|---------|
-| `src/lib/crud-factory.ts` | Generic CRUD route handler factory (list, getById, create, update, delete) |
-| `src/app/api/capabilities/route.ts` | Business Capability collection (GET, POST) |
-| `src/app/api/capabilities/[id]/route.ts` | Business Capability individual (GET, PATCH, DELETE) |
-| `src/app/api/applications/route.ts` | Application collection (GET, POST) |
-| `src/app/api/applications/[id]/route.ts` | Application individual (GET, PATCH, DELETE) |
-| `src/app/api/objectives/route.ts` | Strategic Objective collection (GET, POST) |
-| `src/app/api/objectives/[id]/route.ts` | Strategic Objective individual (GET, PATCH, DELETE) |
-| `src/app/api/initiatives/route.ts` | Initiative collection (GET, POST) |
-| `src/app/api/initiatives/[id]/route.ts` | Initiative individual (GET, PATCH, DELETE) |
-| `src/app/api/it-components/route.ts` | IT Component / Radar Entry collection (GET, POST) |
-| `src/app/api/it-components/[id]/route.ts` | IT Component individual (GET, PATCH, DELETE) |
-| `src/app/api/tech-categories/route.ts` | Tech Category collection (GET, POST) |
-| `src/app/api/tech-categories/[id]/route.ts` | Tech Category individual (GET, PATCH, DELETE) |
-| `src/app/api/organizations/route.ts` | Organization collection (GET, POST) |
-| `src/app/api/organizations/[id]/route.ts` | Organization individual (GET, PATCH, DELETE) |
-| `src/app/api/data-objects/route.ts` | Data Object collection (GET, POST) |
-| `src/app/api/data-objects/[id]/route.ts` | Data Object individual (GET, PATCH, DELETE) |
-| `src/app/api/interfaces/route.ts` | Interface collection (GET, POST) |
-| `src/app/api/interfaces/[id]/route.ts` | Interface individual (GET, PATCH, DELETE) |
-| `src/app/api/providers/route.ts` | Provider collection (GET, POST) |
-| `src/app/api/providers/[id]/route.ts` | Provider individual (GET, PATCH, DELETE) |
-| `src/app/api/platforms/route.ts` | Platform collection (GET, POST) |
-| `src/app/api/platforms/[id]/route.ts` | Platform individual (GET, PATCH, DELETE) |
+| File                                        | Purpose                                                                    |
+| ------------------------------------------- | -------------------------------------------------------------------------- |
+| `src/lib/crud-factory.ts`                   | Generic CRUD route handler factory (list, getById, create, update, delete) |
+| `src/app/api/capabilities/route.ts`         | Business Capability collection (GET, POST)                                 |
+| `src/app/api/capabilities/[id]/route.ts`    | Business Capability individual (GET, PATCH, DELETE)                        |
+| `src/app/api/applications/route.ts`         | Application collection (GET, POST)                                         |
+| `src/app/api/applications/[id]/route.ts`    | Application individual (GET, PATCH, DELETE)                                |
+| `src/app/api/objectives/route.ts`           | Strategic Objective collection (GET, POST)                                 |
+| `src/app/api/objectives/[id]/route.ts`      | Strategic Objective individual (GET, PATCH, DELETE)                        |
+| `src/app/api/initiatives/route.ts`          | Initiative collection (GET, POST)                                          |
+| `src/app/api/initiatives/[id]/route.ts`     | Initiative individual (GET, PATCH, DELETE)                                 |
+| `src/app/api/it-components/route.ts`        | IT Component / Radar Entry collection (GET, POST)                          |
+| `src/app/api/it-components/[id]/route.ts`   | IT Component individual (GET, PATCH, DELETE)                               |
+| `src/app/api/tech-categories/route.ts`      | Tech Category collection (GET, POST)                                       |
+| `src/app/api/tech-categories/[id]/route.ts` | Tech Category individual (GET, PATCH, DELETE)                              |
+| `src/app/api/organizations/route.ts`        | Organization collection (GET, POST)                                        |
+| `src/app/api/organizations/[id]/route.ts`   | Organization individual (GET, PATCH, DELETE)                               |
+| `src/app/api/data-objects/route.ts`         | Data Object collection (GET, POST)                                         |
+| `src/app/api/data-objects/[id]/route.ts`    | Data Object individual (GET, PATCH, DELETE)                                |
+| `src/app/api/interfaces/route.ts`           | Interface collection (GET, POST)                                           |
+| `src/app/api/interfaces/[id]/route.ts`      | Interface individual (GET, PATCH, DELETE)                                  |
+| `src/app/api/providers/route.ts`            | Provider collection (GET, POST)                                            |
+| `src/app/api/providers/[id]/route.ts`       | Provider individual (GET, PATCH, DELETE)                                   |
+| `src/app/api/platforms/route.ts`            | Platform collection (GET, POST)                                            |
+| `src/app/api/platforms/[id]/route.ts`       | Platform individual (GET, PATCH, DELETE)                                   |
 
 ### Architecture decisions
 
@@ -116,6 +116,7 @@ curl -s -X DELETE http://localhost:3000/api/capabilities/<id> \
 ```
 
 Repeat similar patterns for other entities:
+
 - `/api/applications`
 - `/api/objectives`
 - `/api/initiatives`
@@ -174,6 +175,7 @@ npm run db:studio
 ```
 
 Or query directly:
+
 ```sql
 SELECT * FROM audit_entries ORDER BY created_at DESC LIMIT 10;
 ```
@@ -182,19 +184,20 @@ SELECT * FROM audit_entries ORDER BY created_at DESC LIMIT 10;
 
 ## Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| `Cannot find module '@/db/schema'` | Run `npm install` — tsconfig path alias needs compiled TS |
-| 401 on all requests | Ensure `NODE_ENV=development` is set (enables dev bypass) |
-| Empty results from list | Run `npm run db:seed` to populate test data |
-| 500 errors | Check terminal output for `[API Error]` logs — likely a DB connection issue |
-| `column "xxx" does not exist` | Run `npm run db:push` to sync schema to database |
+| Issue                              | Fix                                                                         |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| `Cannot find module '@/db/schema'` | Run `npm install` — tsconfig path alias needs compiled TS                   |
+| 401 on all requests                | Ensure `NODE_ENV=development` is set (enables dev bypass)                   |
+| Empty results from list            | Run `npm run db:seed` to populate test data                                 |
+| 500 errors                         | Check terminal output for `[API Error]` logs — likely a DB connection issue |
+| `column "xxx" does not exist`      | Run `npm run db:push` to sync schema to database                            |
 
 ---
 
 ## What's next (Phase 6)
 
 Phase 6 builds on Phase 5 with:
+
 - 6.1 Relationship CRUD API (create/manage edges between fact sheets)
 - 6.2 Cross-entity search API (full-text search across all types)
 - 6.3 Faceted filter API (combined multi-field filtering)

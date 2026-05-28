@@ -178,7 +178,7 @@ export function withErrorHandler(
 ) {
   return async (
     request: Request,
-    context: { params: Promise<Record<string, string>> }
+    context: { params: Promise<Record<string, string>> } = { params: Promise.resolve({}) }
   ): Promise<NextResponse> => {
     try {
       return await handler(request, context);

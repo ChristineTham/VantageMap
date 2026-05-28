@@ -80,10 +80,7 @@ export function createListHandler(config: CrudConfig) {
     const orderBy = buildOrderBy(query.sort, config.columnMap);
 
     // Count total
-    const [countResult] = await db
-      .select({ value: count() })
-      .from(config.table)
-      .where(whereClause);
+    const [countResult] = await db.select({ value: count() }).from(config.table).where(whereClause);
     const total = countResult?.value ?? 0;
 
     // Fetch page
@@ -160,7 +157,7 @@ export function createCreateHandler(config: CrudConfig) {
       const displayName =
         config.displayNameColumn && (row as any)[config.displayNameColumn]
           ? (row as any)[config.displayNameColumn]
-          : (row as any).name ?? undefined;
+          : ((row as any).name ?? undefined);
 
       await writeAuditLog({
         auth: auth.auth,

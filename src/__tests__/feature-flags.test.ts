@@ -45,14 +45,11 @@ describe("feature-flags — defaults", () => {
 // ── Env overrides — falsy values ─────────────────────────────────────────────
 
 describe("feature-flags — falsy env overrides", () => {
-  it.each(["false", "0", "no", "FALSE", "NO", "False"])(
-    'treats "%s" as disabled',
-    (value) => {
-      withEnv("FEATURE_CAPABILITIES_API", value, () => {
-        expect(isFeatureEnabled("FEATURE_CAPABILITIES_API")).toBe(false);
-      });
-    }
-  );
+  it.each(["false", "0", "no", "FALSE", "NO", "False"])('treats "%s" as disabled', (value) => {
+    withEnv("FEATURE_CAPABILITIES_API", value, () => {
+      expect(isFeatureEnabled("FEATURE_CAPABILITIES_API")).toBe(false);
+    });
+  });
 
   it("treats empty string as default (true)", () => {
     withEnv("FEATURE_CAPABILITIES_API", "", () => {
@@ -65,17 +62,14 @@ describe("feature-flags — falsy env overrides", () => {
 // ── Env overrides — truthy values ────────────────────────────────────────────
 
 describe("feature-flags — truthy env overrides", () => {
-  it.each(["true", "1", "yes", "TRUE", "YES", "True"])(
-    'treats "%s" as enabled',
-    (value) => {
-      // First disable it, then re-enable via env
-      withEnv("FEATURE_RBAC_ENABLED", "false", () => {
-        withEnv("FEATURE_RBAC_ENABLED", value, () => {
-          expect(isFeatureEnabled("FEATURE_RBAC_ENABLED")).toBe(true);
-        });
+  it.each(["true", "1", "yes", "TRUE", "YES", "True"])('treats "%s" as enabled', (value) => {
+    // First disable it, then re-enable via env
+    withEnv("FEATURE_RBAC_ENABLED", "false", () => {
+      withEnv("FEATURE_RBAC_ENABLED", value, () => {
+        expect(isFeatureEnabled("FEATURE_RBAC_ENABLED")).toBe(true);
       });
-    }
-  );
+    });
+  });
 });
 
 // ── getAllFlags() ────────────────────────────────────────────────────────────

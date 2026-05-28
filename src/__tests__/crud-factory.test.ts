@@ -11,6 +11,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { z } from "zod";
+import { NextResponse } from "next/server";
 import type { AuthContext } from "@/lib/auth";
 
 // ─── Mocks (must precede imports of the modules that depend on them) ────────
@@ -92,11 +93,9 @@ function authFor(role: AuthContext["role"]) {
 function unauthResult() {
   return {
     ok: false as const,
-    response: new Response(
-      JSON.stringify({
-        error: { code: "UNAUTHORIZED", message: "Authentication required", correlationId: "x" },
-      }),
-      { status: 401, headers: { "Content-Type": "application/json" } }
+    response: NextResponse.json(
+      { error: { code: "UNAUTHORIZED", message: "Authentication required", correlationId: "x" } },
+      { status: 401 }
     ),
   };
 }
@@ -222,8 +221,8 @@ describe("Step 6 — List handler", () => {
   it("returns 200 with list envelope including data and meta", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>) // count
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>); // data
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>) // count
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>); // data
 
     const res = await handler(GET());
 
@@ -238,8 +237,8 @@ describe("Step 6 — List handler", () => {
   it("returns empty data array when no records exist", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 0 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 0 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET());
 
@@ -256,7 +255,9 @@ describe("Step 6 — Get by ID handler", () => {
 
   it("returns 200 with the entity when found", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
 
     const res = await handler(GET(`${BASE}/${VALID_UUID}`), ctx(VALID_UUID));
 
@@ -268,7 +269,7 @@ describe("Step 6 — Get by ID handler", () => {
 
   it("returns 404 when the entity does not exist", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}/${OTHER_UUID}`), ctx(OTHER_UUID));
 
@@ -293,7 +294,9 @@ describe("Step 6 — Create handler", () => {
 
   it("returns 201 with the created entity", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockInsert.mockReturnValueOnce(insertChain([sampleRow]) as ReturnType<typeof db.insert>);
+    mockInsert.mockReturnValueOnce(
+      insertChain([sampleRow]) as unknown as ReturnType<typeof db.insert>
+    );
 
     const res = await handler(POST({ name: "Customer Management", lifecycle: "Active" }));
 
@@ -339,8 +342,12 @@ describe("Step 6 — Update handler", () => {
   it("returns 200 with the updated entity", async () => {
     const updatedRow = { ...sampleRow, lifecycle: "Phase Out" };
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockUpdate.mockReturnValueOnce(updateChain([updatedRow]) as ReturnType<typeof db.update>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockUpdate.mockReturnValueOnce(
+      updateChain([updatedRow]) as unknown as ReturnType<typeof db.update>
+    );
 
     const res = await handler(PATCH(VALID_UUID, { lifecycle: "Phase Out" }), ctx(VALID_UUID));
 
@@ -352,8 +359,12 @@ describe("Step 6 — Update handler", () => {
   it("accepts partial updates (PATCH semantics — only changed fields required)", async () => {
     const renamedRow = { ...sampleRow, name: "Renamed" };
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockUpdate.mockReturnValueOnce(updateChain([renamedRow]) as ReturnType<typeof db.update>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockUpdate.mockReturnValueOnce(
+      updateChain([renamedRow]) as unknown as ReturnType<typeof db.update>
+    );
 
     // Only 'name' supplied — all other fields remain unchanged
     const res = await handler(PATCH(VALID_UUID, { name: "Renamed" }), ctx(VALID_UUID));
@@ -365,7 +376,7 @@ describe("Step 6 — Update handler", () => {
 
   it("returns 404 when the entity does not exist", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(PATCH(OTHER_UUID, { name: "X" }), ctx(OTHER_UUID));
 
@@ -386,8 +397,10 @@ describe("Step 6 — Delete handler", () => {
 
   it("returns 204 with no body after successful deletion", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockDelete.mockReturnValueOnce(deleteChain() as ReturnType<typeof db.delete>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockDelete.mockReturnValueOnce(deleteChain() as unknown as ReturnType<typeof db.delete>);
 
     const res = await handler(DELETE_REQ(VALID_UUID), ctx(VALID_UUID));
 
@@ -397,7 +410,7 @@ describe("Step 6 — Delete handler", () => {
 
   it("returns 404 when the entity does not exist", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(DELETE_REQ(OTHER_UUID), ctx(OTHER_UUID));
 
@@ -423,8 +436,8 @@ describe("Step 7 — Pagination", () => {
   it("returns default page=1 and pageSize=25 when params are omitted", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 0 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 0 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET());
     const body = await res.json();
@@ -436,8 +449,8 @@ describe("Step 7 — Pagination", () => {
   it("respects explicit page and pageSize params", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 50 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 50 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?page=2&pageSize=10`));
     const body = await res.json();
@@ -451,8 +464,8 @@ describe("Step 7 — Pagination", () => {
   it("calculates totalPages correctly for a partial last page", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 11 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 11 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?page=1&pageSize=5`));
     const body = await res.json();
@@ -485,8 +498,8 @@ describe("Step 7 — Sorting", () => {
   it("sorts by a known column when sortBy and sortDirection are provided", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?sortBy=name&sortDirection=asc`));
 
@@ -496,8 +509,8 @@ describe("Step 7 — Sorting", () => {
   it("sorts descending when sortDirection=desc", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?sortBy=createdAt&sortDirection=desc`));
 
@@ -507,8 +520,8 @@ describe("Step 7 — Sorting", () => {
   it("silently ignores an unknown sortBy column and returns 200", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 0 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 0 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     // 'unknownField' is not in config.columnMap — buildOrderBy returns undefined
     const res = await handler(GET(`${BASE}?sortBy=unknownField`));
@@ -523,8 +536,8 @@ describe("Step 7 — Filtering", () => {
   it("applies filter[field]=value for exact match", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?filter[lifecycle]=Active`));
 
@@ -536,8 +549,8 @@ describe("Step 7 — Filtering", () => {
   it("applies search[field]=value for case-insensitive partial match", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?search[name]=Customer`));
 
@@ -549,8 +562,8 @@ describe("Step 7 — Filtering", () => {
   it("silently ignores filter on an unmapped column and returns all results", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     // 'unknownField' is not in columnMap — buildWhereConditions skips it
     const res = await handler(GET(`${BASE}?filter[unknownField]=anything`));
@@ -563,8 +576,8 @@ describe("Step 7 — Filtering", () => {
   it("combines multiple filter params", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await handler(GET(`${BASE}?filter[lifecycle]=Active&search[name]=Customer`));
 
@@ -597,7 +610,10 @@ describe("Step 8 — Unauthenticated requests return 401", () => {
 
   it("PATCH → 401", async () => {
     mockAuth.mockResolvedValue(unauthResult());
-    const res = await createUpdateHandler(config)(PATCH(VALID_UUID, { name: "X" }), ctx(VALID_UUID));
+    const res = await createUpdateHandler(config)(
+      PATCH(VALID_UUID, { name: "X" }),
+      ctx(VALID_UUID)
+    );
     expect(res.status).toBe(401);
   });
 
@@ -612,8 +628,8 @@ describe("Step 8 — Viewer role", () => {
   it("can list entities (GET list) → 200", async () => {
     mockAuth.mockResolvedValue(authFor("Viewer"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 0 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 0 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await createListHandler(config)(GET());
     expect(res.status).toBe(200);
@@ -621,7 +637,9 @@ describe("Step 8 — Viewer role", () => {
 
   it("can get entity by ID (GET) → 200", async () => {
     mockAuth.mockResolvedValue(authFor("Viewer"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
 
     const res = await createGetByIdHandler(config)(GET(`${BASE}/${VALID_UUID}`), ctx(VALID_UUID));
     expect(res.status).toBe(200);
@@ -640,7 +658,10 @@ describe("Step 8 — Viewer role", () => {
   it("cannot update (PATCH) → 403", async () => {
     mockAuth.mockResolvedValue(authFor("Viewer"));
 
-    const res = await createUpdateHandler(config)(PATCH(VALID_UUID, { name: "X" }), ctx(VALID_UUID));
+    const res = await createUpdateHandler(config)(
+      PATCH(VALID_UUID, { name: "X" }),
+      ctx(VALID_UUID)
+    );
     expect(res.status).toBe(403);
   });
 
@@ -656,8 +677,8 @@ describe("Step 8 — Member role", () => {
   it("can list entities (GET list) → 200", async () => {
     mockAuth.mockResolvedValue(authFor("Member"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 0 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 0 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([]) as unknown as ReturnType<typeof db.select>);
 
     const res = await createListHandler(config)(GET());
     expect(res.status).toBe(200);
@@ -665,7 +686,9 @@ describe("Step 8 — Member role", () => {
 
   it("can get entity by ID (GET) → 200", async () => {
     mockAuth.mockResolvedValue(authFor("Member"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
 
     const res = await createGetByIdHandler(config)(GET(`${BASE}/${VALID_UUID}`), ctx(VALID_UUID));
     expect(res.status).toBe(200);
@@ -673,7 +696,9 @@ describe("Step 8 — Member role", () => {
 
   it("can create (POST) → 201", async () => {
     mockAuth.mockResolvedValue(authFor("Member"));
-    mockInsert.mockReturnValueOnce(insertChain([sampleRow]) as ReturnType<typeof db.insert>);
+    mockInsert.mockReturnValueOnce(
+      insertChain([sampleRow]) as unknown as ReturnType<typeof db.insert>
+    );
 
     const res = await createCreateHandler(config)(POST({ name: "New Capability" }));
     expect(res.status).toBe(201);
@@ -682,8 +707,12 @@ describe("Step 8 — Member role", () => {
   it("can update (PATCH) → 200", async () => {
     const updatedRow = { ...sampleRow, name: "Updated" };
     mockAuth.mockResolvedValue(authFor("Member"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockUpdate.mockReturnValueOnce(updateChain([updatedRow]) as ReturnType<typeof db.update>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockUpdate.mockReturnValueOnce(
+      updateChain([updatedRow]) as unknown as ReturnType<typeof db.update>
+    );
 
     const res = await createUpdateHandler(config)(
       PATCH(VALID_UUID, { name: "Updated" }),
@@ -707,8 +736,8 @@ describe("Step 8 — Admin role", () => {
   it("can list → 200", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
     mockSelect
-      .mockReturnValueOnce(selectChain([{ value: 1 }]) as ReturnType<typeof db.select>)
-      .mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
+      .mockReturnValueOnce(selectChain([{ value: 1 }]) as unknown as ReturnType<typeof db.select>)
+      .mockReturnValueOnce(selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>);
 
     const res = await createListHandler(config)(GET());
     expect(res.status).toBe(200);
@@ -716,7 +745,9 @@ describe("Step 8 — Admin role", () => {
 
   it("can create → 201", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockInsert.mockReturnValueOnce(insertChain([sampleRow]) as ReturnType<typeof db.insert>);
+    mockInsert.mockReturnValueOnce(
+      insertChain([sampleRow]) as unknown as ReturnType<typeof db.insert>
+    );
 
     const res = await createCreateHandler(config)(POST({ name: "Admin Cap" }));
     expect(res.status).toBe(201);
@@ -725,8 +756,12 @@ describe("Step 8 — Admin role", () => {
   it("can update → 200", async () => {
     const updatedRow = { ...sampleRow, name: "Admin Updated" };
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockUpdate.mockReturnValueOnce(updateChain([updatedRow]) as ReturnType<typeof db.update>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockUpdate.mockReturnValueOnce(
+      updateChain([updatedRow]) as unknown as ReturnType<typeof db.update>
+    );
 
     const res = await createUpdateHandler(config)(
       PATCH(VALID_UUID, { name: "Admin Updated" }),
@@ -737,8 +772,10 @@ describe("Step 8 — Admin role", () => {
 
   it("can delete → 204", async () => {
     mockAuth.mockResolvedValue(authFor("Admin"));
-    mockSelect.mockReturnValueOnce(selectChain([sampleRow]) as ReturnType<typeof db.select>);
-    mockDelete.mockReturnValueOnce(deleteChain() as ReturnType<typeof db.delete>);
+    mockSelect.mockReturnValueOnce(
+      selectChain([sampleRow]) as unknown as ReturnType<typeof db.select>
+    );
+    mockDelete.mockReturnValueOnce(deleteChain() as unknown as ReturnType<typeof db.delete>);
 
     const res = await createDeleteHandler(config)(DELETE_REQ(VALID_UUID), ctx(VALID_UUID));
     expect(res.status).toBe(204);
