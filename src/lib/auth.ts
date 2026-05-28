@@ -113,9 +113,7 @@ export async function authenticate(request: Request): Promise<AuthResult> {
  * Phase 10 will integrate with Better Auth's API token system.
  * For now, tokens are not validated — this returns 401.
  */
-async function authenticateWithToken(
-  _token: string
-): Promise<AuthResult> {
+async function authenticateWithToken(_token: string): Promise<AuthResult> {
   // TODO: Phase 10 — validate token via Better Auth
   // For now, bearer tokens are not yet supported
   return {
@@ -129,9 +127,7 @@ async function authenticateWithToken(
  * Phase 10 will integrate with Better Auth's session validation.
  * For now, sessions are not validated — this returns 401.
  */
-async function authenticateWithSession(
-  _sessionToken: string
-): Promise<AuthResult> {
+async function authenticateWithSession(_sessionToken: string): Promise<AuthResult> {
   // TODO: Phase 10 — validate session via Better Auth
   return {
     ok: false,
@@ -144,11 +140,7 @@ async function authenticateWithSession(
  * Looks up the user and their workspace role.
  */
 async function resolveUserContext(userId: string): Promise<AuthResult> {
-  const [user] = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
+  const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
 
   if (!user || user.status !== "Active") {
     return { ok: false, response: unauthorized("User not found or inactive") };

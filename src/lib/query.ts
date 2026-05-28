@@ -12,14 +12,7 @@
 
 import { z } from "zod";
 import type { PaginationMeta } from "@/lib/api-response";
-import {
-  asc,
-  desc,
-  eq,
-  ilike,
-  type SQL,
-  type Column,
-} from "drizzle-orm";
+import { asc, desc, eq, ilike, type SQL, type Column } from "drizzle-orm";
 
 // ── Constants ───────────────────────────────────────────────────────────────
 
@@ -67,10 +60,7 @@ export function parsePagination(searchParams: URLSearchParams): PaginationParams
 /**
  * Build pagination metadata from total count and current page.
  */
-export function buildPaginationMeta(
-  total: number,
-  params: PaginationParams
-): PaginationMeta {
+export function buildPaginationMeta(total: number, params: PaginationParams): PaginationMeta {
   return {
     page: params.page,
     pageSize: params.pageSize,
@@ -122,10 +112,7 @@ export function parseSort(searchParams: URLSearchParams): SortParams {
  *   health: table.health,
  * });
  */
-export function buildOrderBy(
-  sort: SortParams,
-  columnMap: Record<string, Column>
-): SQL | undefined {
+export function buildOrderBy(sort: SortParams, columnMap: Record<string, Column>): SQL | undefined {
   const column = columnMap[sort.sortBy];
   if (!column) return undefined;
 

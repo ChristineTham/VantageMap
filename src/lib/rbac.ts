@@ -49,9 +49,7 @@ const PERMISSIONS: Record<Operation, readonly StandardRole[]> = {
 
 // ── Authorization Check ─────────────────────────────────────────────────────
 
-export type AuthzResult =
-  | { ok: true }
-  | { ok: false; response: NextResponse<ApiErrorBody> };
+export type AuthzResult = { ok: true } | { ok: false; response: NextResponse<ApiErrorBody> };
 
 /**
  * Check if the authenticated user has permission for a given operation.
@@ -64,10 +62,7 @@ export type AuthzResult =
  * const authz = checkPermission(auth.auth, "create");
  * if (!authz.ok) return authz.response;
  */
-export function checkPermission(
-  auth: AuthContext,
-  operation: Operation
-): AuthzResult {
+export function checkPermission(auth: AuthContext, operation: Operation): AuthzResult {
   const allowedRoles = PERMISSIONS[operation];
 
   if (allowedRoles.includes(auth.role)) {
@@ -76,9 +71,7 @@ export function checkPermission(
 
   return {
     ok: false,
-    response: forbidden(
-      `Role '${auth.role}' is not permitted to perform '${operation}'`
-    ),
+    response: forbidden(`Role '${auth.role}' is not permitted to perform '${operation}'`),
   };
 }
 

@@ -58,10 +58,7 @@ export function created<T>(data: T): NextResponse<ApiSuccessResponse<T>> {
 }
 
 /** 200 OK with paginated list. */
-export function list<T>(
-  data: T[],
-  meta: PaginationMeta
-): NextResponse<ApiListResponse<T>> {
+export function list<T>(data: T[], meta: PaginationMeta): NextResponse<ApiListResponse<T>> {
   return NextResponse.json({ data, meta }, { status: 200 });
 }
 
@@ -100,23 +97,17 @@ export function badRequest(
 }
 
 /** 401 Unauthorized — missing or invalid authentication. */
-export function unauthorized(
-  message = "Authentication required"
-): NextResponse<ApiErrorBody> {
+export function unauthorized(message = "Authentication required"): NextResponse<ApiErrorBody> {
   return errorResponse(401, "UNAUTHORIZED", message);
 }
 
 /** 403 Forbidden — authenticated but not permitted. */
-export function forbidden(
-  message = "Permission denied"
-): NextResponse<ApiErrorBody> {
+export function forbidden(message = "Permission denied"): NextResponse<ApiErrorBody> {
   return errorResponse(403, "FORBIDDEN", message);
 }
 
 /** 404 Not Found. */
-export function notFound(
-  message = "Resource not found"
-): NextResponse<ApiErrorBody> {
+export function notFound(message = "Resource not found"): NextResponse<ApiErrorBody> {
   return errorResponse(404, "NOT_FOUND", message);
 }
 
@@ -126,9 +117,7 @@ export function conflict(message: string): NextResponse<ApiErrorBody> {
 }
 
 /** 500 Internal Server Error — unexpected failure. */
-export function internalError(
-  message = "Internal server error"
-): NextResponse<ApiErrorBody> {
+export function internalError(message = "Internal server error"): NextResponse<ApiErrorBody> {
   return errorResponse(500, "INTERNAL_ERROR", message);
 }
 

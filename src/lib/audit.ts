@@ -56,10 +56,7 @@ function extractRequestContext(request?: Request) {
   if (!request) return undefined;
 
   return {
-    ip:
-      request.headers.get("x-forwarded-for") ??
-      request.headers.get("x-real-ip") ??
-      undefined,
+    ip: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? undefined,
     userAgent: request.headers.get("user-agent") ?? undefined,
     method: request.method,
     path: new URL(request.url).pathname,
@@ -141,9 +138,7 @@ export async function writeAuditLog(params: AuditLogParams): Promise<void> {
  * Per security-rbac.md: "Record failed authorization attempts
  * with reason and request context."
  */
-export async function writeFailedAuthLog(
-  params: FailedAuthLogParams
-): Promise<void> {
+export async function writeFailedAuthLog(params: FailedAuthLogParams): Promise<void> {
   try {
     await db.insert(auditEntries).values({
       actorId: params.auth?.userId,

@@ -88,13 +88,7 @@ export function getAllFlags(): Record<FeatureFlag, boolean> {
  * @returns true if the module should use API data, false for static fixtures
  */
 export function isApiEnabled(
-  module:
-    | "capabilities"
-    | "applications"
-    | "strategy"
-    | "radar"
-    | "roadmap"
-    | "dashboard"
+  module: "capabilities" | "applications" | "strategy" | "radar" | "roadmap" | "dashboard"
 ): boolean {
   const flagMap: Record<string, FeatureFlag> = {
     capabilities: "FEATURE_CAPABILITIES_API",
