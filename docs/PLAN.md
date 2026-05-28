@@ -105,9 +105,9 @@ Implement the canonical data model from [MODEL.md](MODEL.md) as database tables 
 
 ---
 
-### Phase 4 — Backend API Foundation ⏳
+### Phase 4 — Backend API Foundation ✅
 
-Build shared API infrastructure that all entity endpoints will use. Each step is a reusable middleware or utility layer. **Status: All utility modules written. Pending: type-check, lint, build verification in Codespaces. See [phase-4-codespaces.md](phase-4-codespaces.md).**
+Build shared API infrastructure that all entity endpoints will use. Each step is a reusable middleware or utility layer. **Status: Complete.**
 
 **Decisions summary:**
 
@@ -130,9 +130,9 @@ Build shared API infrastructure that all entity endpoints will use. Each step is
 
 ---
 
-### Phase 5 — Entity CRUD APIs
+### Phase 5 — Entity CRUD APIs ⏳
 
-One step per fact sheet type. All steps are independent and parallelizable. Each step creates the full REST endpoint suite (GET list, GET by ID, POST create, PUT update, DELETE) with pagination, permission checks, audit logging, and tests.
+One step per fact sheet type. All steps are independent and parallelizable. Each step creates the full REST endpoint suite (GET list, GET by ID, POST create, PATCH update, DELETE) with pagination, permission checks, audit logging, and tests. **Status: All 10 entity route handlers written using a shared CRUD factory (`src/lib/crud-factory.ts`). Pending: type-check, lint, build verification, and manual smoke-testing in Codespaces. See [phase-5-codespaces.md](phase-5-codespaces.md).**
 
 | Step | Title                   | Entity                                                                                  | Depends on   |
 | ---- | ----------------------- | --------------------------------------------------------------------------------------- | ------------ |
