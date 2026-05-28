@@ -35,6 +35,12 @@ const FLAG_DEFAULTS = {
   FEATURE_AUDIT_LOGGING: true,
   /** Enable RBAC permission checks on API routes. */
   FEATURE_RBAC_ENABLED: true,
+  /** Enable cross-entity search API. */
+  FEATURE_SEARCH_API: true,
+  /** Enable relationship CRUD API. */
+  FEATURE_RELATIONSHIPS_API: true,
+  /** Enable bulk operations API. */
+  FEATURE_BULK_API: true,
 } as const;
 
 export type FeatureFlag = keyof typeof FLAG_DEFAULTS;

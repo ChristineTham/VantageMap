@@ -149,9 +149,9 @@ One step per fact sheet type. All steps are independent and parallelizable. Each
 
 ---
 
-### Phase 6 — Relationship and Search APIs
+### Phase 6 — Relationship and Search APIs ✅
 
-Cross-entity operations that span multiple fact sheet types.
+Cross-entity operations that span multiple fact sheet types. **Status: Complete. Relationship CRUD with meta-model validation, cross-entity full-text search using PostgreSQL FTS, faceted filter API, and bulk operations (update/delete/upsert) all implemented. See [phase-6-codespaces.md](phase-6-codespaces.md).**
 
 | Step | Title                   | Scope                                                                                                                                                                                         | Depends on                                               |
 | ---- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
