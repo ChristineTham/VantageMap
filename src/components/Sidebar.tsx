@@ -13,8 +13,10 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { SearchModal } from "@/components/SearchModal";
+import { SearchBar } from "@/components/SearchBar";
 
 // ── Navigation Items ────────────────────────────────────────────────────────
 
@@ -25,7 +27,6 @@ const navItems = [
   { href: "/strategy", label: "Strategy", icon: Target },
   { href: "/radar", label: "Tech Radar", icon: Radar },
   { href: "/roadmap", label: "Roadmap", icon: GanttChart },
-  { href: "/search", label: "Search", icon: Search },
 ];
 
 // ── Sidebar Component ───────────────────────────────────────────────────────
@@ -33,62 +34,92 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // Global Cmd/Ctrl+K shortcut
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   return (
-    <aside
-      className={cn(
-        "flex h-screen flex-col border-r border-rosely-blush bg-white transition-all duration-200",
-        collapsed ? "w-16" : "w-56"
-      )}
-    >
-      {/* Logo / Brand */}
-      <div className="flex h-14 items-center border-b border-rosely-blush px-4">
-        {!collapsed && (
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-serif text-lg font-bold text-rosely-plum">VantageMap</span>
-          </Link>
+    <>
+      <aside
+        className={cn(
+          "flex h-screen flex-col border-r border-rosely-blush bg-white transition-all duration-200",
+          collapsed ? "w-16" : "w-56"
         )}
-        {collapsed && (
-          <Link href="/" className="flex w-full items-center justify-center">
-            <span className="font-serif text-lg font-bold text-rosely-plum">V</span>
-          </Link>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-2 py-3">
-        {navItems.map((item) => {
-          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-rosely-petal text-rosely-plum"
-                  : "text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night"
-              )}
-              title={collapsed ? item.label : undefined}
-            >
-              <item.icon className="h-5 w-5 shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+      >
+        {/* Logo / Brand */}
+        <div className="flex h-14 items-center border-b border-rosely-blush px-4">
+          {!collapsed && (
+            <Link href="/" className="flex items-center gap-2">
+              <span className="font-serif text-lg font-bold text-rosely-plum">VantageMap</span>
             </Link>
-          );
-        })}
-      </nav>
+          )}
+          {collapsed && (
+            <Link href="/" className="flex w-full items-center justify-center">
+              <span className="font-serif text-lg font-bold text-rosely-plum">V</span>
+            </Link>
+          )}
+        </div>
 
-      {/* Collapse Toggle */}
-      <div className="border-t border-rosely-blush p-2">
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex w-full items-center justify-center rounded-lg p-2 text-rosely-mist hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
-      </div>
-    </aside>
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 px-2 py-3">
+          {navItems.map((item) => {
+            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-rosely-petal text-rosely-plum"
+                    : "text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night"
+                )}
+                title={collapsed ? item.label : undefined}
+              >
+                <item.icon className="h-5 w-5 shrink-0" />
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
+
+          {/* Search — inline input (expanded) or icon button (collapsed) */}
+          {collapsed ? (
+            <button
+              onClick={() => setSearchOpen(true)}
+              title="Search (⌘K)"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
+            >
+              <Search className="h-5 w-5 shrink-0" />
+            </button>
+          ) : (
+            <SearchBar />
+          )}
+        </nav>
+
+        {/* Collapse Toggle */}
+        <div className="border-t border-rosely-blush p-2">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="flex w-full items-center justify-center rounded-lg p-2 text-rosely-mist hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </button>
+        </div>
+      </aside>
+
+      {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
+    </>
   );
 }

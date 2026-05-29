@@ -72,33 +72,38 @@ export function RelationshipAddDialog({
   }, [validOutgoing, validIncoming, typeSearch]);
 
   // Debounced search for target entities
-  const searchEntities = useCallback(
-    async (q: string, type: FactSheetType | "") => {
-      if (!type || q.trim().length < 1) {
-        setSearchResults([]);
-        return;
-      }
-      setSearching(true);
-      try {
-        const params = new URLSearchParams({ q: q.trim(), types: type, pageSize: "10", nameOnly: "true" });
-        const res = await fetch(`/api/search?${params}`, {
-          headers: { ...clientAuthHeaders() },
-        });
-        if (!res.ok) throw new Error("Search failed");
-        const body = await res.json();
-        const data = body.data ?? body;
-        const hits: SearchHit[] = (data.results ?? []).map(
-          (r: SearchHit) => ({ id: r.id, name: r.name, description: r.description, entityType: r.entityType })
-        );
-        setSearchResults(hits);
-      } catch {
-        setSearchResults([]);
-      } finally {
-        setSearching(false);
-      }
-    },
-    []
-  );
+  const searchEntities = useCallback(async (q: string, type: FactSheetType | "") => {
+    if (!type || q.trim().length < 1) {
+      setSearchResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const params = new URLSearchParams({
+        q: q.trim(),
+        types: type,
+        pageSize: "10",
+        nameOnly: "true",
+      });
+      const res = await fetch(`/api/search?${params}`, {
+        headers: { ...clientAuthHeaders() },
+      });
+      if (!res.ok) throw new Error("Search failed");
+      const body = await res.json();
+      const data = body.data ?? body;
+      const hits: SearchHit[] = (data.results ?? []).map((r: SearchHit) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        entityType: r.entityType,
+      }));
+      setSearchResults(hits);
+    } catch {
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -257,13 +262,21 @@ export function RelationshipAddDialog({
                 <div className="flex items-center gap-2 rounded-lg border border-rosely-lilac/40 bg-rosely-petal px-3 py-2">
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-rosely-plum" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-rosely-night">{selectedTarget.name}</p>
+                    <p className="truncate text-sm font-medium text-rosely-night">
+                      {selectedTarget.name}
+                    </p>
                     {selectedTarget.description && (
-                      <p className="truncate text-xs text-rosely-mist">{selectedTarget.description}</p>
+                      <p className="truncate text-xs text-rosely-mist">
+                        {selectedTarget.description}
+                      </p>
                     )}
                   </div>
                   <button
-                    onClick={() => { setSelectedTarget(null); setEntitySearch(""); setSearchResults([]); }}
+                    onClick={() => {
+                      setSelectedTarget(null);
+                      setEntitySearch("");
+                      setSearchResults([]);
+                    }}
                     className="shrink-0 text-xs text-rosely-mist hover:text-rosely-night transition-colors"
                   >
                     Change
@@ -299,7 +312,9 @@ export function RelationshipAddDialog({
                       {searching ? (
                         <p className="py-4 text-center text-sm text-rosely-mist">Searching…</p>
                       ) : searchResults.length === 0 ? (
-                        <p className="py-4 text-center text-sm text-rosely-mist">No results found.</p>
+                        <p className="py-4 text-center text-sm text-rosely-mist">
+                          No results found.
+                        </p>
                       ) : (
                         searchResults.map((hit) => (
                           <button
@@ -309,7 +324,9 @@ export function RelationshipAddDialog({
                           >
                             <span className="font-medium text-rosely-night">{hit.name}</span>
                             {hit.description && (
-                              <span className="text-xs text-rosely-mist line-clamp-1">{hit.description}</span>
+                              <span className="text-xs text-rosely-mist line-clamp-1">
+                                {hit.description}
+                              </span>
                             )}
                           </button>
                         ))
@@ -339,7 +356,12 @@ export function RelationshipAddDialog({
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-rosely-blush">
                 <button
-                  onClick={() => { setStep("type"); setSelectedTarget(null); setEntitySearch(""); setSearchResults([]); }}
+                  onClick={() => {
+                    setStep("type");
+                    setSelectedTarget(null);
+                    setEntitySearch("");
+                    setSearchResults([]);
+                  }}
                   className="text-sm text-rosely-mist hover:text-rosely-night transition-colors"
                 >
                   ← Back

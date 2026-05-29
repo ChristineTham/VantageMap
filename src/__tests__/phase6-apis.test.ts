@@ -511,7 +511,9 @@ describe("GET /api/facets", () => {
   });
 
   it("returns facet groups", async () => {
-    vi.mocked(db.execute).mockResolvedValue({ rows: [{ value: "Application", count: 5 }] } as never);
+    vi.mocked(db.execute).mockResolvedValue({
+      rows: [{ value: "Application", count: 5 }],
+    } as never);
     const res = await facetsGET(makeRequest(`${BASE}/api/facets`));
     const body = await res.json();
     expect(res.status).toBe(200);

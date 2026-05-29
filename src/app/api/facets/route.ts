@@ -82,9 +82,8 @@ export const GET = withErrorHandler(async (request: Request) => {
   const typeCountQueries = tablesToQuery.map(
     (t) => `SELECT '${t.type}' AS value, COUNT(*)::int AS count FROM ${t.table}`
   );
-  const typeResults = (await db.execute(
-    sql.raw(typeCountQueries.join(" UNION ALL "))
-  )).rows as unknown as FacetValue[];
+  const typeResults = (await db.execute(sql.raw(typeCountQueries.join(" UNION ALL "))))
+    .rows as unknown as FacetValue[];
   facets.push({
     field: "type",
     values: typeResults.filter((r) => r.count > 0),
@@ -98,11 +97,13 @@ export const GET = withErrorHandler(async (request: Request) => {
         `SELECT lifecycle AS value, COUNT(*)::int AS count FROM ${t.table} WHERE lifecycle IS NOT NULL GROUP BY lifecycle`
     );
   if (lifecycleQueries.length > 0) {
-    const lifecycleRaw = (await db.execute(
-      sql.raw(
-        `SELECT value, SUM(count)::int AS count FROM (${lifecycleQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+    const lifecycleRaw = (
+      await db.execute(
+        sql.raw(
+          `SELECT value, SUM(count)::int AS count FROM (${lifecycleQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+        )
       )
-    )).rows as unknown as FacetValue[];
+    ).rows as unknown as FacetValue[];
     facets.push({ field: "lifecycle", values: lifecycleRaw });
   }
 
@@ -114,11 +115,13 @@ export const GET = withErrorHandler(async (request: Request) => {
         `SELECT health AS value, COUNT(*)::int AS count FROM ${t.table} WHERE health IS NOT NULL GROUP BY health`
     );
   if (healthQueries.length > 0) {
-    const healthRaw = (await db.execute(
-      sql.raw(
-        `SELECT value, SUM(count)::int AS count FROM (${healthQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+    const healthRaw = (
+      await db.execute(
+        sql.raw(
+          `SELECT value, SUM(count)::int AS count FROM (${healthQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+        )
       )
-    )).rows as unknown as FacetValue[];
+    ).rows as unknown as FacetValue[];
     facets.push({ field: "health", values: healthRaw });
   }
 
@@ -130,11 +133,13 @@ export const GET = withErrorHandler(async (request: Request) => {
         `SELECT quality_seal AS value, COUNT(*)::int AS count FROM ${t.table} WHERE quality_seal IS NOT NULL GROUP BY quality_seal`
     );
   if (sealQueries.length > 0) {
-    const sealRaw = (await db.execute(
-      sql.raw(
-        `SELECT value, SUM(count)::int AS count FROM (${sealQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+    const sealRaw = (
+      await db.execute(
+        sql.raw(
+          `SELECT value, SUM(count)::int AS count FROM (${sealQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
+        )
       )
-    )).rows as unknown as FacetValue[];
+    ).rows as unknown as FacetValue[];
     facets.push({ field: "qualitySeal", values: sealRaw });
   }
 
