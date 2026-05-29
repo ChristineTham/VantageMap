@@ -21,13 +21,7 @@ interface FilterBarProps {
 /**
  * Displays active filters as removable pills.
  */
-export function FilterBar({
-  filters,
-  colorMap,
-  onRemove,
-  onClearAll,
-  className,
-}: FilterBarProps) {
+export function FilterBar({ filters, colorMap, onRemove, onClearAll, className }: FilterBarProps) {
   if (filters.length === 0) return null;
 
   return (

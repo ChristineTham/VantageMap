@@ -43,9 +43,7 @@ export function Sidebar() {
       <div className="flex h-14 items-center border-b border-rosely-blush px-4">
         {!collapsed && (
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-serif text-lg font-bold text-rosely-plum">
-              VantageMap
-            </span>
+            <span className="font-serif text-lg font-bold text-rosely-plum">VantageMap</span>
           </Link>
         )}
         {collapsed && (
@@ -58,10 +56,7 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-2 py-3">
         {navItems.map((item) => {
-          const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
           return (
             <Link
@@ -89,11 +84,7 @@ export function Sidebar() {
           className="flex w-full items-center justify-center rounded-lg p-2 text-rosely-mist hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
+          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
       </div>
     </aside>

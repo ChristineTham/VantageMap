@@ -56,9 +56,7 @@ function isApiEnabled(flag: string): boolean {
  * Fetch business capabilities.
  * Returns all capabilities when no params provided (pageSize=200).
  */
-export async function getCapabilities(
-  params?: ListParams
-): Promise<BusinessCapability[]> {
+export async function getCapabilities(params?: ListParams): Promise<BusinessCapability[]> {
   if (!isApiEnabled("FEATURE_CAPABILITIES_API")) return [];
   try {
     const res = await capabilitiesApi.list({
@@ -89,9 +87,7 @@ export async function getCapability(id: string): Promise<BusinessCapability | nu
 /**
  * Fetch applications.
  */
-export async function getApplications(
-  params?: ListParams
-): Promise<Application[]> {
+export async function getApplications(params?: ListParams): Promise<Application[]> {
   if (!isApiEnabled("FEATURE_APPLICATIONS_API")) return [];
   try {
     const res = await applicationsApi.list({
@@ -122,9 +118,7 @@ export async function getApplication(id: string): Promise<Application | null> {
 /**
  * Fetch strategic objectives.
  */
-export async function getObjectives(
-  params?: ListParams
-): Promise<StrategicObjective[]> {
+export async function getObjectives(params?: ListParams): Promise<StrategicObjective[]> {
   if (!isApiEnabled("FEATURE_STRATEGY_API")) return [];
   try {
     const res = await objectivesApi.list({
@@ -142,9 +136,7 @@ export async function getObjectives(
 /**
  * Fetch initiatives.
  */
-export async function getInitiatives(
-  params?: ListParams
-): Promise<Initiative[]> {
+export async function getInitiatives(params?: ListParams): Promise<Initiative[]> {
   if (!isApiEnabled("FEATURE_ROADMAP_API")) return [];
   try {
     const res = await initiativesApi.list({
@@ -162,9 +154,7 @@ export async function getInitiatives(
 /**
  * Fetch IT components (tech radar entries).
  */
-export async function getITComponents(
-  params?: ListParams
-): Promise<ITComponent[]> {
+export async function getITComponents(params?: ListParams): Promise<ITComponent[]> {
   if (!isApiEnabled("FEATURE_RADAR_API")) return [];
   try {
     const res = await itComponentsApi.list({
@@ -182,9 +172,7 @@ export async function getITComponents(
 /**
  * Fetch tech categories.
  */
-export async function getTechCategories(
-  params?: ListParams
-): Promise<TechCategory[]> {
+export async function getTechCategories(params?: ListParams): Promise<TechCategory[]> {
   if (!isApiEnabled("FEATURE_RADAR_API")) return [];
   try {
     const res = await techCategoriesApi.list({
@@ -202,9 +190,7 @@ export async function getTechCategories(
 /**
  * Fetch organizations.
  */
-export async function getOrganizations(
-  params?: ListParams
-): Promise<Organization[]> {
+export async function getOrganizations(params?: ListParams): Promise<Organization[]> {
   try {
     const res = await organizationsApi.list({
       pageSize: 200,
@@ -221,9 +207,7 @@ export async function getOrganizations(
 /**
  * Fetch data objects.
  */
-export async function getDataObjects(
-  params?: ListParams
-): Promise<DataObject[]> {
+export async function getDataObjects(params?: ListParams): Promise<DataObject[]> {
   try {
     const res = await dataObjectsApi.list({
       pageSize: 200,
@@ -240,9 +224,7 @@ export async function getDataObjects(
 /**
  * Fetch interfaces.
  */
-export async function getInterfaces(
-  params?: ListParams
-): Promise<InterfaceEntity[]> {
+export async function getInterfaces(params?: ListParams): Promise<InterfaceEntity[]> {
   try {
     const res = await interfacesApi.list({
       pageSize: 200,
@@ -259,9 +241,7 @@ export async function getInterfaces(
 /**
  * Fetch providers.
  */
-export async function getProviders(
-  params?: ListParams
-): Promise<Provider[]> {
+export async function getProviders(params?: ListParams): Promise<Provider[]> {
   try {
     const res = await providersApi.list({
       pageSize: 200,
@@ -278,9 +258,7 @@ export async function getProviders(
 /**
  * Fetch platforms.
  */
-export async function getPlatforms(
-  params?: ListParams
-): Promise<Platform[]> {
+export async function getPlatforms(params?: ListParams): Promise<Platform[]> {
   try {
     const res = await platformsApi.list({
       pageSize: 200,

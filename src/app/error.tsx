@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 
 /**
@@ -28,13 +29,11 @@ export default function GlobalError({
         Something went wrong
       </h2>
       <p className="mt-1 max-w-md text-sm text-rosely-mist">
-        An unexpected error occurred. You can try again, or return to the
-        dashboard if the problem persists.
+        An unexpected error occurred. You can try again, or return to the dashboard if the problem
+        persists.
       </p>
       {error.digest && (
-        <p className="mt-2 font-mono text-xs text-rosely-mist/60">
-          Error ID: {error.digest}
-        </p>
+        <p className="mt-2 font-mono text-xs text-rosely-mist/60">Error ID: {error.digest}</p>
       )}
       <div className="mt-6 flex gap-3">
         <button
@@ -43,12 +42,12 @@ export default function GlobalError({
         >
           Try again
         </button>
-        <a
+        <Link
           href="/"
           className="rounded-lg border border-rosely-blush bg-white px-4 py-2 text-sm font-medium text-rosely-night hover:bg-rosely-petal transition-colors"
         >
           Dashboard
-        </a>
+        </Link>
       </div>
     </div>
   );

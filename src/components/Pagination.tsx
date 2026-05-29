@@ -13,12 +13,7 @@ interface PaginationProps {
 /**
  * Pagination controls with page numbers and prev/next buttons.
  */
-export function Pagination({
-  page,
-  totalPages,
-  onPageChange,
-  className,
-}: PaginationProps) {
+export function Pagination({ page, totalPages, onPageChange, className }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   // Calculate visible page numbers (show max 5 pages around current)
@@ -61,9 +56,7 @@ export function Pagination({
 
       {end < totalPages && (
         <>
-          {end < totalPages - 1 && (
-            <span className="px-1 text-xs text-rosely-mist">…</span>
-          )}
+          {end < totalPages - 1 && <span className="px-1 text-xs text-rosely-mist">…</span>}
           <PageButton page={totalPages} current={page} onClick={onPageChange} />
         </>
       )}

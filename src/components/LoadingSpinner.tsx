@@ -40,9 +40,7 @@ export function PageLoader({ label }: { label?: string }) {
     <div className="flex min-h-[50vh] items-center justify-center">
       <div className="flex flex-col items-center gap-3">
         <LoadingSpinner size="lg" label={label} />
-        {label && (
-          <p className="text-sm text-rosely-mist">{label}</p>
-        )}
+        {label && <p className="text-sm text-rosely-mist">{label}</p>}
       </div>
     </div>
   );

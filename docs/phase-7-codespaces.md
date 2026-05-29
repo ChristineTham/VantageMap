@@ -6,32 +6,32 @@ The application shell, navigation, API client layer, shared component library, a
 
 ### New files created
 
-| File | Purpose |
-| --- | --- |
-| `src/app/layout.tsx` | Root layout with `<Sidebar />` + `<main>` wrapper, Noto Sans/Serif/Mono fonts |
-| `src/app/page.tsx` | Dashboard placeholder with navigation cards |
-| `src/app/loading.tsx` | Root loading skeleton (uses `PageSkeleton`) |
-| `src/app/error.tsx` | Global error boundary (Client Component) |
-| `src/app/not-found.tsx` | Custom 404 page |
-| `src/components/Sidebar.tsx` | Collapsible sidebar navigation (Client Component), 6 routes, Lucide icons |
-| `src/lib/api.ts` | Typed fetch wrappers: `createEntityClient<T>()` factory, 12 entity clients, search/facets/bulk ops |
-| `src/lib/types.ts` | Frontend TypeScript types (12 entities, all enums, colour maps) |
-| `src/lib/data.ts` | Unified data access layer with feature-flag toggle (async, API-backed) |
-| `src/components/StatusBadge.tsx` | Rounded pill badge for status values + `HealthBadge` specialization |
-| `src/components/HealthIndicator.tsx` | Coloured dot for health status with optional label |
-| `src/components/LifecycleTag.tsx` | Badge for lifecycle phase values |
-| `src/components/SearchInput.tsx` | Search input with icon (Client Component) |
-| `src/components/FilterBar.tsx` | Active filter pills with remove/clear-all (Client Component) |
-| `src/components/EmptyState.tsx` | Empty state placeholder with icon and optional action |
-| `src/components/LoadingSpinner.tsx` | Animated spinner + `PageLoader` full-page variant |
-| `src/components/Skeleton.tsx` | Skeleton placeholders: `Skeleton`, `CardSkeleton`, `TableSkeleton`, `PageSkeleton` |
-| `src/components/Pagination.tsx` | Pagination controls with page numbers (Client Component) |
-| `src/components/DataTable.tsx` | Generic sortable data table + `useTableSort` hook (Client Component) |
+| File                                 | Purpose                                                                                            |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `src/app/layout.tsx`                 | Root layout with `<Sidebar />` + `<main>` wrapper, Noto Sans/Serif/Mono fonts                      |
+| `src/app/page.tsx`                   | Dashboard placeholder with navigation cards                                                        |
+| `src/app/loading.tsx`                | Root loading skeleton (uses `PageSkeleton`)                                                        |
+| `src/app/error.tsx`                  | Global error boundary (Client Component)                                                           |
+| `src/app/not-found.tsx`              | Custom 404 page                                                                                    |
+| `src/components/Sidebar.tsx`         | Collapsible sidebar navigation (Client Component), 6 routes, Lucide icons                          |
+| `src/lib/api.ts`                     | Typed fetch wrappers: `createEntityClient<T>()` factory, 12 entity clients, search/facets/bulk ops |
+| `src/lib/types.ts`                   | Frontend TypeScript types (12 entities, all enums, colour maps)                                    |
+| `src/lib/data.ts`                    | Unified data access layer with feature-flag toggle (async, API-backed)                             |
+| `src/components/StatusBadge.tsx`     | Rounded pill badge for status values + `HealthBadge` specialization                                |
+| `src/components/HealthIndicator.tsx` | Coloured dot for health status with optional label                                                 |
+| `src/components/LifecycleTag.tsx`    | Badge for lifecycle phase values                                                                   |
+| `src/components/SearchInput.tsx`     | Search input with icon (Client Component)                                                          |
+| `src/components/FilterBar.tsx`       | Active filter pills with remove/clear-all (Client Component)                                       |
+| `src/components/EmptyState.tsx`      | Empty state placeholder with icon and optional action                                              |
+| `src/components/LoadingSpinner.tsx`  | Animated spinner + `PageLoader` full-page variant                                                  |
+| `src/components/Skeleton.tsx`        | Skeleton placeholders: `Skeleton`, `CardSkeleton`, `TableSkeleton`, `PageSkeleton`                 |
+| `src/components/Pagination.tsx`      | Pagination controls with page numbers (Client Component)                                           |
+| `src/components/DataTable.tsx`       | Generic sortable data table + `useTableSort` hook (Client Component)                               |
 
 ### Modified files
 
-| File | Changes |
-| --- | --- |
+| File                 | Changes                                 |
+| -------------------- | --------------------------------------- |
 | `src/app/layout.tsx` | Added Sidebar, main wrapper, Noto fonts |
 
 ### Architecture decisions
@@ -75,6 +75,7 @@ npx tsc --noEmit
 Expected: zero errors. All files passed the VS Code TypeScript language server locally.
 
 **Potential issues to watch for:**
+
 - If shadcn/ui components have different export signatures than expected, update imports in app-specific components
 - `src/lib/api.ts` references `process.env.NEXT_PUBLIC_APP_URL` — ensure this is set or defaults to `http://localhost:3000`
 
@@ -151,35 +152,35 @@ The global `error.tsx` should catch it and show the "Something went wrong" UI wi
 
 ### App-specific components (`src/components/`)
 
-| Component | Props | Notes |
-| --- | --- | --- |
-| `Sidebar` | none | Client Component, uses `usePathname()` |
-| `StatusBadge` | `status, colorMap?, className?` | Generic; pass any `Record<string, string>` colour map |
-| `HealthBadge` | `health, className?` | Pre-configured for `HealthStatus` values |
-| `HealthIndicator` | `health, showLabel?, className?` | Small coloured dot |
-| `LifecycleTag` | `lifecycle, className?` | Pill for lifecycle phase |
-| `SearchInput` | `value, onChange, placeholder?, className?` | Client Component |
-| `FilterBar` | `filters, colorMap?, onRemove, onClearAll?, className?` | Client Component, removable pills |
-| `EmptyState` | `title?, description?, icon?, action?, className?` | Server Component compatible |
-| `LoadingSpinner` | `size?, label?, className?` | Animated Lucide `Loader2` |
-| `PageLoader` | `label?` | Full-page centered spinner |
-| `Skeleton` | `className?` | Animated pulse bar |
-| `CardSkeleton` | `className?` | Card-shaped skeleton |
-| `TableSkeleton` | `rows?, cols?, className?` | Table-shaped skeleton |
-| `PageSkeleton` | `className?` | Full page skeleton (title + search + table) |
-| `Pagination` | `page, totalPages, onPageChange, className?` | Client Component |
-| `DataTable<T>` | `columns, data, getRowKey, onRowClick?, sortBy?, sortDirection?, onSort?, emptyMessage?, className?` | Client Component |
-| `useTableSort` | `(defaultField?, defaultDirection?)` | Hook for sort state |
+| Component         | Props                                                                                                | Notes                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `Sidebar`         | none                                                                                                 | Client Component, uses `usePathname()`                |
+| `StatusBadge`     | `status, colorMap?, className?`                                                                      | Generic; pass any `Record<string, string>` colour map |
+| `HealthBadge`     | `health, className?`                                                                                 | Pre-configured for `HealthStatus` values              |
+| `HealthIndicator` | `health, showLabel?, className?`                                                                     | Small coloured dot                                    |
+| `LifecycleTag`    | `lifecycle, className?`                                                                              | Pill for lifecycle phase                              |
+| `SearchInput`     | `value, onChange, placeholder?, className?`                                                          | Client Component                                      |
+| `FilterBar`       | `filters, colorMap?, onRemove, onClearAll?, className?`                                              | Client Component, removable pills                     |
+| `EmptyState`      | `title?, description?, icon?, action?, className?`                                                   | Server Component compatible                           |
+| `LoadingSpinner`  | `size?, label?, className?`                                                                          | Animated Lucide `Loader2`                             |
+| `PageLoader`      | `label?`                                                                                             | Full-page centered spinner                            |
+| `Skeleton`        | `className?`                                                                                         | Animated pulse bar                                    |
+| `CardSkeleton`    | `className?`                                                                                         | Card-shaped skeleton                                  |
+| `TableSkeleton`   | `rows?, cols?, className?`                                                                           | Table-shaped skeleton                                 |
+| `PageSkeleton`    | `className?`                                                                                         | Full page skeleton (title + search + table)           |
+| `Pagination`      | `page, totalPages, onPageChange, className?`                                                         | Client Component                                      |
+| `DataTable<T>`    | `columns, data, getRowKey, onRowClick?, sortBy?, sortDirection?, onSort?, emptyMessage?, className?` | Client Component                                      |
+| `useTableSort`    | `(defaultField?, defaultDirection?)`                                                                 | Hook for sort state                                   |
 
 ### Data layer
 
-| Export | From | Notes |
-| --- | --- | --- |
-| `capabilitiesApi`, `applicationsApi`, etc. | `@/lib/api` | 12 entity clients with `list`, `getById`, `create`, `update`, `remove` |
-| `searchEntities`, `getFacets`, `filterByFacets` | `@/lib/api` | Cross-entity search |
-| `bulkUpdate`, `bulkDelete`, `bulkUpsert` | `@/lib/api` | Bulk operations |
-| `getCapabilities()`, `getApplications()`, etc. | `@/lib/data` | Feature-flag-gated data access |
-| All types and colour maps | `@/lib/types` | Also re-exported from `@/lib/data` |
+| Export                                          | From          | Notes                                                                  |
+| ----------------------------------------------- | ------------- | ---------------------------------------------------------------------- |
+| `capabilitiesApi`, `applicationsApi`, etc.      | `@/lib/api`   | 12 entity clients with `list`, `getById`, `create`, `update`, `remove` |
+| `searchEntities`, `getFacets`, `filterByFacets` | `@/lib/api`   | Cross-entity search                                                    |
+| `bulkUpdate`, `bulkDelete`, `bulkUpsert`        | `@/lib/api`   | Bulk operations                                                        |
+| `getCapabilities()`, `getApplications()`, etc.  | `@/lib/data`  | Feature-flag-gated data access                                         |
+| All types and colour maps                       | `@/lib/types` | Also re-exported from `@/lib/data`                                     |
 
 ---
 

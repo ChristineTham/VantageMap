@@ -31,11 +31,7 @@ export default function HomePage() {
           description="Balanced Scorecard objectives"
           href="/strategy"
         />
-        <DashboardCard
-          title="Tech Radar"
-          description="Technology landscape"
-          href="/radar"
-        />
+        <DashboardCard title="Tech Radar" description="Technology landscape" href="/radar" />
         <DashboardCard
           title="Roadmap"
           description="Strategic initiatives timeline"

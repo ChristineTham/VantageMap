@@ -8,14 +8,7 @@ interface SkeletonProps {
  * An animated skeleton placeholder for loading states.
  */
 export function Skeleton({ className }: SkeletonProps) {
-  return (
-    <div
-      className={cn(
-        "animate-pulse rounded-lg bg-rosely-petal",
-        className
-      )}
-    />
-  );
+  return <div className={cn("animate-pulse rounded-lg bg-rosely-petal", className)} />;
 }
 
 /**
@@ -23,12 +16,7 @@ export function Skeleton({ className }: SkeletonProps) {
  */
 export function CardSkeleton({ className }: SkeletonProps) {
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-rosely-blush bg-white p-4 space-y-3",
-        className
-      )}
-    >
+    <div className={cn("rounded-xl border border-rosely-blush bg-white p-4 space-y-3", className)}>
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-4/5" />
@@ -46,10 +34,7 @@ export function TableSkeleton({
 }: SkeletonProps & { rows?: number; cols?: number }) {
   return (
     <div
-      className={cn(
-        "overflow-hidden rounded-xl border border-rosely-blush bg-white",
-        className
-      )}
+      className={cn("overflow-hidden rounded-xl border border-rosely-blush bg-white", className)}
     >
       {/* Header */}
       <div className="flex gap-4 border-b border-rosely-blush px-4 py-3">

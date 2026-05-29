@@ -103,10 +103,7 @@ class ApiError extends Error {
   }
 }
 
-async function apiFetch<T>(
-  path: string,
-  options?: RequestInit
-): Promise<T> {
+async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${getBaseUrl()}${path}`;
 
   const headers: Record<string, string> = {
@@ -236,7 +233,9 @@ export async function searchEntities(
 
 export async function getFacets(
   types?: string[]
-): Promise<ApiSuccessResponse<{ facets: { field: string; values: { value: string; count: number }[] }[] }>> {
+): Promise<
+  ApiSuccessResponse<{ facets: { field: string; values: { value: string; count: number }[] }[] }>
+> {
   const params = new URLSearchParams();
   if (types?.length) params.set("types", types.join(","));
   const qs = params.toString();
@@ -274,8 +273,17 @@ export async function bulkDelete(
 }
 
 export async function bulkUpsert(
-  items: { type: string; name: string; description?: string; lifecycle?: string; health?: string; owner?: string }[]
-): Promise<ApiSuccessResponse<{ processed: number; created: number; updated: number; results: unknown[] }>> {
+  items: {
+    type: string;
+    name: string;
+    description?: string;
+    lifecycle?: string;
+    health?: string;
+    owner?: string;
+  }[]
+): Promise<
+  ApiSuccessResponse<{ processed: number; created: number; updated: number; results: unknown[] }>
+> {
   return apiFetch("/api/bulk?action=upsert", {
     method: "POST",
     body: JSON.stringify({ items }),

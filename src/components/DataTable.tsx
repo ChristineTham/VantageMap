@@ -50,10 +50,7 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   return (
     <div
-      className={cn(
-        "overflow-hidden rounded-xl border border-rosely-blush bg-white",
-        className
-      )}
+      className={cn("overflow-hidden rounded-xl border border-rosely-blush bg-white", className)}
     >
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -64,14 +61,12 @@ export function DataTable<T>({
                   key={col.key}
                   className={cn(
                     "px-4 py-3 font-medium text-rosely-mist",
-                    col.sortable && onSort && "cursor-pointer select-none hover:text-rosely-night transition-colors",
+                    col.sortable &&
+                      onSort &&
+                      "cursor-pointer select-none hover:text-rosely-night transition-colors",
                     col.className
                   )}
-                  onClick={
-                    col.sortable && onSort
-                      ? () => onSort(col.key)
-                      : undefined
-                  }
+                  onClick={col.sortable && onSort ? () => onSort(col.key) : undefined}
                 >
                   <span className="inline-flex items-center gap-1">
                     {col.header}
@@ -89,10 +84,7 @@ export function DataTable<T>({
           <tbody className="divide-y divide-rosely-petal">
             {data.length === 0 ? (
               <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-4 py-12 text-center text-rosely-mist"
-                >
+                <td colSpan={columns.length} className="px-4 py-12 text-center text-rosely-mist">
                   {emptyMessage}
                 </td>
               </tr>
@@ -107,10 +99,7 @@ export function DataTable<T>({
                   onClick={onRowClick ? () => onRowClick(row) : undefined}
                 >
                   {columns.map((col) => (
-                    <td
-                      key={col.key}
-                      className={cn("px-4 py-3 text-rosely-night", col.className)}
-                    >
+                    <td key={col.key} className={cn("px-4 py-3 text-rosely-night", col.className)}>
                       {col.render(row)}
                     </td>
                   ))}
@@ -126,13 +115,7 @@ export function DataTable<T>({
 
 // ── Sort Icon ───────────────────────────────────────────────────────────────
 
-function SortIcon({
-  active,
-  direction,
-}: {
-  active: boolean;
-  direction?: "asc" | "desc";
-}) {
+function SortIcon({ active, direction }: { active: boolean; direction?: "asc" | "desc" }) {
   if (!active) {
     return <ArrowUpDown className="h-3 w-3 opacity-40" />;
   }
@@ -150,7 +133,10 @@ function SortIcon({
  * @example
  * const { sortBy, sortDirection, toggleSort } = useTableSort("name");
  */
-export function useTableSort(defaultField: string = "name", defaultDirection: "asc" | "desc" = "asc") {
+export function useTableSort(
+  defaultField: string = "name",
+  defaultDirection: "asc" | "desc" = "asc"
+) {
   const [sortBy, setSortBy] = useState(defaultField);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">(defaultDirection);
 

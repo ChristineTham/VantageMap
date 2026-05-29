@@ -96,9 +96,19 @@ export interface BusinessContext {
 
 export type ApplicationSubtype = "Business Application" | "Microservice" | "AI Agent";
 export type FitScore = "Insufficient" | "Adequate" | "Full";
-export type BusinessCriticality = "Administrative Service" | "Relevant" | "Important" | "Mission Critical";
+export type BusinessCriticality =
+  | "Administrative Service"
+  | "Relevant"
+  | "Important"
+  | "Mission Critical";
 export type TimeClassification = "Tolerate" | "Invest" | "Migrate" | "Eliminate";
-export type SixRClassification = "Retire" | "Retain" | "Repurchase" | "Rehost" | "Replatform" | "Rearchitect";
+export type SixRClassification =
+  | "Retire"
+  | "Retain"
+  | "Repurchase"
+  | "Rehost"
+  | "Replatform"
+  | "Rearchitect";
 
 export interface Application {
   id: string;
@@ -160,7 +170,11 @@ export interface InterfaceEntity {
 
 // ── Strategy & Transformation ───────────────────────────────────────────────
 
-export type StrategicPerspective = "Financial" | "Customer" | "Internal Process" | "Learning & Growth";
+export type StrategicPerspective =
+  | "Financial"
+  | "Customer"
+  | "Internal Process"
+  | "Learning & Growth";
 
 export interface StrategicObjective {
   id: string;
@@ -190,7 +204,12 @@ export interface KPI {
 }
 
 export type InitiativeSubtype = "Idea" | "Program" | "Project" | "Epic";
-export type InitiativeStatus = "Not Started" | "In Progress" | "Completed" | "On Hold" | "Cancelled";
+export type InitiativeStatus =
+  | "Not Started"
+  | "In Progress"
+  | "Completed"
+  | "On Hold"
+  | "Cancelled";
 
 export interface Initiative {
   id: string;
@@ -238,7 +257,14 @@ export interface TechCategory {
   updatedAt: string;
 }
 
-export type ITComponentSubtype = "Hardware" | "IaaS" | "PaaS" | "SaaS" | "Service" | "Software" | "AI Model";
+export type ITComponentSubtype =
+  | "Hardware"
+  | "IaaS"
+  | "PaaS"
+  | "SaaS"
+  | "Service"
+  | "Software"
+  | "AI Model";
 export type TechnicalStandard = "Approved" | "Approved with constraints" | "Deprecated";
 export type TechRing = "Adopt" | "Trial" | "Assess" | "Hold";
 export type TechQuadrant = "Techniques" | "Tools" | "Platforms" | "Languages & Frameworks";
