@@ -11,7 +11,7 @@ import { eq, desc } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { webhooks, webhookDeliveries } from "@/db/schema";
-import { withErrorHandler, ok, notFound, unauthorized } from "@/lib/api-response";
+import { withErrorHandler, ok, notFound } from "@/lib/api-response";
 import { parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
@@ -33,7 +33,16 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 export const GET = withErrorHandler(async (request: NextRequest, context: RouteContext) => {
   if (!isFeatureEnabled("FEATURE_WEBHOOKS_API")) {
-    return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
+    return Response.json(
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Webhooks API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
+      { status: 404 }
+    );
   }
 
   const authResult = await requireAuth(request);
@@ -41,11 +50,7 @@ export const GET = withErrorHandler(async (request: NextRequest, context: RouteC
 
   const { id } = await context.params;
 
-  const [webhook] = await db
-    .select()
-    .from(webhooks)
-    .where(eq(webhooks.id, id))
-    .limit(1);
+  const [webhook] = await db.select().from(webhooks).where(eq(webhooks.id, id)).limit(1);
 
   if (!webhook) return notFound("Webhook");
 
@@ -69,7 +74,16 @@ export const GET = withErrorHandler(async (request: NextRequest, context: RouteC
 
 export const PATCH = withErrorHandler(async (request: NextRequest, context: RouteContext) => {
   if (!isFeatureEnabled("FEATURE_WEBHOOKS_API")) {
-    return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
+    return Response.json(
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Webhooks API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
+      { status: 404 }
+    );
   }
 
   const authResult = await requireAuth(request);
@@ -77,11 +91,7 @@ export const PATCH = withErrorHandler(async (request: NextRequest, context: Rout
 
   const { id } = await context.params;
 
-  const [existing] = await db
-    .select()
-    .from(webhooks)
-    .where(eq(webhooks.id, id))
-    .limit(1);
+  const [existing] = await db.select().from(webhooks).where(eq(webhooks.id, id)).limit(1);
 
   if (!existing) return notFound("Webhook");
 
@@ -104,7 +114,16 @@ export const PATCH = withErrorHandler(async (request: NextRequest, context: Rout
 
 export const DELETE = withErrorHandler(async (request: NextRequest, context: RouteContext) => {
   if (!isFeatureEnabled("FEATURE_WEBHOOKS_API")) {
-    return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
+    return Response.json(
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Webhooks API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
+      { status: 404 }
+    );
   }
 
   const authResult = await requireAuth(request);
@@ -112,11 +131,7 @@ export const DELETE = withErrorHandler(async (request: NextRequest, context: Rou
 
   const { id } = await context.params;
 
-  const [existing] = await db
-    .select()
-    .from(webhooks)
-    .where(eq(webhooks.id, id))
-    .limit(1);
+  const [existing] = await db.select().from(webhooks).where(eq(webhooks.id, id)).limit(1);
 
   if (!existing) return notFound("Webhook");
 

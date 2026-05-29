@@ -3,11 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import {
-  getValidTransitions,
-  isTransitionAllowed,
-  getTransitionLabel,
-} from "@/lib/quality-seal";
+import { getValidTransitions, isTransitionAllowed, getTransitionLabel } from "@/lib/quality-seal";
 
 describe("Quality Seal State Machine", () => {
   describe("getValidTransitions", () => {

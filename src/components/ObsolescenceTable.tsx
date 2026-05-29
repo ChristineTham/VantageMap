@@ -76,8 +76,14 @@ export function ObsolescenceTable({ items }: { items: ObsolescenceRiskItem[] }) 
                 </td>
                 <td className="py-2 text-xs">
                   {item.daysUntilEol !== null ? (
-                    <span className={item.daysUntilEol <= 0 ? "text-rosely-rose font-medium" : "text-rosely-dusk"}>
-                      {item.daysUntilEol <= 0 ? `${Math.abs(item.daysUntilEol)}d overdue` : `${item.daysUntilEol}d`}
+                    <span
+                      className={
+                        item.daysUntilEol <= 0 ? "text-rosely-rose font-medium" : "text-rosely-dusk"
+                      }
+                    >
+                      {item.daysUntilEol <= 0
+                        ? `${Math.abs(item.daysUntilEol)}d overdue`
+                        : `${item.daysUntilEol}d`}
                     </span>
                   ) : (
                     <span className="text-rosely-mist">—</span>

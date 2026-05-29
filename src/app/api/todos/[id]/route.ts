@@ -9,13 +9,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { todos } from "@/db/schema";
-import {
-  ok,
-  noContent,
-  notFound,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, noContent, notFound, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 
@@ -53,11 +47,7 @@ export const PATCH = withErrorHandler(
       updates.completedAt = body.data.done ? new Date() : null;
     }
 
-    const [updated] = await db
-      .update(todos)
-      .set(updates)
-      .where(eq(todos.id, id))
-      .returning();
+    const [updated] = await db.update(todos).set(updates).where(eq(todos.id, id)).returning();
 
     if (!updated) return notFound("Todo not found");
     return ok(updated);

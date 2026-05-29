@@ -427,7 +427,12 @@ export async function getPortfolioHealth(): Promise<PortfolioHealthReport> {
         fitScoreAvg: { technical: 0, functional: 0 },
         criticalityDistribution: [],
       },
-      trends: { appsInPhaseOut: 0, appsInEndOfLife: 0, appsWithPoorHealth: 0, appsWithCriticalHealth: 0 },
+      trends: {
+        appsInPhaseOut: 0,
+        appsInEndOfLife: 0,
+        appsWithPoorHealth: 0,
+        appsWithCriticalHealth: 0,
+      },
     };
   }
 }

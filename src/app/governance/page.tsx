@@ -22,7 +22,8 @@ export default function GovernancePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Tag Management */}
-        <Link href="/governance/tags"
+        <Link
+          href="/governance/tags"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <Tags className="w-8 h-8 text-rosely-plum mb-3" />
@@ -35,7 +36,8 @@ export default function GovernancePage() {
         </Link>
 
         {/* Quality Seal */}
-        <Link href="/governance/quality-seal"
+        <Link
+          href="/governance/quality-seal"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <ShieldCheck className="w-8 h-8 text-rosely-teal mb-3" />
@@ -48,7 +50,8 @@ export default function GovernancePage() {
         </Link>
 
         {/* Surveys */}
-        <Link href="/governance/surveys"
+        <Link
+          href="/governance/surveys"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <ClipboardList className="w-8 h-8 text-rosely-periwinkle mb-3" />

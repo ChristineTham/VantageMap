@@ -14,9 +14,9 @@
  *   - UI components: visualization and layout
  */
 
-import { eq, and, count, sql, lte, gte, isNotNull } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { db } from "@/db";
-import { applications, itComponents, initiatives, relationships, businessCapabilities } from "@/db/schema";
+import { applications, itComponents, relationships, businessCapabilities } from "@/db/schema";
 
 // ── Report Types ────────────────────────────────────────────────────────────
 
@@ -247,7 +247,6 @@ export async function getObsolescenceRiskReport(
   horizonDays: number = 365
 ): Promise<ObsolescenceRiskReport> {
   const now = new Date();
-  const horizonDate = new Date(now.getTime() + horizonDays * 24 * 60 * 60 * 1000);
 
   // Fetch IT components with EOL/EOS dates
   const components = await db
@@ -260,9 +259,7 @@ export async function getObsolescenceRiskReport(
       owner: itComponents.owner,
     })
     .from(itComponents)
-    .where(
-      sql`${itComponents.endOfLife} IS NOT NULL OR ${itComponents.endOfSupport} IS NOT NULL`
-    );
+    .where(sql`${itComponents.endOfLife} IS NOT NULL OR ${itComponents.endOfSupport} IS NOT NULL`);
 
   // Also check applications in Phase Out or End of Life
   const eolApps = await db
@@ -273,9 +270,7 @@ export async function getObsolescenceRiskReport(
       owner: applications.owner,
     })
     .from(applications)
-    .where(
-      sql`${applications.lifecycle} IN ('Phase Out', 'End of Life')`
-    );
+    .where(sql`${applications.lifecycle} IN ('Phase Out', 'End of Life')`);
 
   const items: ObsolescenceRiskItem[] = [];
   let pastEolCount = 0;
@@ -285,13 +280,18 @@ export async function getObsolescenceRiskReport(
     const eolDate = comp.endOfLife ? new Date(comp.endOfLife) : null;
     const eosDate = comp.endOfSupport ? new Date(comp.endOfSupport) : null;
 
-    const daysUntilEol = eolDate ? Math.ceil((eolDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)) : null;
-    const daysUntilEos = eosDate ? Math.ceil((eosDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)) : null;
+    const daysUntilEol = eolDate
+      ? Math.ceil((eolDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
+      : null;
+    const daysUntilEos = eosDate
+      ? Math.ceil((eosDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
+      : null;
 
     const riskLevel = computeRiskLevel(daysUntilEol, daysUntilEos);
 
     if (daysUntilEol !== null && daysUntilEol < 0) pastEolCount++;
-    if (daysUntilEol !== null && daysUntilEol >= 0 && daysUntilEol <= horizonDays) upcomingEolCount++;
+    if (daysUntilEol !== null && daysUntilEol >= 0 && daysUntilEol <= horizonDays)
+      upcomingEolCount++;
 
     items.push({
       id: comp.id,
@@ -355,10 +355,7 @@ function computeRiskLevel(
   daysUntilEol: number | null,
   daysUntilEos: number | null
 ): "Critical" | "High" | "Medium" | "Low" {
-  const minDays = Math.min(
-    daysUntilEol ?? Infinity,
-    daysUntilEos ?? Infinity
-  );
+  const minDays = Math.min(daysUntilEol ?? Infinity, daysUntilEos ?? Infinity);
 
   if (minDays === Infinity) return "Low";
   if (minDays <= 0) return "Critical";
@@ -399,10 +396,19 @@ export async function getPortfolioHealthReport(): Promise<PortfolioHealthReport>
 
   // Fit score averages
   const fitScoreMap: Record<string, number> = { Insufficient: 1, Adequate: 3, Full: 5 };
-  let techSum = 0, techCount = 0, funcSum = 0, funcCount = 0;
+  let techSum = 0,
+    techCount = 0,
+    funcSum = 0,
+    funcCount = 0;
   for (const app of allApps) {
-    if (app.technicalFit !== null) { techSum += fitScoreMap[app.technicalFit as string] ?? 0; techCount++; }
-    if (app.functionalFit !== null) { funcSum += fitScoreMap[app.functionalFit as string] ?? 0; funcCount++; }
+    if (app.technicalFit !== null) {
+      techSum += fitScoreMap[app.technicalFit as string] ?? 0;
+      techCount++;
+    }
+    if (app.functionalFit !== null) {
+      funcSum += fitScoreMap[app.functionalFit as string] ?? 0;
+      funcCount++;
+    }
   }
 
   // Criticality distribution
@@ -420,19 +426,16 @@ export async function getPortfolioHealthReport(): Promise<PortfolioHealthReport>
 
   // Compute overall portfolio health score (0-100)
   // Factors: % healthy apps, avg fit scores, % not in EOL
-  const healthyPct = total > 0
-    ? ((healthCounts["Excellent"] ?? 0) + (healthCounts["Good"] ?? 0)) / total
-    : 0;
-  const fitAvg = techCount > 0 && funcCount > 0
-    ? ((techSum / techCount) + (funcSum / funcCount)) / 2 / 5 // Normalize to 0-1
-    : 0.5;
-  const activeLifecyclePct = total > 0
-    ? (total - appsInPhaseOut - appsInEndOfLife) / total
-    : 1;
+  const healthyPct =
+    total > 0 ? ((healthCounts["Excellent"] ?? 0) + (healthCounts["Good"] ?? 0)) / total : 0;
+  const fitAvg =
+    techCount > 0 && funcCount > 0
+      ? (techSum / techCount + funcSum / funcCount) / 2 / 5 // Normalize to 0-1
+      : 0.5;
+  const activeLifecyclePct = total > 0 ? (total - appsInPhaseOut - appsInEndOfLife) / total : 1;
 
-  const overallScore = Math.round(
-    (healthyPct * 40 + fitAvg * 30 + activeLifecyclePct * 30) * 100
-  ) / 100;
+  const overallScore =
+    Math.round((healthyPct * 40 + fitAvg * 30 + activeLifecyclePct * 30) * 100) / 100;
 
   return {
     overallScore: Math.min(100, Math.max(0, Math.round(overallScore * 100))),
@@ -502,9 +505,8 @@ export async function getCapabilityCoverageReport(): Promise<CapabilityCoverageR
 
   const uncoveredCapabilities = capabilities.filter((c) => c.appCount === 0).length;
   const totalApps = capabilities.reduce((sum, c) => sum + c.appCount, 0);
-  const avgAppsPerCapability = caps.length > 0
-    ? Math.round((totalApps / caps.length) * 10) / 10
-    : 0;
+  const avgAppsPerCapability =
+    caps.length > 0 ? Math.round((totalApps / caps.length) * 10) / 10 : 0;
 
   return {
     capabilities: capabilities.sort((a, b) => b.appCount - a.appCount),

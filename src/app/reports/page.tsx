@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { BarChart3, ShieldAlert, Activity, Layers } from "lucide-react";
 import {
   getTimeDistribution,
@@ -14,7 +13,8 @@ import { CapabilityCoverageChart } from "@/components/CapabilityCoverageChart";
 
 export const metadata: Metadata = {
   title: "Reports – VantageMap",
-  description: "Enterprise architecture reporting and analytics: TIME, 6R, obsolescence risk, portfolio health.",
+  description:
+    "Enterprise architecture reporting and analytics: TIME, 6R, obsolescence risk, portfolio health.",
 };
 
 export default async function ReportsPage() {
@@ -84,7 +84,8 @@ export default async function ReportsPage() {
             Suggested TIME Classifications
           </h3>
           <p className="text-xs text-rosely-mist mb-4">
-            Based on technical and functional fit scores. Review and apply via the application edit page.
+            Based on technical and functional fit scores. Review and apply via the application edit
+            page.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -180,17 +181,11 @@ function StatCard({
   );
 }
 
-function DimensionCard({
-  title,
-  value,
-  alert,
-}: {
-  title: string;
-  value: string;
-  alert?: boolean;
-}) {
+function DimensionCard({ title, value, alert }: { title: string; value: string; alert?: boolean }) {
   return (
-    <div className={`rounded-lg border p-3 ${alert ? "border-rosely-flamingo/40 bg-rosely-flamingo/5" : "border-rosely-blush"}`}>
+    <div
+      className={`rounded-lg border p-3 ${alert ? "border-rosely-flamingo/40 bg-rosely-flamingo/5" : "border-rosely-blush"}`}
+    >
       <p className="text-xs text-rosely-mist">{title}</p>
       <p className={`text-lg font-bold mt-1 ${alert ? "text-rosely-rose" : "text-rosely-night"}`}>
         {value}

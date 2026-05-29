@@ -36,7 +36,7 @@ interface TagManagerProps {
 export function TagManager({
   tagGroups,
   onCreateGroup,
-  onUpdateGroup,
+  onUpdateGroup: _onUpdateGroup,
   onDeleteGroup,
   onCreateTag,
   onDeleteTag,
@@ -203,7 +203,11 @@ export function TagManager({
                       className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-lilac/20 text-rosely-plum border border-rosely-lilac/30"
                       style={
                         tag.color
-                          ? { backgroundColor: `${tag.color}20`, color: tag.color, borderColor: `${tag.color}40` }
+                          ? {
+                              backgroundColor: `${tag.color}20`,
+                              color: tag.color,
+                              borderColor: `${tag.color}40`,
+                            }
                           : undefined
                       }
                     >

@@ -9,13 +9,7 @@ import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { todos } from "@/db/schema";
-import {
-  ok,
-  created,
-  badRequest,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, created, badRequest, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import type { FactSheetType } from "@/lib/audit-types";
@@ -43,10 +37,7 @@ const createTodoSchema = z.object({
 });
 
 export const GET = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);
@@ -62,12 +53,7 @@ export const GET = withErrorHandler(
     const items = await db
       .select()
       .from(todos)
-      .where(
-        and(
-          eq(todos.factSheetType, type as FactSheetType),
-          eq(todos.factSheetId, id)
-        )
-      )
+      .where(and(eq(todos.factSheetType, type as FactSheetType), eq(todos.factSheetId, id)))
       .orderBy(todos.createdAt);
 
     return ok(items);
@@ -75,10 +61,7 @@ export const GET = withErrorHandler(
 );
 
 export const POST = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);

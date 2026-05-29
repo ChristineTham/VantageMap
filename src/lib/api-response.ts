@@ -171,13 +171,12 @@ export function zodError(err: ZodError): NextResponse<ApiErrorBody> {
  * });
  */
 export function withErrorHandler<
-  TContext extends { params: Promise<Record<string, string>> } = { params: Promise<Record<string, string>> }
+  TContext extends { params: Promise<Record<string, string>> } = {
+    params: Promise<Record<string, string>>;
+  },
 >(
-  handler: (
-    request: NextRequest,
-    context: TContext
-  ) => Promise<Response>
-): (request: NextRequest, context: TContext) => Promise<Response> {
+  handler: (request: NextRequest, context: TContext) => Promise<Response>
+): (request: NextRequest, context?: TContext) => Promise<Response> {
   return async (
     request: NextRequest,
     context: TContext = { params: Promise.resolve({}) } as TContext

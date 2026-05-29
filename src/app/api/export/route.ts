@@ -30,7 +30,7 @@ import {
   dataObjects,
   interfaces as interfacesTable,
 } from "@/db/schema";
-import { withErrorHandler, badRequest, unauthorized } from "@/lib/api-response";
+import { withErrorHandler, badRequest } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { dispatchWebhookEvent } from "@/lib/webhook-engine";
@@ -57,7 +57,13 @@ const TABLE_MAP: Record<string, any> = {
 export const GET = withErrorHandler(async (request: NextRequest) => {
   if (!isFeatureEnabled("FEATURE_EXPORT_API")) {
     return Response.json(
-      { error: { code: "NOT_FOUND", message: "Export API not enabled", correlationId: crypto.randomUUID() } },
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Export API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
       { status: 404 }
     );
   }
@@ -83,11 +89,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
   // Fetch all matching rows (streaming not possible with Drizzle select)
   // Limit to 50,000 to prevent memory issues
-  const rows = await db
-    .select()
-    .from(table)
-    .where(where)
-    .limit(50_000);
+  const rows = await db.select().from(table).where(where).limit(50_000);
 
   if (rows.length === 0) {
     return badRequest("No data found for the given type and filter");
@@ -114,11 +116,15 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   });
 
   // Dispatch webhook event (fire-and-forget)
-  dispatchWebhookEvent("bulk.export_completed", {
-    factSheetType: type,
-    rowCount: rows.length,
-    format,
-  }, { userId: auth.userId }).catch(() => {});
+  dispatchWebhookEvent(
+    "bulk.export_completed",
+    {
+      factSheetType: type,
+      rowCount: rows.length,
+      format,
+    },
+    { userId: auth.userId }
+  ).catch(() => {});
 
   // Return as downloadable file
   const filename = `${type.toLowerCase()}-export-${new Date().toISOString().slice(0, 10)}.csv`;

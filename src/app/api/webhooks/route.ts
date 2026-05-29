@@ -8,17 +8,16 @@
  */
 
 import { NextRequest } from "next/server";
-import { eq } from "drizzle-orm";
+import { count } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { webhooks } from "@/db/schema";
-import { withErrorHandler, ok, created, badRequest, unauthorized, forbidden } from "@/lib/api-response";
+import { withErrorHandler, ok, created, badRequest } from "@/lib/api-response";
 import { parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { parseListParams, buildPaginationMeta } from "@/lib/query";
 import { WEBHOOK_EVENTS } from "@/lib/webhook-engine";
-import { count } from "drizzle-orm";
 
 // ── Validation Schemas ──────────────────────────────────────────────────────
 
@@ -35,15 +34,23 @@ const createWebhookSchema = z.object({
 
 export const GET = withErrorHandler(async (request: NextRequest) => {
   if (!isFeatureEnabled("FEATURE_WEBHOOKS_API")) {
-    return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
+    return Response.json(
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Webhooks API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
+      { status: 404 }
+    );
   }
 
   const authResult = await requireAuth(request);
   if (!authResult.ok) return authResult.response;
-  const auth = authResult.auth;
 
   const { pagination } = parseListParams(new URL(request.url).searchParams);
-  const { page, pageSize, offset } = pagination;
+  const { pageSize, offset } = pagination;
 
   const [countResult] = await db.select({ value: count() }).from(webhooks);
   const total = countResult?.value ?? 0;
@@ -74,7 +81,16 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
 export const POST = withErrorHandler(async (request: NextRequest) => {
   if (!isFeatureEnabled("FEATURE_WEBHOOKS_API")) {
-    return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
+    return Response.json(
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Webhooks API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
+      { status: 404 }
+    );
   }
 
   const authResult = await requireAuth(request);

@@ -15,7 +15,7 @@
 import { NextRequest } from "next/server";
 import { graphql, validate, parse } from "graphql";
 import { schema } from "@/lib/graphql-schema";
-import { withErrorHandler, unauthorized } from "@/lib/api-response";
+import { withErrorHandler } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
@@ -39,10 +39,7 @@ function getQueryDepth(query: string): number {
 export const POST = withErrorHandler(async (request: NextRequest) => {
   // Feature flag check
   if (!isFeatureEnabled("FEATURE_GRAPHQL_API")) {
-    return Response.json(
-      { errors: [{ message: "GraphQL API is not enabled" }] },
-      { status: 404 }
-    );
+    return Response.json({ errors: [{ message: "GraphQL API is not enabled" }] }, { status: 404 });
   }
 
   // Auth check
@@ -54,17 +51,16 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   const { query, variables, operationName } = body;
 
   if (!query || typeof query !== "string") {
-    return Response.json(
-      { errors: [{ message: "Query string is required" }] },
-      { status: 400 }
-    );
+    return Response.json({ errors: [{ message: "Query string is required" }] }, { status: 400 });
   }
 
   // Depth limiting
   const depth = getQueryDepth(query);
   if (depth > MAX_DEPTH) {
     return Response.json(
-      { errors: [{ message: `Query depth ${depth} exceeds maximum allowed depth of ${MAX_DEPTH}` }] },
+      {
+        errors: [{ message: `Query depth ${depth} exceeds maximum allowed depth of ${MAX_DEPTH}` }],
+      },
       { status: 400 }
     );
   }
@@ -106,10 +102,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
 // Allow GET for introspection (e.g., GraphiQL)
 export const GET = withErrorHandler(async (request: NextRequest) => {
   if (!isFeatureEnabled("FEATURE_GRAPHQL_API")) {
-    return Response.json(
-      { errors: [{ message: "GraphQL API is not enabled" }] },
-      { status: 404 }
-    );
+    return Response.json({ errors: [{ message: "GraphQL API is not enabled" }] }, { status: 404 });
   }
 
   const authResult = await requireAuth(request);
@@ -119,16 +112,15 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const query = searchParams.get("query");
 
   if (!query) {
-    return Response.json(
-      { errors: [{ message: "Query parameter required" }] },
-      { status: 400 }
-    );
+    return Response.json({ errors: [{ message: "Query parameter required" }] }, { status: 400 });
   }
 
   const depth = getQueryDepth(query);
   if (depth > MAX_DEPTH) {
     return Response.json(
-      { errors: [{ message: `Query depth ${depth} exceeds maximum allowed depth of ${MAX_DEPTH}` }] },
+      {
+        errors: [{ message: `Query depth ${depth} exceeds maximum allowed depth of ${MAX_DEPTH}` }],
+      },
       { status: 400 }
     );
   }

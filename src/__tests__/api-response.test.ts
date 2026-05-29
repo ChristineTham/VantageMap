@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { z } from "zod";
+import { NextRequest } from "next/server";
 import {
   ok,
   created,
@@ -175,7 +176,7 @@ describe("api-response — parseBody()", () => {
 describe("api-response — withErrorHandler()", () => {
   it("passes through normal handler response", async () => {
     const handler = withErrorHandler(async () => ok({ success: true }));
-    const req = new Request("http://localhost/");
+    const req = new NextRequest("http://localhost/");
     const res = await handler(req, { params: Promise.resolve({}) });
     expect(res.status).toBe(200);
   });
@@ -184,7 +185,7 @@ describe("api-response — withErrorHandler()", () => {
     const handler = withErrorHandler(async () => {
       throw new Error("Something exploded");
     });
-    const req = new Request("http://localhost/");
+    const req = new NextRequest("http://localhost/");
     const res = await handler(req, { params: Promise.resolve({}) });
     expect(res.status).toBe(500);
     const body = await res.json();

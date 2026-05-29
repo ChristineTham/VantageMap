@@ -34,7 +34,7 @@ import {
   dataObjects,
   interfaces as interfacesTable,
 } from "@/db/schema";
-import { withErrorHandler, ok, badRequest, unauthorized } from "@/lib/api-response";
+import { withErrorHandler, ok, badRequest } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { dispatchWebhookEvent } from "@/lib/webhook-engine";
@@ -63,33 +63,33 @@ const TABLE_MAP: Record<string, any> = {
 
 // Column name normalization: common CSV headers → DB column names
 const COLUMN_ALIASES: Record<string, string> = {
-  "id": "id",
-  "name": "name",
+  id: "id",
+  name: "name",
   "display name": "name",
-  "display_name": "name",
-  "description": "description",
-  "lifecycle": "lifecycle",
+  display_name: "name",
+  description: "description",
+  lifecycle: "lifecycle",
   "lifecycle phase": "lifecycle",
-  "health": "health",
+  health: "health",
   "health status": "health",
-  "owner": "owner",
+  owner: "owner",
   "quality seal": "qualitySeal",
-  "quality_seal": "qualitySeal",
-  "qualityseal": "qualitySeal",
-  "parent_id": "parentId",
-  "parentid": "parentId",
+  quality_seal: "qualitySeal",
+  qualityseal: "qualitySeal",
+  parent_id: "parentId",
+  parentid: "parentId",
   "parent id": "parentId",
-  "level": "level",
-  "subtype": "subtype",
-  "ring": "ring",
-  "quadrant": "quadrant",
-  "perspective": "perspective",
-  "status": "status",
-  "start_date": "startDate",
+  level: "level",
+  subtype: "subtype",
+  ring: "ring",
+  quadrant: "quadrant",
+  perspective: "perspective",
+  status: "status",
+  start_date: "startDate",
   "start date": "startDate",
-  "end_date": "endDate",
+  end_date: "endDate",
   "end date": "endDate",
-  "version": "version",
+  version: "version",
 };
 
 // ── POST /api/import ────────────────────────────────────────────────────────
@@ -97,7 +97,13 @@ const COLUMN_ALIASES: Record<string, string> = {
 export const POST = withErrorHandler(async (request: NextRequest) => {
   if (!isFeatureEnabled("FEATURE_IMPORT_API")) {
     return Response.json(
-      { error: { code: "NOT_FOUND", message: "Import API not enabled", correlationId: crypto.randomUUID() } },
+      {
+        error: {
+          code: "NOT_FOUND",
+          message: "Import API not enabled",
+          correlationId: crypto.randomUUID(),
+        },
+      },
       { status: 404 }
     );
   }
@@ -115,7 +121,8 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   if (!file) return badRequest("File is required");
   if (!factSheetType) return badRequest("factSheetType is required");
   if (!TABLE_MAP[factSheetType]) return badRequest(`Invalid factSheetType: ${factSheetType}`);
-  if (!["preview", "execute"].includes(mode)) return badRequest("mode must be 'preview' or 'execute'");
+  if (!["preview", "execute"].includes(mode))
+    return badRequest("mode must be 'preview' or 'execute'");
 
   // Size check
   if (file.size > MAX_FILE_SIZE) {
@@ -140,7 +147,8 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   const rows = parsed.data as Record<string, string>[];
 
   if (rows.length === 0) return badRequest("CSV file contains no data rows");
-  if (rows.length > MAX_ROWS) return badRequest(`Too many rows (${rows.length}). Maximum is ${MAX_ROWS}`);
+  if (rows.length > MAX_ROWS)
+    return badRequest(`Too many rows (${rows.length}). Maximum is ${MAX_ROWS}`);
 
   // Validate each row
   const validRows: Record<string, unknown>[] = [];
@@ -234,12 +242,16 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   }
 
   // Dispatch webhook event
-  await dispatchWebhookEvent("bulk.import_completed", {
-    factSheetType,
-    inserted: insertedCount,
-    updated: updatedCount,
-    errors: rowErrors.length,
-  }, { userId: auth.userId });
+  await dispatchWebhookEvent(
+    "bulk.import_completed",
+    {
+      factSheetType,
+      inserted: insertedCount,
+      updated: updatedCount,
+      errors: rowErrors.length,
+    },
+    { userId: auth.userId }
+  );
 
   return ok({
     data: {

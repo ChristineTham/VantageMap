@@ -95,7 +95,11 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
               Add
             </button>
             <button
-              onClick={() => { setShowNew(false); setNewTitle(""); setNewDueDate(""); }}
+              onClick={() => {
+                setShowNew(false);
+                setNewTitle("");
+                setNewDueDate("");
+              }}
               className="px-3 py-1.5 text-sm font-medium text-rosely-dusk bg-rosely-petal rounded-md hover:bg-rosely-blush transition-colors"
             >
               Cancel
@@ -147,10 +151,7 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
         <div className="space-y-1 opacity-60">
           <span className="text-xs text-rosely-mist font-medium">Completed</span>
           {completed.map((todo) => (
-            <div
-              key={todo.id}
-              className="flex items-start gap-2 py-1.5 px-2"
-            >
+            <div key={todo.id} className="flex items-start gap-2 py-1.5 px-2">
               <button
                 onClick={() => !readOnly && onToggle(todo.id, false)}
                 disabled={readOnly}

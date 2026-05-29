@@ -27,17 +27,17 @@ import {
 // ── Color Maps ──────────────────────────────────────────────────────────────
 
 const TIME_COLORS: Record<string, string> = {
-  Tolerate: "#93a9d1",   // rosely-cornflower
-  Invest: "#64bfa4",     // rosely-teal
-  Migrate: "#eada4f",    // rosely-golden
-  Eliminate: "#d2386c",  // rosely-rose
+  Tolerate: "#93a9d1", // rosely-cornflower
+  Invest: "#64bfa4", // rosely-teal
+  Migrate: "#eada4f", // rosely-golden
+  Eliminate: "#d2386c", // rosely-rose
 };
 
 const SIX_R_COLORS: Record<string, string> = {
-  Retire: "#d2386c",     // rosely-rose
-  Retain: "#a49e9e",     // rosely-mist
+  Retire: "#d2386c", // rosely-rose
+  Retain: "#a49e9e", // rosely-mist
   Repurchase: "#b884c8", // rosely-lilac
-  Rehost: "#64bfa4",     // rosely-teal
+  Rehost: "#64bfa4", // rosely-teal
   Replatform: "#93a9d1", // rosely-cornflower
   Rearchitect: "#eada4f", // rosely-golden
 };
@@ -108,14 +108,7 @@ export function ReportingCharts({
           <div className="relative flex items-center justify-center">
             <svg className="w-32 h-32" viewBox="0 0 100 100">
               {/* Background circle */}
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                fill="none"
-                stroke="#f4dede"
-                strokeWidth="10"
-              />
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#f4dede" strokeWidth="10" />
               {/* Score arc */}
               <circle
                 cx="50"

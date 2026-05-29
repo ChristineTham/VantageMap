@@ -92,12 +92,13 @@ async function signPayload(payload: string, secret: string): Promise<string> {
  * Dispatch an event to all matching active webhook subscribers.
  * Non-blocking — fires and forgets (delivery tracked in DB).
  */
-export async function dispatchWebhookEvent(event: string, data: Record<string, unknown>, metadata?: { userId?: string; correlationId?: string }) {
+export async function dispatchWebhookEvent(
+  event: string,
+  data: Record<string, unknown>,
+  metadata?: { userId?: string; correlationId?: string }
+) {
   // Find all active webhooks that subscribe to this event
-  const activeWebhooks = await db
-    .select()
-    .from(webhooks)
-    .where(eq(webhooks.active, true));
+  const activeWebhooks = await db.select().from(webhooks).where(eq(webhooks.active, true));
 
   // Filter webhooks whose events array includes this event (or wildcard *)
   const matching = activeWebhooks.filter((wh) => {
@@ -252,10 +253,7 @@ export async function processWebhookRetries(): Promise<number> {
     .from(webhookDeliveries)
     .innerJoin(webhooks, eq(webhookDeliveries.webhookId, webhooks.id))
     .where(
-      and(
-        eq(webhookDeliveries.status, "retrying"),
-        lte(webhookDeliveries.nextRetryAt, new Date())
-      )
+      and(eq(webhookDeliveries.status, "retrying"), lte(webhookDeliveries.nextRetryAt, new Date()))
     )
     .limit(50); // Process in batches
 

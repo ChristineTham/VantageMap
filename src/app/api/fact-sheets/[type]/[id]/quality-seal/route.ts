@@ -47,10 +47,7 @@ const transitionSchema = z.object({
 });
 
 export const GET = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);
@@ -104,10 +101,7 @@ export const GET = withErrorHandler(
 );
 
 export const POST = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);

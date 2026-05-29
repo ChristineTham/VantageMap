@@ -11,7 +11,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { withErrorHandler, ok, unauthorized, badRequest } from "@/lib/api-response";
+import { withErrorHandler, ok, badRequest } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { getObsolescenceRiskReport } from "@/lib/reports";
 

@@ -30,7 +30,7 @@ const FACT_SHEET_TYPES = [
 const LIFECYCLE_PHASES = ["Plan", "Phase In", "Active", "Phase Out", "End of Life"] as const;
 const HEALTH_STATUSES = ["Good", "Adequate", "Insufficient", "Critical"] as const;
 const QUALITY_SEAL_STATES = ["Draft", "Check Needed", "Approved", "Rejected"] as const;
-const SUBSCRIPTION_ROLES = ["Responsible", "Accountable", "Observer"] as const;
+const _SUBSCRIPTION_ROLES = ["Responsible", "Accountable", "Observer"] as const;
 
 // ── OpenAPI Spec ────────────────────────────────────────────────────────────
 
@@ -238,7 +238,9 @@ export const openApiSpec = {
         operationId: "createCapability",
         requestBody: {
           required: true,
-          content: { "application/json": { schema: { $ref: "#/components/schemas/CapabilityCreate" } } },
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/CapabilityCreate" } },
+          },
         },
         responses: {
           "201": { description: "Capability created" },
@@ -293,7 +295,11 @@ export const openApiSpec = {
               schema: {
                 oneOf: [
                   { $ref: "#/components/schemas/RelationshipCreate" },
-                  { type: "array", items: { $ref: "#/components/schemas/RelationshipCreate" }, maxItems: 100 },
+                  {
+                    type: "array",
+                    items: { $ref: "#/components/schemas/RelationshipCreate" },
+                    maxItems: 100,
+                  },
                 ],
               },
             },
@@ -340,7 +346,9 @@ export const openApiSpec = {
         operationId: "createTagGroup",
         requestBody: {
           required: true,
-          content: { "application/json": { schema: { $ref: "#/components/schemas/TagGroupCreate" } } },
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/TagGroupCreate" } },
+          },
         },
         responses: { "201": { description: "Tag group created" } },
       },
@@ -353,7 +361,12 @@ export const openApiSpec = {
         summary: "List tags assigned to a fact sheet",
         operationId: "listFactSheetTags",
         parameters: [
-          { name: "type", in: "path", required: true, schema: { type: "string", enum: FACT_SHEET_TYPES } },
+          {
+            name: "type",
+            in: "path",
+            required: true,
+            schema: { type: "string", enum: FACT_SHEET_TYPES },
+          },
           { $ref: "#/components/parameters/IdParam" },
         ],
         responses: { "200": { description: "Assigned tags" } },
@@ -363,12 +376,25 @@ export const openApiSpec = {
         summary: "Assign a tag to a fact sheet",
         operationId: "assignTag",
         parameters: [
-          { name: "type", in: "path", required: true, schema: { type: "string", enum: FACT_SHEET_TYPES } },
+          {
+            name: "type",
+            in: "path",
+            required: true,
+            schema: { type: "string", enum: FACT_SHEET_TYPES },
+          },
           { $ref: "#/components/parameters/IdParam" },
         ],
         requestBody: {
           required: true,
-          content: { "application/json": { schema: { type: "object", properties: { tagId: { type: "string", format: "uuid" } }, required: ["tagId"] } } },
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: { tagId: { type: "string", format: "uuid" } },
+                required: ["tagId"],
+              },
+            },
+          },
         },
         responses: { "201": { description: "Tag assigned" } },
       },
@@ -379,7 +405,12 @@ export const openApiSpec = {
         summary: "Get quality seal state and history",
         operationId: "getQualitySeal",
         parameters: [
-          { name: "type", in: "path", required: true, schema: { type: "string", enum: FACT_SHEET_TYPES } },
+          {
+            name: "type",
+            in: "path",
+            required: true,
+            schema: { type: "string", enum: FACT_SHEET_TYPES },
+          },
           { $ref: "#/components/parameters/IdParam" },
         ],
         responses: { "200": { description: "Current state, valid transitions, and history" } },
@@ -389,7 +420,12 @@ export const openApiSpec = {
         summary: "Transition quality seal state",
         operationId: "transitionQualitySeal",
         parameters: [
-          { name: "type", in: "path", required: true, schema: { type: "string", enum: FACT_SHEET_TYPES } },
+          {
+            name: "type",
+            in: "path",
+            required: true,
+            schema: { type: "string", enum: FACT_SHEET_TYPES },
+          },
           { $ref: "#/components/parameters/IdParam" },
         ],
         requestBody: {
@@ -428,7 +464,9 @@ export const openApiSpec = {
         operationId: "createWebhook",
         requestBody: {
           required: true,
-          content: { "application/json": { schema: { $ref: "#/components/schemas/WebhookCreate" } } },
+          content: {
+            "application/json": { schema: { $ref: "#/components/schemas/WebhookCreate" } },
+          },
         },
         responses: { "201": { description: "Webhook created" } },
       },
@@ -496,8 +534,17 @@ export const openApiSpec = {
         summary: "Export fact sheets to CSV",
         operationId: "exportFactSheets",
         parameters: [
-          { name: "type", in: "query", required: true, schema: { type: "string", enum: FACT_SHEET_TYPES } },
-          { name: "format", in: "query", schema: { type: "string", enum: ["csv", "xlsx"], default: "csv" } },
+          {
+            name: "type",
+            in: "query",
+            required: true,
+            schema: { type: "string", enum: FACT_SHEET_TYPES },
+          },
+          {
+            name: "format",
+            in: "query",
+            schema: { type: "string", enum: ["csv", "xlsx"], default: "csv" },
+          },
           { name: "filter", in: "query", schema: { type: "string" } },
         ],
         responses: {
@@ -599,7 +646,10 @@ export const openApiSpec = {
             properties: {
               code: { type: "string" },
               message: { type: "string" },
-              details: { type: "object", additionalProperties: { type: "array", items: { type: "string" } } },
+              details: {
+                type: "object",
+                additionalProperties: { type: "array", items: { type: "string" } },
+              },
               correlationId: { type: "string", format: "uuid" },
             },
             required: ["code", "message", "correlationId"],

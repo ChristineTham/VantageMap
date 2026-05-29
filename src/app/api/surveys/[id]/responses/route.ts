@@ -9,24 +9,19 @@ import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { surveys, surveyQuestions, surveyResponses } from "@/db/schema";
-import {
-  ok,
-  created,
-  notFound,
-  badRequest,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, created, notFound, badRequest, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 
 const submitResponsesSchema = z.object({
-  answers: z.array(
-    z.object({
-      questionId: z.string().uuid(),
-      value: z.string().max(5000),
-    })
-  ).min(1),
+  answers: z
+    .array(
+      z.object({
+        questionId: z.string().uuid(),
+        value: z.string().max(5000),
+      })
+    )
+    .min(1),
 });
 
 export const GET = withErrorHandler(
@@ -102,16 +97,10 @@ export const POST = withErrorHandler(
     await db
       .delete(surveyResponses)
       .where(
-        and(
-          eq(surveyResponses.surveyId, id),
-          eq(surveyResponses.respondentId, auth.auth.userId)
-        )
+        and(eq(surveyResponses.surveyId, id), eq(surveyResponses.respondentId, auth.auth.userId))
       );
 
-    const responses = await db
-      .insert(surveyResponses)
-      .values(responseValues)
-      .returning();
+    const responses = await db.insert(surveyResponses).values(responseValues).returning();
 
     return created(responses);
   }

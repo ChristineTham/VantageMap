@@ -39,19 +39,14 @@ const TABS: { id: TabId; label: string; icon: typeof Shield }[] = [
   { id: "todos", label: "To-Dos", icon: CheckSquare },
 ];
 
-export function GovernancePanel({
-  factSheetName,
-  children,
-}: GovernancePanelProps) {
+export function GovernancePanel({ factSheetName, children }: GovernancePanelProps) {
   const [activeTab, setActiveTab] = useState<TabId>("seal");
 
   return (
     <div className="bg-white rounded-xl border border-rosely-blush overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-rosely-petal bg-rosely-cream/30">
-        <h2 className="text-sm font-semibold text-rosely-night truncate">
-          {factSheetName}
-        </h2>
+        <h2 className="text-sm font-semibold text-rosely-night truncate">{factSheetName}</h2>
         <p className="text-xs text-rosely-mist">Governance & Collaboration</p>
       </div>
 

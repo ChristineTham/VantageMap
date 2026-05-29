@@ -29,11 +29,24 @@ interface SubscriptionPanelProps {
   readOnly?: boolean;
 }
 
-const ROLE_CONFIG: Record<SubscriptionRole, { icon: typeof Shield; label: string; color: string }> = {
-  Responsible: { icon: Shield, label: "Responsible", color: "text-rosely-plum bg-rosely-plum/10" },
-  Accountable: { icon: CheckCircle2, label: "Accountable", color: "text-rosely-teal bg-rosely-teal/10" },
-  Observer: { icon: Eye, label: "Observer", color: "text-rosely-periwinkle bg-rosely-periwinkle/10" },
-};
+const ROLE_CONFIG: Record<SubscriptionRole, { icon: typeof Shield; label: string; color: string }> =
+  {
+    Responsible: {
+      icon: Shield,
+      label: "Responsible",
+      color: "text-rosely-plum bg-rosely-plum/10",
+    },
+    Accountable: {
+      icon: CheckCircle2,
+      label: "Accountable",
+      color: "text-rosely-teal bg-rosely-teal/10",
+    },
+    Observer: {
+      icon: Eye,
+      label: "Observer",
+      color: "text-rosely-periwinkle bg-rosely-periwinkle/10",
+    },
+  };
 
 export function SubscriptionPanel({
   subscriptions,

@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import type { AuthContext } from "@/lib/auth";
 
 // ─── Mocks (must precede module imports) ───────────────────────────────────
@@ -151,7 +151,7 @@ function makeRequest(url: string, method = "GET", body?: unknown) {
     opts.headers = { "Content-Type": "application/json" };
     opts.body = JSON.stringify(body);
   }
-  return new Request(url, opts);
+  return new Request(url, opts) as unknown as NextRequest;
 }
 
 function ctx(id: string) {
@@ -245,7 +245,7 @@ describe("POST /api/relationships — single create", () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: "not json",
-    });
+    }) as unknown as NextRequest;
     const res = await relPOST(req);
     expect(res.status).toBe(400);
   });

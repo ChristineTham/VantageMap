@@ -17,6 +17,7 @@ aggregation queries, Recharts for visualization).
 
 Phase 13 reads from existing tables — it does not create new tables.
 All report data is computed on-demand from:
+
 - `applications` (TIME, 6R, lifecycle, health, fit scores)
 - `it_components` (end_of_life, end_of_support dates)
 - `business_capabilities` (capability list)
@@ -27,33 +28,37 @@ All report data is computed on-demand from:
 ## New Files Created
 
 ### Backend — Report Engine
-| File | Purpose |
-|------|---------|
-| `src/lib/reports.ts` | Core aggregation logic for all reports |
-| `src/app/api/reports/time-distribution/route.ts` | TIME rationalization API |
-| `src/app/api/reports/six-r-distribution/route.ts` | 6R distribution API |
-| `src/app/api/reports/obsolescence-risk/route.ts` | Obsolescence risk API |
-| `src/app/api/reports/portfolio-health/route.ts` | Portfolio health score API |
-| `src/app/api/reports/capability-coverage/route.ts` | Capability coverage API |
+
+| File                                               | Purpose                                |
+| -------------------------------------------------- | -------------------------------------- |
+| `src/lib/reports.ts`                               | Core aggregation logic for all reports |
+| `src/app/api/reports/time-distribution/route.ts`   | TIME rationalization API               |
+| `src/app/api/reports/six-r-distribution/route.ts`  | 6R distribution API                    |
+| `src/app/api/reports/obsolescence-risk/route.ts`   | Obsolescence risk API                  |
+| `src/app/api/reports/portfolio-health/route.ts`    | Portfolio health score API             |
+| `src/app/api/reports/capability-coverage/route.ts` | Capability coverage API                |
 
 ### Frontend — UI Components
-| File | Purpose |
-|------|---------|
-| `src/components/ReportingCharts.tsx` | TIME donut, 6R bar, health gauge, risk summary |
-| `src/components/ObsolescenceTable.tsx` | Risk items table with severity badges |
-| `src/components/CapabilityCoverageChart.tsx` | Capability-to-app coverage bar chart |
-| `src/app/reports/page.tsx` | Full-page Reports & Analytics view |
+
+| File                                         | Purpose                                        |
+| -------------------------------------------- | ---------------------------------------------- |
+| `src/components/ReportingCharts.tsx`         | TIME donut, 6R bar, health gauge, risk summary |
+| `src/components/ObsolescenceTable.tsx`       | Risk items table with severity badges          |
+| `src/components/CapabilityCoverageChart.tsx` | Capability-to-app coverage bar chart           |
+| `src/app/reports/page.tsx`                   | Full-page Reports & Analytics view             |
 
 ### Modified Files
-| File | Change |
-|------|--------|
-| `src/app/page.tsx` | Added ReportingCharts to dashboard |
-| `src/lib/data.ts` | Added report-fetching wrapper functions |
+
+| File                         | Change                                       |
+| ---------------------------- | -------------------------------------------- |
+| `src/app/page.tsx`           | Added ReportingCharts to dashboard           |
+| `src/lib/data.ts`            | Added report-fetching wrapper functions      |
 | `src/components/Sidebar.tsx` | Added "Reports" nav item with BarChart3 icon |
 
 ### Tests
-| File | Purpose |
-|------|---------|
+
+| File                                    | Purpose                                      |
+| --------------------------------------- | -------------------------------------------- |
 | `src/__tests__/phase13-reports.test.ts` | Unit tests for classification, risk, scoring |
 
 ---
@@ -91,6 +96,7 @@ curl http://localhost:3000/api/reports/capability-coverage \
 ```
 
 Expected response (portfolio-health):
+
 ```json
 {
   "data": {
@@ -119,14 +125,15 @@ curl http://localhost:3000/api/reports/time-distribution \
 ```
 
 Expected response:
+
 ```json
 {
   "data": {
     "distribution": [
-      {"label": "Tolerate", "count": 5, "percentage": 38.5},
-      {"label": "Invest", "count": 4, "percentage": 30.8},
-      {"label": "Migrate", "count": 2, "percentage": 15.4},
-      {"label": "Eliminate", "count": 2, "percentage": 15.4}
+      { "label": "Tolerate", "count": 5, "percentage": 38.5 },
+      { "label": "Invest", "count": 4, "percentage": 30.8 },
+      { "label": "Migrate", "count": 2, "percentage": 15.4 },
+      { "label": "Eliminate", "count": 2, "percentage": 15.4 }
     ],
     "total": 15,
     "classified": 13,
@@ -165,6 +172,7 @@ curl "http://localhost:3000/api/reports/obsolescence-risk?horizon=90" \
 ```
 
 Expected response:
+
 ```json
 {
   "data": {
@@ -180,7 +188,7 @@ Expected response:
         "owner": "Frontend Team"
       }
     ],
-    "summary": {"critical": 2, "high": 3, "medium": 5, "low": 8, "total": 18},
+    "summary": { "critical": 2, "high": 3, "medium": 5, "low": 8, "total": 18 },
     "upcomingEolCount": 5,
     "pastEolCount": 2
   }
@@ -209,11 +217,13 @@ Expected response:
 ### Computation Strategy
 
 All reports are computed **on-demand** (no pre-materialized views) for MVP:
+
 - Simple queries against existing tables
 - No background jobs or scheduled aggregation
 - No caching beyond HTTP-level `Cache-Control` headers
 
 Post-MVP optimization path:
+
 1. Add `Cache-Control: private, max-age=300` to report endpoints (5min cache)
 2. Create materialized views for expensive joins (e.g., capability coverage)
 3. Schedule Inngest functions to refresh materialized views every 15 minutes
@@ -237,18 +247,19 @@ Fit ↓       Low    Eliminate       Migrate
 
 ### Risk Level Thresholds
 
-| Risk Level | Days Until EOL/EOS |
-|------------|-------------------|
-| Critical | ≤ 0 (past due) or ≤ 90 days |
-| High | 91 – 180 days |
-| Medium | 181 – 365 days |
-| Low | > 365 days or no date set |
+| Risk Level | Days Until EOL/EOS          |
+| ---------- | --------------------------- |
+| Critical   | ≤ 0 (past due) or ≤ 90 days |
+| High       | 91 – 180 days               |
+| Medium     | 181 – 365 days              |
+| Low        | > 365 days or no date set   |
 
 ### Portfolio Health Score (0-100)
 
 Composite score = (healthyPct × 40) + (fitAvg × 30) + (activeLifecyclePct × 30)
 
 Where:
+
 - `healthyPct`: % of apps with Excellent or Good health (weight: 40%)
 - `fitAvg`: normalized average of technical + functional fit scores (weight: 30%)
 - `activeLifecyclePct`: % of apps NOT in Phase Out or End of Life (weight: 30%)
@@ -258,6 +269,7 @@ Where:
 ## Seed Data Tips
 
 For meaningful reports, ensure seed data includes:
+
 - Applications with diverse `time_classification` values
 - Applications with diverse `six_r_classification` values
 - Applications with `technical_fit` and `functional_fit` scores (1-5)

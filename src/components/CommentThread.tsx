@@ -56,9 +56,7 @@ function CommentItem({
           <span className="text-xs text-rosely-mist">
             {new Date(comment.createdAt).toLocaleDateString()}
           </span>
-          {comment.editedAt && (
-            <span className="text-xs text-rosely-mist italic">(edited)</span>
-          )}
+          {comment.editedAt && <span className="text-xs text-rosely-mist italic">(edited)</span>}
         </div>
         <p className="text-sm text-rosely-dusk whitespace-pre-wrap">{comment.content}</p>
         <div className="flex items-center gap-2 mt-1.5">
@@ -110,11 +108,7 @@ function CommentItem({
   );
 }
 
-export function CommentThread({
-  comments,
-  currentUserId,
-  onSubmitComment,
-}: CommentThreadProps) {
+export function CommentThread({ comments, currentUserId, onSubmitComment }: CommentThreadProps) {
   const [newComment, setNewComment] = useState("");
 
   const handleSubmit = () => {

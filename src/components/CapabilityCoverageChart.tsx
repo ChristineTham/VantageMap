@@ -80,10 +80,7 @@ export function CapabilityCoverageChart({
           />
           <Bar dataKey="apps" radius={[0, 4, 4, 0]}>
             {topCaps.map((entry) => (
-              <Cell
-                key={entry.name}
-                fill={entry.apps === 0 ? "#ec809e" : "#93a9d1"}
-              />
+              <Cell key={entry.name} fill={entry.apps === 0 ? "#ec809e" : "#93a9d1"} />
             ))}
           </Bar>
         </BarChart>

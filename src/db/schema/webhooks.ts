@@ -6,8 +6,17 @@
  * - webhook_deliveries: Delivery log with status, attempts, response
  */
 
-import { pgTable, uuid, varchar, text, boolean, timestamp, integer, jsonb, index } from "drizzle-orm/pg-core";
-import { factSheetTypeEnum } from "./enums";
+import {
+  pgTable,
+  uuid,
+  varchar,
+  text,
+  boolean,
+  timestamp,
+  integer,
+  jsonb,
+  index,
+} from "drizzle-orm/pg-core";
 
 // ── Webhook Subscriptions ───────────────────────────────────────────────────
 

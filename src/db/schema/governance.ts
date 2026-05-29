@@ -217,9 +217,7 @@ export const qualitySealTransitions = pgTable(
     reason: text("reason"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [
-    index("idx_qs_transitions_entity").on(table.factSheetType, table.factSheetId),
-  ]
+  (table) => [index("idx_qs_transitions_entity").on(table.factSheetType, table.factSheetId)]
 );
 
 export const qualitySealTransitionsRelations = relations(qualitySealTransitions, ({ one }) => ({

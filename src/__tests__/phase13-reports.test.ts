@@ -69,10 +69,7 @@ describe("Obsolescence Risk Level Computation", () => {
     daysUntilEol: number | null,
     daysUntilEos: number | null
   ): "Critical" | "High" | "Medium" | "Low" {
-    const minDays = Math.min(
-      daysUntilEol ?? Infinity,
-      daysUntilEos ?? Infinity
-    );
+    const minDays = Math.min(daysUntilEol ?? Infinity, daysUntilEos ?? Infinity);
     if (minDays === Infinity) return "Low";
     if (minDays <= 0) return "Critical";
     if (minDays <= 90) return "Critical";
@@ -148,9 +145,8 @@ describe("Portfolio Health Score", () => {
     const fitAvg = 0.8; // 80% average fit (4/5)
     const activeLifecyclePct = 0.9; // 90% active lifecycle
 
-    const overallScore = Math.round(
-      (healthyPct * 40 + fitAvg * 30 + activeLifecyclePct * 30) * 100
-    ) / 100;
+    const overallScore =
+      Math.round((healthyPct * 40 + fitAvg * 30 + activeLifecyclePct * 30) * 100) / 100;
     const final = Math.min(100, Math.max(0, Math.round(overallScore * 100)));
 
     expect(final).toBeGreaterThanOrEqual(0);

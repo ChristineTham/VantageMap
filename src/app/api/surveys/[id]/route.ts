@@ -10,13 +10,7 @@ import { eq, count } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { surveys, surveyQuestions, surveyResponses } from "@/db/schema";
-import {
-  ok,
-  noContent,
-  notFound,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, noContent, notFound, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 
@@ -81,11 +75,7 @@ export const PATCH = withErrorHandler(
       updates.closesAt = body.data.closesAt ? new Date(body.data.closesAt) : null;
     }
 
-    const [updated] = await db
-      .update(surveys)
-      .set(updates)
-      .where(eq(surveys.id, id))
-      .returning();
+    const [updated] = await db.update(surveys).set(updates).where(eq(surveys.id, id)).returning();
 
     if (!updated) return notFound("Survey not found");
     return ok(updated);

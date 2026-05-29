@@ -9,13 +9,7 @@ import { eq, and, isNull, desc } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { comments } from "@/db/schema";
-import {
-  ok,
-  created,
-  badRequest,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, created, badRequest, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import type { FactSheetType } from "@/lib/audit-types";
@@ -42,10 +36,7 @@ const createCommentSchema = z.object({
 });
 
 export const GET = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);
@@ -75,12 +66,7 @@ export const GET = withErrorHandler(
     const allReplies = await db
       .select()
       .from(comments)
-      .where(
-        and(
-          eq(comments.factSheetType, type as FactSheetType),
-          eq(comments.factSheetId, id)
-        )
-      )
+      .where(and(eq(comments.factSheetType, type as FactSheetType), eq(comments.factSheetId, id)))
       .orderBy(comments.createdAt);
 
     // Build threaded structure
@@ -103,10 +89,7 @@ export const GET = withErrorHandler(
 );
 
 export const POST = withErrorHandler(
-  async (
-    request: Request,
-    { params }: { params: Promise<{ type: string; id: string }> }
-  ) => {
+  async (request: Request, { params }: { params: Promise<{ type: string; id: string }> }) => {
     const { type, id } = await params;
 
     const auth = await requireAuth(request);

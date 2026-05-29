@@ -11,7 +11,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { z } from "zod";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import type { AuthContext } from "@/lib/auth";
 
 // ─── Mocks (must precede imports of the modules that depend on them) ────────
@@ -178,24 +178,24 @@ const config: CrudConfig = {
 const BASE = "http://localhost:3000/api/capabilities";
 
 function GET(url = BASE) {
-  return new Request(url);
+  return new NextRequest(url);
 }
 function POST(body: unknown) {
-  return new Request(BASE, {
+  return new NextRequest(BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 }
 function PATCH(id: string, body: unknown) {
-  return new Request(`${BASE}/${id}`, {
+  return new NextRequest(`${BASE}/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 }
 function DELETE_REQ(id: string) {
-  return new Request(`${BASE}/${id}`, { method: "DELETE" });
+  return new NextRequest(`${BASE}/${id}`, { method: "DELETE" });
 }
 function ctx(id: string) {
   return { params: Promise.resolve({ id }) };

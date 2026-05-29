@@ -9,12 +9,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { surveys, surveyQuestions } from "@/db/schema";
-import {
-  ok,
-  created,
-  withErrorHandler,
-  parseBody,
-} from "@/lib/api-response";
+import { ok, created, withErrorHandler, parseBody } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 
@@ -39,15 +34,17 @@ const createSurveySchema = z.object({
     .nullish(),
   factSheetId: z.string().uuid().nullish(),
   closesAt: z.string().datetime().nullish(),
-  questions: z.array(
-    z.object({
-      questionText: z.string().min(1).max(1000),
-      questionType: z.enum(["text", "select", "rating", "boolean"]).default("text"),
-      options: z.array(z.string()).nullish(),
-      targetField: z.string().max(255).nullish(),
-      required: z.boolean().default(false),
-    })
-  ).min(1),
+  questions: z
+    .array(
+      z.object({
+        questionText: z.string().min(1).max(1000),
+        questionType: z.enum(["text", "select", "rating", "boolean"]).default("text"),
+        options: z.array(z.string()).nullish(),
+        targetField: z.string().max(255).nullish(),
+        required: z.boolean().default(false),
+      })
+    )
+    .min(1),
 });
 
 export const GET = withErrorHandler(async (request: Request) => {
@@ -104,10 +101,7 @@ export const POST = withErrorHandler(async (request: Request) => {
     required: q.required,
   }));
 
-  const questions = await db
-    .insert(surveyQuestions)
-    .values(questionValues)
-    .returning();
+  const questions = await db.insert(surveyQuestions).values(questionValues).returning();
 
   return created({ ...survey, questions });
 });

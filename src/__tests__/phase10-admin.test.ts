@@ -14,7 +14,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import type { AuthContext } from "@/lib/auth";
 
 // ─── Mocks (must precede module imports) ───────────────────────────────────
@@ -163,13 +163,13 @@ function deleteChain() {
 
 // ─── Request helpers ───────────────────────────────────────────────────────
 
-function makeRequest(url: string, method = "GET", body?: unknown): Request {
+function makeRequest(url: string, method = "GET", body?: unknown): NextRequest {
   const opts: RequestInit = { method };
   if (body !== undefined) {
     opts.headers = { "Content-Type": "application/json" };
     opts.body = JSON.stringify(body);
   }
-  return new Request(`${BASE}${url}`, opts);
+  return new Request(`${BASE}${url}`, opts) as unknown as NextRequest;
 }
 
 function ctx(id: string) {

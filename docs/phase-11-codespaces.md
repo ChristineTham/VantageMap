@@ -15,58 +15,58 @@ Phase 11 implements governance controls for data quality management:
 
 ### Database Schema
 
-| File | Purpose |
-|------|---------|
-| `src/db/schema/governance.ts` | Comments, Todos, Surveys, QualitySealTransitions tables |
-| `src/db/schema/index.ts` | Updated to export governance schema |
-| `drizzle/0001_phase11_governance.sql` | SQL migration for new tables |
+| File                                  | Purpose                                                 |
+| ------------------------------------- | ------------------------------------------------------- |
+| `src/db/schema/governance.ts`         | Comments, Todos, Surveys, QualitySealTransitions tables |
+| `src/db/schema/index.ts`              | Updated to export governance schema                     |
+| `drizzle/0001_phase11_governance.sql` | SQL migration for new tables                            |
 
 ### API Routes
 
-| Route | File | Methods |
-|-------|------|---------|
-| `/api/tag-groups` | `src/app/api/tag-groups/route.ts` | GET, POST |
-| `/api/tag-groups/:id` | `src/app/api/tag-groups/[id]/route.ts` | GET, PATCH, DELETE |
-| `/api/tag-groups/:id/tags` | `src/app/api/tag-groups/[id]/tags/route.ts` | GET, POST |
-| `/api/fact-sheets/:type/:id/tags` | `src/app/api/fact-sheets/[type]/[id]/tags/route.ts` | GET, POST, DELETE |
-| `/api/fact-sheets/:type/:id/subscriptions` | `src/app/api/fact-sheets/[type]/[id]/subscriptions/route.ts` | GET, POST, DELETE |
-| `/api/fact-sheets/:type/:id/quality-seal` | `src/app/api/fact-sheets/[type]/[id]/quality-seal/route.ts` | GET, POST |
-| `/api/fact-sheets/:type/:id/comments` | `src/app/api/fact-sheets/[type]/[id]/comments/route.ts` | GET, POST |
-| `/api/fact-sheets/:type/:id/todos` | `src/app/api/fact-sheets/[type]/[id]/todos/route.ts` | GET, POST |
-| `/api/todos/:id` | `src/app/api/todos/[id]/route.ts` | PATCH, DELETE |
-| `/api/surveys` | `src/app/api/surveys/route.ts` | GET, POST |
-| `/api/surveys/:id` | `src/app/api/surveys/[id]/route.ts` | GET, PATCH, DELETE |
-| `/api/surveys/:id/responses` | `src/app/api/surveys/[id]/responses/route.ts` | GET, POST |
+| Route                                      | File                                                         | Methods            |
+| ------------------------------------------ | ------------------------------------------------------------ | ------------------ |
+| `/api/tag-groups`                          | `src/app/api/tag-groups/route.ts`                            | GET, POST          |
+| `/api/tag-groups/:id`                      | `src/app/api/tag-groups/[id]/route.ts`                       | GET, PATCH, DELETE |
+| `/api/tag-groups/:id/tags`                 | `src/app/api/tag-groups/[id]/tags/route.ts`                  | GET, POST          |
+| `/api/fact-sheets/:type/:id/tags`          | `src/app/api/fact-sheets/[type]/[id]/tags/route.ts`          | GET, POST, DELETE  |
+| `/api/fact-sheets/:type/:id/subscriptions` | `src/app/api/fact-sheets/[type]/[id]/subscriptions/route.ts` | GET, POST, DELETE  |
+| `/api/fact-sheets/:type/:id/quality-seal`  | `src/app/api/fact-sheets/[type]/[id]/quality-seal/route.ts`  | GET, POST          |
+| `/api/fact-sheets/:type/:id/comments`      | `src/app/api/fact-sheets/[type]/[id]/comments/route.ts`      | GET, POST          |
+| `/api/fact-sheets/:type/:id/todos`         | `src/app/api/fact-sheets/[type]/[id]/todos/route.ts`         | GET, POST          |
+| `/api/todos/:id`                           | `src/app/api/todos/[id]/route.ts`                            | PATCH, DELETE      |
+| `/api/surveys`                             | `src/app/api/surveys/route.ts`                               | GET, POST          |
+| `/api/surveys/:id`                         | `src/app/api/surveys/[id]/route.ts`                          | GET, PATCH, DELETE |
+| `/api/surveys/:id/responses`               | `src/app/api/surveys/[id]/responses/route.ts`                | GET, POST          |
 
 ### UI Components
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| `TagPicker` | `src/components/TagPicker.tsx` | Assign/remove tags on fact sheet detail |
-| `TagManager` | `src/components/TagManager.tsx` | Admin CRUD for tag groups and tags |
-| `SubscriptionPanel` | `src/components/SubscriptionPanel.tsx` | Subscribe/unsubscribe with roles |
-| `QualitySealBadge` | `src/components/QualitySealBadge.tsx` | Quality seal state + transitions |
-| `CommentThread` | `src/components/CommentThread.tsx` | Threaded comments with replies |
-| `TodoList` | `src/components/TodoList.tsx` | To-do items (create, toggle, assign) |
-| `GovernancePanel` | `src/components/GovernancePanel.tsx` | Tabbed container for all governance features |
+| Component           | File                                   | Purpose                                      |
+| ------------------- | -------------------------------------- | -------------------------------------------- |
+| `TagPicker`         | `src/components/TagPicker.tsx`         | Assign/remove tags on fact sheet detail      |
+| `TagManager`        | `src/components/TagManager.tsx`        | Admin CRUD for tag groups and tags           |
+| `SubscriptionPanel` | `src/components/SubscriptionPanel.tsx` | Subscribe/unsubscribe with roles             |
+| `QualitySealBadge`  | `src/components/QualitySealBadge.tsx`  | Quality seal state + transitions             |
+| `CommentThread`     | `src/components/CommentThread.tsx`     | Threaded comments with replies               |
+| `TodoList`          | `src/components/TodoList.tsx`          | To-do items (create, toggle, assign)         |
+| `GovernancePanel`   | `src/components/GovernancePanel.tsx`   | Tabbed container for all governance features |
 
 ### Pages
 
-| Route | File |
-|-------|------|
-| `/governance` | `src/app/governance/page.tsx` |
+| Route              | File                               |
+| ------------------ | ---------------------------------- |
+| `/governance`      | `src/app/governance/page.tsx`      |
 | `/governance/tags` | `src/app/governance/tags/page.tsx` |
 
 ### Library
 
-| File | Purpose |
-|------|---------|
+| File                      | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
 | `src/lib/quality-seal.ts` | Quality seal state machine (transitions, validation) |
 
 ### Tests
 
-| File | Purpose |
-|------|---------|
+| File                                 | Purpose                            |
+| ------------------------------------ | ---------------------------------- |
 | `src/__tests__/quality-seal.test.ts` | Unit tests for state machine logic |
 
 ### Sidebar
@@ -116,6 +116,7 @@ npm run dev
 ```
 
 Test tag groups:
+
 ```bash
 curl -X POST http://localhost:3000/api/tag-groups \
   -H "Content-Type: application/json" \
@@ -125,6 +126,7 @@ curl http://localhost:3000/api/tag-groups
 ```
 
 Test subscriptions:
+
 ```bash
 curl -X POST http://localhost:3000/api/fact-sheets/Application/<uuid>/subscriptions \
   -H "Content-Type: application/json" \
@@ -132,6 +134,7 @@ curl -X POST http://localhost:3000/api/fact-sheets/Application/<uuid>/subscripti
 ```
 
 Test quality seal:
+
 ```bash
 curl http://localhost:3000/api/fact-sheets/Application/<uuid>/quality-seal
 

@@ -84,7 +84,9 @@ export function QualitySealBadge({
             className="inline-flex items-center gap-1 text-xs text-rosely-plum hover:text-rosely-plum/80 transition-colors"
           >
             Change
-            <ChevronDown className={`w-3 h-3 transition-transform ${showActions ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`w-3 h-3 transition-transform ${showActions ? "rotate-180" : ""}`}
+            />
           </button>
         )}
       </div>
@@ -103,7 +105,9 @@ export function QualitySealBadge({
                 >
                   <ArrowRight className="w-3.5 h-3.5 text-rosely-plum" />
                   <span>{t.label}</span>
-                  <span className={`ml-auto text-xs rounded-full px-2 py-0.5 ${STATE_STYLES[t.toState]}`}>
+                  <span
+                    className={`ml-auto text-xs rounded-full px-2 py-0.5 ${STATE_STYLES[t.toState]}`}
+                  >
                     {t.toState}
                   </span>
                 </button>
@@ -161,11 +165,15 @@ export function QualitySealBadge({
                   key={entry.id}
                   className="flex items-center gap-2 text-xs text-rosely-dusk py-1 border-b border-rosely-petal last:border-0"
                 >
-                  <span className={`rounded-full px-1.5 py-0.5 ${STATE_STYLES[entry.fromState as QualitySealState] ?? ""}`}>
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 ${STATE_STYLES[entry.fromState as QualitySealState] ?? ""}`}
+                  >
                     {entry.fromState}
                   </span>
                   <ArrowRight className="w-3 h-3 text-rosely-mist" />
-                  <span className={`rounded-full px-1.5 py-0.5 ${STATE_STYLES[entry.toState as QualitySealState] ?? ""}`}>
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 ${STATE_STYLES[entry.toState as QualitySealState] ?? ""}`}
+                  >
                     {entry.toState}
                   </span>
                   <span className="ml-auto text-rosely-mist">

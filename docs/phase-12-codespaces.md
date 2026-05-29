@@ -32,6 +32,7 @@ psql $DATABASE_URL -f drizzle/0001_webhook_tables.sql
 ```
 
 This creates two new tables:
+
 - `webhooks` — Subscription registry (URL, events, secret, active flag)
 - `webhook_deliveries` — Delivery log with retry tracking
 
@@ -39,22 +40,22 @@ This creates two new tables:
 
 ## New Files Created
 
-| File | Purpose |
-|------|---------|
-| `src/lib/openapi.ts` | OpenAPI 3.1 specification (declarative) |
-| `src/app/api/docs/openapi.json/route.ts` | Serves the spec as JSON |
-| `src/app/api/docs/page.tsx` | Interactive API explorer (Scalar UI via CDN) |
-| `src/lib/graphql-schema.ts` | GraphQL schema with all 12 fact sheet types |
-| `src/app/api/graphql/route.ts` | GraphQL POST/GET endpoint |
-| `src/db/schema/webhooks.ts` | Webhook + delivery DB schema |
-| `src/lib/webhook-engine.ts` | Event catalog, HMAC signing, delivery engine |
-| `src/app/api/webhooks/route.ts` | Webhook CRUD (list, create) |
-| `src/app/api/webhooks/[id]/route.ts` | Webhook instance (get, update, delete) |
-| `src/app/api/import/route.ts` | CSV import with preview/execute modes |
-| `src/app/api/export/route.ts` | CSV export with field selection |
-| `src/lib/feature-flags.ts` | +4 flags (GRAPHQL, WEBHOOKS, IMPORT, EXPORT) |
-| `drizzle/0001_webhook_tables.sql` | SQL migration for webhook tables |
-| `src/__tests__/phase12-integration.test.ts` | Unit tests for Phase 12 |
+| File                                        | Purpose                                      |
+| ------------------------------------------- | -------------------------------------------- |
+| `src/lib/openapi.ts`                        | OpenAPI 3.1 specification (declarative)      |
+| `src/app/api/docs/openapi.json/route.ts`    | Serves the spec as JSON                      |
+| `src/app/api/docs/page.tsx`                 | Interactive API explorer (Scalar UI via CDN) |
+| `src/lib/graphql-schema.ts`                 | GraphQL schema with all 12 fact sheet types  |
+| `src/app/api/graphql/route.ts`              | GraphQL POST/GET endpoint                    |
+| `src/db/schema/webhooks.ts`                 | Webhook + delivery DB schema                 |
+| `src/lib/webhook-engine.ts`                 | Event catalog, HMAC signing, delivery engine |
+| `src/app/api/webhooks/route.ts`             | Webhook CRUD (list, create)                  |
+| `src/app/api/webhooks/[id]/route.ts`        | Webhook instance (get, update, delete)       |
+| `src/app/api/import/route.ts`               | CSV import with preview/execute modes        |
+| `src/app/api/export/route.ts`               | CSV export with field selection              |
+| `src/lib/feature-flags.ts`                  | +4 flags (GRAPHQL, WEBHOOKS, IMPORT, EXPORT) |
+| `drizzle/0001_webhook_tables.sql`           | SQL migration for webhook tables             |
+| `src/__tests__/phase12-integration.test.ts` | Unit tests for Phase 12                      |
 
 ---
 
@@ -62,14 +63,15 @@ This creates two new tables:
 
 Four new feature flags (all default to `true`):
 
-| Flag | Purpose |
-|------|---------|
-| `FEATURE_GRAPHQL_API` | Enable/disable GraphQL endpoint |
+| Flag                   | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `FEATURE_GRAPHQL_API`  | Enable/disable GraphQL endpoint          |
 | `FEATURE_WEBHOOKS_API` | Enable/disable webhook CRUD and delivery |
-| `FEATURE_IMPORT_API` | Enable/disable CSV import |
-| `FEATURE_EXPORT_API` | Enable/disable CSV export |
+| `FEATURE_IMPORT_API`   | Enable/disable CSV import                |
+| `FEATURE_EXPORT_API`   | Enable/disable CSV export                |
 
 To disable any in `.env`:
+
 ```env
 FEATURE_GRAPHQL_API=false
 FEATURE_WEBHOOKS_API=false
@@ -156,6 +158,7 @@ curl -X POST http://localhost:3000/api/import \
 ```
 
 Sample CSV format:
+
 ```csv
 name,description,lifecycle,health,owner
 "My App","Description here","Active","Good","Team A"
@@ -216,10 +219,14 @@ To trigger webhook events from existing CRUD operations, add
 import { dispatchWebhookEvent } from "@/lib/webhook-engine";
 
 // After successful insert:
-await dispatchWebhookEvent("application.created", {
-  id: created.id,
-  name: created.name,
-}, { userId: session.user.id });
+await dispatchWebhookEvent(
+  "application.created",
+  {
+    id: created.id,
+    name: created.name,
+  },
+  { userId: session.user.id }
+);
 ```
 
 This is intentionally not wired automatically in Phase 12 to avoid

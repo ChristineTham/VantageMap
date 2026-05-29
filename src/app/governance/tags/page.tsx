@@ -44,8 +44,8 @@ export default function TagsAdminPage() {
       {/* Tag groups will be rendered by the client component TagManager */}
       <div className="bg-white rounded-xl border border-rosely-blush p-5">
         <p className="text-sm text-rosely-mist">
-          Tag group management requires client-side interactivity.
-          This component will be hydrated with the <code className="text-rosely-plum">TagManager</code> component.
+          Tag group management requires client-side interactivity. This component will be hydrated
+          with the <code className="text-rosely-plum">TagManager</code> component.
         </p>
         <p className="text-xs text-rosely-mist mt-2">
           API: <code className="text-rosely-plum">GET /api/tag-groups</code> |{" "}

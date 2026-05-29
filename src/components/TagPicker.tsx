@@ -48,9 +48,7 @@ export function TagPicker({
 
   const assignedTagIds = new Set(assignedTags.map((t) => t.tagId));
   const unassigned = availableTags.filter(
-    (t) =>
-      !assignedTagIds.has(t.id) &&
-      t.name.toLowerCase().includes(search.toLowerCase())
+    (t) => !assignedTagIds.has(t.id) && t.name.toLowerCase().includes(search.toLowerCase())
   );
 
   // Group assigned tags by tag group
@@ -94,7 +92,11 @@ export function TagPicker({
                     className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-lilac/20 text-rosely-plum border border-rosely-lilac/30"
                     style={
                       tag.tagColor
-                        ? { backgroundColor: `${tag.tagColor}20`, color: tag.tagColor, borderColor: `${tag.tagColor}40` }
+                        ? {
+                            backgroundColor: `${tag.tagColor}20`,
+                            color: tag.tagColor,
+                            borderColor: `${tag.tagColor}40`,
+                          }
                         : undefined
                     }
                   >
