@@ -12,6 +12,7 @@
  *   audit.ts         — AuditEntry
  *   users.ts         — User, Workspace, UserWorkspaceRole
  *   api-tokens.ts    — API Tokens for technical users (Phase 10)
+ *   governance.ts    — Comments, Todos, Surveys, QualitySealTransitions (Phase 11)
  */
 
 export * from "./enums";
@@ -24,3 +25,4 @@ export * from "./tags";
 export * from "./audit";
 export * from "./users";
 export * from "./api-tokens";
+export * from "./governance";
