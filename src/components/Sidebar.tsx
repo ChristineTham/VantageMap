@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Search,
   ShieldCheck,
+  BarChart3,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/radar", label: "Tech Radar", icon: Radar },
   { href: "/roadmap", label: "Roadmap", icon: GanttChart },
   { href: "/governance", label: "Governance", icon: ShieldCheck },
+  { href: "/reports", label: "Reports", icon: BarChart3 },
 ];
 
 // ── Sidebar Component ───────────────────────────────────────────────────────

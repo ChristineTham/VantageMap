@@ -7,9 +7,14 @@ import {
   getObjectives,
   getInitiatives,
   getITComponents,
+  getTimeDistribution,
+  getSixRDistribution,
+  getObsolescenceRisk,
+  getPortfolioHealth,
 } from "@/lib/data";
 import type { HealthStatus } from "@/lib/types";
 import { DashboardCharts } from "@/components/DashboardCharts";
+import { ReportingCharts } from "@/components/ReportingCharts";
 
 export const metadata: Metadata = {
   title: "Dashboard – VantageMap",
@@ -24,6 +29,14 @@ export default async function HomePage() {
     getObjectives(),
     getInitiatives(),
     getITComponents(),
+  ]);
+
+  // Fetch Phase 13 report data in parallel
+  const [timeReport, sixRReport, obsolescenceReport, portfolioReport] = await Promise.all([
+    getTimeDistribution(),
+    getSixRDistribution(),
+    getObsolescenceRisk(),
+    getPortfolioHealth(),
   ]);
 
   // Compute health distribution across applications
@@ -86,6 +99,21 @@ export default async function HomePage() {
 
       {/* Charts */}
       <DashboardCharts healthDist={healthDist} statusDist={statusDist} />
+
+      {/* Phase 13 — Reporting & Analytics */}
+      <div>
+        <h2 className="text-lg font-semibold text-rosely-night mb-4">Reporting & Analytics</h2>
+        <ReportingCharts
+          timeDistribution={timeReport.distribution}
+          timeTotal={timeReport.total}
+          timeClassified={timeReport.classified}
+          sixRDistribution={sixRReport.distribution}
+          sixRTotal={sixRReport.total}
+          sixRClassified={sixRReport.classified}
+          portfolioHealthScore={portfolioReport.overallScore}
+          obsolescenceRiskSummary={obsolescenceReport.summary}
+        />
+      </div>
 
       {/* Attention Needed */}
       {criticalApps.length > 0 && (

@@ -362,3 +362,80 @@ export async function searchAllEntities(
     };
   }
 }
+
+// ── Reports (Phase 13) ─────────────────────────────────────────────────────
+
+import {
+  getTimeDistributionReport,
+  getSixRDistributionReport,
+  getObsolescenceRiskReport,
+  getPortfolioHealthReport,
+  getCapabilityCoverageReport,
+  type TimeDistributionReport,
+  type SixRDistributionReport,
+  type ObsolescenceRiskReport,
+  type PortfolioHealthReport,
+  type CapabilityCoverageReport,
+} from "@/lib/reports";
+
+export type {
+  TimeDistributionReport,
+  SixRDistributionReport,
+  ObsolescenceRiskReport,
+  PortfolioHealthReport,
+  CapabilityCoverageReport,
+};
+
+export async function getTimeDistribution(): Promise<TimeDistributionReport> {
+  try {
+    return await getTimeDistributionReport();
+  } catch {
+    return { distribution: [], total: 0, classified: 0, unclassified: 0, recommendations: [] };
+  }
+}
+
+export async function getSixRDistribution(): Promise<SixRDistributionReport> {
+  try {
+    return await getSixRDistributionReport();
+  } catch {
+    return { distribution: [], total: 0, classified: 0, unclassified: 0 };
+  }
+}
+
+export async function getObsolescenceRisk(horizonDays?: number): Promise<ObsolescenceRiskReport> {
+  try {
+    return await getObsolescenceRiskReport(horizonDays);
+  } catch {
+    return {
+      items: [],
+      summary: { critical: 0, high: 0, medium: 0, low: 0, total: 0 },
+      upcomingEolCount: 0,
+      pastEolCount: 0,
+    };
+  }
+}
+
+export async function getPortfolioHealth(): Promise<PortfolioHealthReport> {
+  try {
+    return await getPortfolioHealthReport();
+  } catch {
+    return {
+      overallScore: 0,
+      dimensions: {
+        healthDistribution: [],
+        lifecycleDistribution: [],
+        fitScoreAvg: { technical: 0, functional: 0 },
+        criticalityDistribution: [],
+      },
+      trends: { appsInPhaseOut: 0, appsInEndOfLife: 0, appsWithPoorHealth: 0, appsWithCriticalHealth: 0 },
+    };
+  }
+}
+
+export async function getCapabilityCoverage(): Promise<CapabilityCoverageReport> {
+  try {
+    return await getCapabilityCoverageReport();
+  } catch {
+    return { capabilities: [], uncoveredCapabilities: 0, avgAppsPerCapability: 0 };
+  }
+}

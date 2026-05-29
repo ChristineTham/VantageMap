@@ -248,9 +248,9 @@ Build external integration capabilities from [DEVELOPER.md](DEVELOPER.md). **Sta
 
 ---
 
-### Phase 13 — Reporting and Analytics
+### Phase 13 — Reporting and Analytics ✅
 
-Implement use-case engines and analytics from [USE-CASES.md](USE-CASES.md).
+Implement use-case engines and analytics from [USE-CASES.md](USE-CASES.md). **Status: Complete. On-demand reporting pipeline with portfolio health scoring (0-100 composite), TIME rationalization engine with fit-score-based recommendation system, 6R cloud migration distribution, obsolescence risk tracking with configurable horizon and severity levels, and capability-to-application coverage analysis. Five report API endpoints under `/api/reports/*`. Dedicated `/reports` page and dashboard widget integration with Recharts visualizations. Sidebar updated. See [phase-13-codespaces.md](phase-13-codespaces.md).**
 
 | Step | Title                              | Scope                                                                                                                                                     | Depends on                         |
 | ---- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
