@@ -14,11 +14,7 @@ interface RelationshipListProps {
   entityId: string;
 }
 
-export function RelationshipList({
-  relationships,
-  entityType,
-  entityId,
-}: RelationshipListProps) {
+export function RelationshipList({ relationships, entityType, entityId }: RelationshipListProps) {
   const [showAdd, setShowAdd] = useState(false);
 
   // Group relationships by type
@@ -102,7 +98,7 @@ export function RelationshipList({
 function RelationshipRow({
   relationship,
   currentEntityId,
-  currentEntityType,
+  currentEntityType: _currentEntityType,
 }: {
   relationship: Relationship;
   currentEntityId: string;
@@ -117,12 +113,7 @@ function RelationshipRow({
   return (
     <li className="flex items-center justify-between px-4 py-3 hover:bg-rosely-petal/30 transition-colors group">
       <div className="flex items-center gap-3">
-        <ArrowRight
-          className={cn(
-            "h-4 w-4 text-rosely-mist",
-            !isSource && "rotate-180"
-          )}
-        />
+        <ArrowRight className={cn("h-4 w-4 text-rosely-mist", !isSource && "rotate-180")} />
         <div>
           <Link
             href={`/${linkedSlug}/${linkedId}`}

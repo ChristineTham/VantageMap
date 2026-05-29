@@ -222,8 +222,8 @@ export function BulkEditDialog({
             <>
               <p className="text-sm text-rosely-dusk">
                 This will permanently delete{" "}
-                <span className="font-semibold text-rosely-night">{selectedIds.length}</span>{" "}
-                items and their relationships. This cannot be undone.
+                <span className="font-semibold text-rosely-night">{selectedIds.length}</span> items
+                and their relationships. This cannot be undone.
               </p>
               <label className="flex items-center gap-2 text-sm text-rosely-dusk">
                 <input
@@ -253,7 +253,9 @@ export function BulkEditDialog({
               disabled={saving}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors",
-                saving ? "bg-rosely-plum/60 cursor-not-allowed" : "bg-rosely-plum hover:bg-rosely-plum/90"
+                saving
+                  ? "bg-rosely-plum/60 cursor-not-allowed"
+                  : "bg-rosely-plum hover:bg-rosely-plum/90"
               )}
             >
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}

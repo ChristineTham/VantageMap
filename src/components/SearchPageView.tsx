@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useCallback, useEffect, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Search, Filter, X, Loader2 } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FACT_SHEET_CONFIGS } from "@/lib/fact-sheet-config";
 import { HealthBadge } from "@/components/StatusBadge";
@@ -33,11 +33,7 @@ interface SearchPageViewProps {
   initialPage: number;
 }
 
-export function SearchPageView({
-  initialQuery,
-  initialTypes,
-  initialPage,
-}: SearchPageViewProps) {
+export function SearchPageView({ initialQuery, initialTypes, initialPage }: SearchPageViewProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
   const [selectedTypes, setSelectedTypes] = useState<string[]>(initialTypes);
@@ -50,46 +46,44 @@ export function SearchPageView({
   const [isPending, startTransition] = useTransition();
   const [hasSearched, setHasSearched] = useState(!!initialQuery);
 
-  const doSearch = useCallback(
-    async (q: string, types: string[], p: number) => {
-      if (!q.trim()) {
-        setResults([]);
-        setGrouped([]);
-        setTotal(0);
-        setTotalPages(0);
-        return;
-      }
+  const doSearch = useCallback(async (q: string, types: string[], p: number) => {
+    if (!q.trim()) {
+      setResults([]);
+      setGrouped([]);
+      setTotal(0);
+      setTotalPages(0);
+      return;
+    }
 
-      try {
-        const params = new URLSearchParams({ q: q.trim() });
-        if (types.length > 0) params.set("types", types.join(","));
-        if (p > 1) params.set("page", String(p));
-        params.set("pageSize", "20");
+    try {
+      const params = new URLSearchParams({ q: q.trim() });
+      if (types.length > 0) params.set("types", types.join(","));
+      if (p > 1) params.set("page", String(p));
+      params.set("pageSize", "20");
 
-        const res = await fetch(`/api/search?${params}`);
-        if (!res.ok) throw new Error("Search failed");
+      const res = await fetch(`/api/search?${params}`);
+      if (!res.ok) throw new Error("Search failed");
 
-        const body = await res.json();
-        const data = body.data ?? body;
+      const body = await res.json();
+      const data = body.data ?? body;
 
-        setResults(data.results ?? []);
-        setGrouped(data.grouped ?? []);
-        setTotal(data.meta?.total ?? 0);
-        setTotalPages(data.meta?.totalPages ?? 0);
-        setHasSearched(true);
-      } catch {
-        setResults([]);
-        setGrouped([]);
-        setTotal(0);
-        setTotalPages(0);
-      }
-    },
-    []
-  );
+      setResults(data.results ?? []);
+      setGrouped(data.grouped ?? []);
+      setTotal(data.meta?.total ?? 0);
+      setTotalPages(data.meta?.totalPages ?? 0);
+      setHasSearched(true);
+    } catch {
+      setResults([]);
+      setGrouped([]);
+      setTotal(0);
+      setTotalPages(0);
+    }
+  }, []);
 
   // Search on mount if query provided
   useEffect(() => {
     if (initialQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       doSearch(initialQuery, initialTypes, initialPage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,7 +162,11 @@ export function SearchPageView({
           disabled={isPending}
           className="inline-flex items-center gap-1.5 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white hover:bg-rosely-plum/90 transition-colors disabled:opacity-60"
         >
-          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+          {isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Search className="h-4 w-4" />
+          )}
           Search
         </button>
       </form>
@@ -234,10 +232,7 @@ export function SearchPageView({
             {grouped.length > 0 && (
               <div className="flex items-center gap-2">
                 {grouped.map((g) => (
-                  <span
-                    key={g.type}
-                    className="text-xs text-rosely-mist"
-                  >
+                  <span key={g.type} className="text-xs text-rosely-mist">
                     {g.type}: {g.count}
                   </span>
                 ))}
@@ -281,7 +276,9 @@ function SearchResultCard({ result }: { result: SearchResult }) {
               <HealthBadge health={result.health as Parameters<typeof HealthBadge>[0]["health"]} />
             )}
             {result.lifecycle && (
-              <LifecycleTag lifecycle={result.lifecycle as Parameters<typeof LifecycleTag>[0]["lifecycle"]} />
+              <LifecycleTag
+                lifecycle={result.lifecycle as Parameters<typeof LifecycleTag>[0]["lifecycle"]}
+              />
             )}
           </div>
           <h3 className="text-sm font-medium text-rosely-night truncate">{result.name}</h3>

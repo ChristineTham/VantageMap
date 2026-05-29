@@ -9,14 +9,7 @@ import type { FactSheetType } from "@/lib/types";
 
 // ── Field Definition ────────────────────────────────────────────────────────
 
-export type FieldType =
-  | "text"
-  | "textarea"
-  | "select"
-  | "date"
-  | "number"
-  | "url"
-  | "json";
+export type FieldType = "text" | "textarea" | "select" | "date" | "number" | "url" | "json";
 
 export interface FieldDefinition {
   key: string;
@@ -50,9 +43,27 @@ const qualitySealOptions = ["Draft", "Check Needed", "Approved", "Rejected"];
 const commonFields: FieldDefinition[] = [
   { key: "name", label: "Name", type: "text", required: true, group: "General" },
   { key: "description", label: "Description", type: "textarea", group: "General" },
-  { key: "lifecycle", label: "Lifecycle Phase", type: "select", options: lifecycleOptions, group: "Status" },
-  { key: "health", label: "Health Status", type: "select", options: healthOptions, group: "Status" },
-  { key: "qualitySeal", label: "Quality Seal", type: "select", options: qualitySealOptions, group: "Governance" },
+  {
+    key: "lifecycle",
+    label: "Lifecycle Phase",
+    type: "select",
+    options: lifecycleOptions,
+    group: "Status",
+  },
+  {
+    key: "health",
+    label: "Health Status",
+    type: "select",
+    options: healthOptions,
+    group: "Status",
+  },
+  {
+    key: "qualitySeal",
+    label: "Quality Seal",
+    type: "select",
+    options: qualitySealOptions,
+    group: "Governance",
+  },
   { key: "owner", label: "Owner", type: "text", group: "Governance" },
 ];
 
@@ -68,10 +79,28 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Layers",
     fields: [
       ...commonFields,
-      { key: "level", label: "Level", type: "select", options: ["1", "2", "3"], required: true, group: "Hierarchy" },
-      { key: "parentId", label: "Parent Capability", type: "text", placeholder: "Parent capability ID", group: "Hierarchy" },
+      {
+        key: "level",
+        label: "Level",
+        type: "select",
+        options: ["1", "2", "3"],
+        required: true,
+        group: "Hierarchy",
+      },
+      {
+        key: "parentId",
+        label: "Parent Capability",
+        type: "text",
+        placeholder: "Parent capability ID",
+        group: "Hierarchy",
+      },
       { key: "maturity", label: "Maturity Score", type: "number", group: "Assessment" },
-      { key: "strategicImportance", label: "Strategic Importance", type: "number", group: "Assessment" },
+      {
+        key: "strategicImportance",
+        label: "Strategic Importance",
+        type: "number",
+        group: "Assessment",
+      },
     ],
   },
   {
@@ -83,14 +112,56 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "AppWindow",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Business Application", "Microservice", "AI Agent"], group: "Classification" },
-      { key: "technicalFit", label: "Technical Fit", type: "select", options: ["Insufficient", "Adequate", "Full"], group: "Assessment" },
-      { key: "functionalFit", label: "Functional Fit", type: "select", options: ["Insufficient", "Adequate", "Full"], group: "Assessment" },
-      { key: "businessCriticality", label: "Business Criticality", type: "select", options: ["Administrative Service", "Relevant", "Important", "Mission Critical"], group: "Classification" },
-      { key: "timeClassification", label: "TIME Classification", type: "select", options: ["Tolerate", "Invest", "Migrate", "Eliminate"], group: "Classification" },
-      { key: "sixRClassification", label: "6R Classification", type: "select", options: ["Retire", "Retain", "Repurchase", "Rehost", "Replatform", "Rearchitect"], group: "Classification" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: ["Business Application", "Microservice", "AI Agent"],
+        group: "Classification",
+      },
+      {
+        key: "technicalFit",
+        label: "Technical Fit",
+        type: "select",
+        options: ["Insufficient", "Adequate", "Full"],
+        group: "Assessment",
+      },
+      {
+        key: "functionalFit",
+        label: "Functional Fit",
+        type: "select",
+        options: ["Insufficient", "Adequate", "Full"],
+        group: "Assessment",
+      },
+      {
+        key: "businessCriticality",
+        label: "Business Criticality",
+        type: "select",
+        options: ["Administrative Service", "Relevant", "Important", "Mission Critical"],
+        group: "Classification",
+      },
+      {
+        key: "timeClassification",
+        label: "TIME Classification",
+        type: "select",
+        options: ["Tolerate", "Invest", "Migrate", "Eliminate"],
+        group: "Classification",
+      },
+      {
+        key: "sixRClassification",
+        label: "6R Classification",
+        type: "select",
+        options: ["Retire", "Retain", "Repurchase", "Rehost", "Replatform", "Rearchitect"],
+        group: "Classification",
+      },
       { key: "version", label: "Version", type: "text", group: "General" },
-      { key: "parentId", label: "Parent Application", type: "text", placeholder: "Parent application ID", group: "Hierarchy" },
+      {
+        key: "parentId",
+        label: "Parent Application",
+        type: "text",
+        placeholder: "Parent application ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -102,8 +173,21 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Target",
     fields: [
       ...commonFields,
-      { key: "perspective", label: "Perspective", type: "select", options: ["Financial", "Customer", "Internal Process", "Learning & Growth"], required: true, group: "Classification" },
-      { key: "parentId", label: "Parent Objective", type: "text", placeholder: "Parent objective ID", group: "Hierarchy" },
+      {
+        key: "perspective",
+        label: "Perspective",
+        type: "select",
+        options: ["Financial", "Customer", "Internal Process", "Learning & Growth"],
+        required: true,
+        group: "Classification",
+      },
+      {
+        key: "parentId",
+        label: "Parent Objective",
+        type: "text",
+        placeholder: "Parent objective ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -115,12 +199,36 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Rocket",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Idea", "Program", "Project", "Epic"], group: "Classification" },
-      { key: "status", label: "Status", type: "select", options: ["Not Started", "In Progress", "Completed", "On Hold", "Cancelled"], group: "Status" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: ["Idea", "Program", "Project", "Epic"],
+        group: "Classification",
+      },
+      {
+        key: "status",
+        label: "Status",
+        type: "select",
+        options: ["Not Started", "In Progress", "Completed", "On Hold", "Cancelled"],
+        group: "Status",
+      },
       { key: "startDate", label: "Start Date", type: "date", group: "Timeline" },
       { key: "endDate", label: "End Date", type: "date", group: "Timeline" },
-      { key: "budget", label: "Budget", type: "text", placeholder: "e.g. 500000", group: "Planning" },
-      { key: "parentId", label: "Parent Initiative", type: "text", placeholder: "Parent initiative ID", group: "Hierarchy" },
+      {
+        key: "budget",
+        label: "Budget",
+        type: "text",
+        placeholder: "e.g. 500000",
+        group: "Planning",
+      },
+      {
+        key: "parentId",
+        label: "Parent Initiative",
+        type: "text",
+        placeholder: "Parent initiative ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -132,16 +240,58 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Cpu",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Hardware", "IaaS", "PaaS", "SaaS", "Service", "Software", "AI Model"], group: "Classification" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: ["Hardware", "IaaS", "PaaS", "SaaS", "Service", "Software", "AI Model"],
+        group: "Classification",
+      },
       { key: "version", label: "Version", type: "text", group: "General" },
-      { key: "technicalStandard", label: "Technical Standard", type: "select", options: ["Approved", "Approved with constraints", "Deprecated"], group: "Classification" },
-      { key: "ring", label: "Radar Ring", type: "select", options: ["Adopt", "Trial", "Assess", "Hold"], group: "Radar" },
-      { key: "quadrant", label: "Radar Quadrant", type: "select", options: ["Techniques", "Tools", "Platforms", "Languages & Frameworks"], group: "Radar" },
+      {
+        key: "technicalStandard",
+        label: "Technical Standard",
+        type: "select",
+        options: ["Approved", "Approved with constraints", "Deprecated"],
+        group: "Classification",
+      },
+      {
+        key: "ring",
+        label: "Radar Ring",
+        type: "select",
+        options: ["Adopt", "Trial", "Assess", "Hold"],
+        group: "Radar",
+      },
+      {
+        key: "quadrant",
+        label: "Radar Quadrant",
+        type: "select",
+        options: ["Techniques", "Tools", "Platforms", "Languages & Frameworks"],
+        group: "Radar",
+      },
       { key: "endOfLife", label: "End of Life", type: "date", group: "Timeline" },
       { key: "endOfSupport", label: "End of Support", type: "date", group: "Timeline" },
-      { key: "techCategoryId", label: "Tech Category", type: "text", placeholder: "Category ID", group: "Hierarchy" },
-      { key: "providerId", label: "Provider", type: "text", placeholder: "Provider ID", group: "Classification" },
-      { key: "parentId", label: "Parent Component", type: "text", placeholder: "Parent ID", group: "Hierarchy" },
+      {
+        key: "techCategoryId",
+        label: "Tech Category",
+        type: "text",
+        placeholder: "Category ID",
+        group: "Hierarchy",
+      },
+      {
+        key: "providerId",
+        label: "Provider",
+        type: "text",
+        placeholder: "Provider ID",
+        group: "Classification",
+      },
+      {
+        key: "parentId",
+        label: "Parent Component",
+        type: "text",
+        placeholder: "Parent ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -153,9 +303,22 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Building2",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Business Unit", "Customer", "Region", "Legal Entity", "Team"], required: true, group: "Classification" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: ["Business Unit", "Customer", "Region", "Legal Entity", "Team"],
+        required: true,
+        group: "Classification",
+      },
       { key: "level", label: "Level", type: "number", group: "Hierarchy" },
-      { key: "parentId", label: "Parent Organization", type: "text", placeholder: "Parent organization ID", group: "Hierarchy" },
+      {
+        key: "parentId",
+        label: "Parent Organization",
+        type: "text",
+        placeholder: "Parent organization ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -167,8 +330,19 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Database",
     fields: [
       ...commonFields,
-      { key: "dataClassification", label: "Data Classification", type: "text", group: "Classification" },
-      { key: "parentId", label: "Parent Data Object", type: "text", placeholder: "Parent ID", group: "Hierarchy" },
+      {
+        key: "dataClassification",
+        label: "Data Classification",
+        type: "text",
+        group: "Classification",
+      },
+      {
+        key: "parentId",
+        label: "Parent Data Object",
+        type: "text",
+        placeholder: "Parent ID",
+        group: "Hierarchy",
+      },
     ],
   },
   {
@@ -180,12 +354,42 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Cable",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Logical Interface", "API", "MCP Server"], group: "Classification" },
-      { key: "dataFlowDirection", label: "Data Flow Direction", type: "select", options: ["Incoming", "Outgoing", "Bi-Directional"], group: "Classification" },
-      { key: "frequency", label: "Frequency", type: "text", placeholder: "e.g. Real-time, Daily", group: "General" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: ["Logical Interface", "API", "MCP Server"],
+        group: "Classification",
+      },
+      {
+        key: "dataFlowDirection",
+        label: "Data Flow Direction",
+        type: "select",
+        options: ["Incoming", "Outgoing", "Bi-Directional"],
+        group: "Classification",
+      },
+      {
+        key: "frequency",
+        label: "Frequency",
+        type: "text",
+        placeholder: "e.g. Real-time, Daily",
+        group: "General",
+      },
       { key: "endpointUrl", label: "Endpoint URL", type: "url", group: "Technical" },
-      { key: "authProtocol", label: "Auth Protocol", type: "text", placeholder: "e.g. OAuth 2.0, API Key", group: "Technical" },
-      { key: "providerApplicationId", label: "Provider Application", type: "text", placeholder: "Application ID", group: "Classification" },
+      {
+        key: "authProtocol",
+        label: "Auth Protocol",
+        type: "text",
+        placeholder: "e.g. OAuth 2.0, API Key",
+        group: "Technical",
+      },
+      {
+        key: "providerApplicationId",
+        label: "Provider Application",
+        type: "text",
+        placeholder: "Application ID",
+        group: "Classification",
+      },
     ],
   },
   {
@@ -208,9 +412,7 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     pluralName: "Platforms",
     apiPath: "/api/platforms",
     icon: "Server",
-    fields: [
-      ...commonFields,
-    ],
+    fields: [...commonFields],
   },
   {
     type: "TechCategory",
@@ -223,7 +425,13 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
       { key: "name", label: "Name", type: "text", required: true, group: "General" },
       { key: "description", label: "Description", type: "textarea", group: "General" },
       { key: "level", label: "Level", type: "number", group: "Hierarchy" },
-      { key: "parentId", label: "Parent Category", type: "text", placeholder: "Parent ID", group: "Hierarchy" },
+      {
+        key: "parentId",
+        label: "Parent Category",
+        type: "text",
+        placeholder: "Parent ID",
+        group: "Hierarchy",
+      },
       { key: "owner", label: "Owner", type: "text", group: "Governance" },
     ],
   },
@@ -236,9 +444,28 @@ export const FACT_SHEET_CONFIGS: FactSheetConfig[] = [
     icon: "Workflow",
     fields: [
       ...commonFields,
-      { key: "subtype", label: "Subtype", type: "select", options: ["Business Product", "Customer Journey", "Process", "Value Stream", "ESG Capability"], required: true, group: "Classification" },
+      {
+        key: "subtype",
+        label: "Subtype",
+        type: "select",
+        options: [
+          "Business Product",
+          "Customer Journey",
+          "Process",
+          "Value Stream",
+          "ESG Capability",
+        ],
+        required: true,
+        group: "Classification",
+      },
       { key: "level", label: "Level", type: "number", group: "Hierarchy" },
-      { key: "parentId", label: "Parent Context", type: "text", placeholder: "Parent ID", group: "Hierarchy" },
+      {
+        key: "parentId",
+        label: "Parent Context",
+        type: "text",
+        placeholder: "Parent ID",
+        group: "Hierarchy",
+      },
     ],
   },
 ];

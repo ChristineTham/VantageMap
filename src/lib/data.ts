@@ -313,7 +313,10 @@ export async function getEntityByTypeAndId(
   id: string
 ): Promise<Record<string, unknown> | null> {
   try {
-    const apiClientMap: Record<FactSheetType, { getById: (id: string) => Promise<{ data: unknown }> }> = {
+    const apiClientMap: Record<
+      FactSheetType,
+      { getById: (id: string) => Promise<{ data: unknown }> }
+    > = {
       BusinessCapability: capabilitiesApi,
       Application: applicationsApi,
       StrategicObjective: objectivesApi,
@@ -351,6 +354,11 @@ export async function searchAllEntities(
     const res = await searchEntities(query, options);
     return res.data;
   } catch {
-    return { query, results: [], grouped: [], meta: { page: 1, pageSize: 20, total: 0, totalPages: 0 } };
+    return {
+      query,
+      results: [],
+      grouped: [],
+      meta: { page: 1, pageSize: 20, total: 0, totalPages: 0 },
+    };
   }
 }

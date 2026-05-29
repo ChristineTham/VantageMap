@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { X, Plus, Loader2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { FactSheetType } from "@/lib/types";
-import { FACT_SHEET_CONFIGS } from "@/lib/fact-sheet-config";
+
 import { VALID_RELATIONSHIP_PAIRS } from "@/lib/relationship-rules";
 
 interface RelationshipAddDialogProps {
@@ -51,16 +51,19 @@ export function RelationshipAddDialog({
     [entityType]
   );
 
-  const allValid = [...validOutgoing, ...validIncoming];
-
   // Filter based on search
   const filteredOptions = useMemo(() => {
+    const allValid = [...validOutgoing, ...validIncoming];
     if (!targetSearch) return allValid;
     const q = targetSearch.toLowerCase();
     return allValid.filter((o) => o.label.toLowerCase().includes(q));
-  }, [allValid, targetSearch]);
+  }, [validOutgoing, validIncoming, targetSearch]);
 
-  const handleSelectRelType = (relType: string, targetType: FactSheetType, isOutgoing: boolean) => {
+  const handleSelectRelType = (
+    relType: string,
+    targetType: FactSheetType,
+    _isOutgoing: boolean
+  ) => {
     setSelectedRelType(relType);
     setSelectedTargetType(targetType);
     setStep("target");
@@ -177,9 +180,7 @@ export function RelationshipAddDialog({
                     return (
                       <button
                         key={`${opt.relType}-${opt.targetType}-${idx}`}
-                        onClick={() =>
-                          handleSelectRelType(opt.relType, opt.targetType, isOutgoing)
-                        }
+                        onClick={() => handleSelectRelType(opt.relType, opt.targetType, isOutgoing)}
                         className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-left text-rosely-dusk hover:bg-rosely-petal hover:text-rosely-night transition-colors"
                       >
                         <span className="font-medium">{opt.relType}</span>

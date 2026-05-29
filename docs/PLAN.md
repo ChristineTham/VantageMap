@@ -190,9 +190,9 @@ One step per route/view. All steps are independent and parallelizable. Each step
 
 ---
 
-### Phase 9 — CRUD and Editing UI (In Progress)
+### Phase 9 — CRUD and Editing UI ✅
 
-Add create, edit, and detail views to support data stewardship workflows from [USER-GUIDE.md](USER-GUIDE.md). **Status: Code scaffolded. Needs type-check, build validation, and integration testing in Codespaces. See [phase-9-codespaces.md](phase-9-codespaces.md).**
+Add create, edit, and detail views to support data stewardship workflows from [USER-GUIDE.md](USER-GUIDE.md). **Status: Complete. Universal fact sheet detail view (`/[type]/[id]`), create form (`/[type]/new`), edit dialog, delete dialog, relationship editor, bulk edit UI, search page with cross-entity search, and sidebar Search nav item. TypeScript clean, lint clean, build passes. 93 new tests (487 total). See [phase-9-codespaces.md](phase-9-codespaces.md).**
 
 | Step | Title                  | Scope                                                                                                                                                   | Depends on               |
 | ---- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |

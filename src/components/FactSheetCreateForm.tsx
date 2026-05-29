@@ -100,9 +100,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-rosely-night">
-          Create {config.displayName}
-        </h1>
+        <h1 className="text-2xl font-bold text-rosely-night">Create {config.displayName}</h1>
         <p className="text-sm text-rosely-mist mt-1">
           Fill in the details below to create a new {config.displayName.toLowerCase()} fact sheet.
         </p>
@@ -153,11 +151,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
                 : "bg-rosely-plum hover:bg-rosely-plum/90"
             )}
           >
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="h-4 w-4" />
-            )}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             {saving ? "Creating…" : `Create ${config.displayName}`}
           </button>
         </div>
@@ -219,7 +213,15 @@ function CreateFormField({
         />
       ) : (
         <input
-          type={field.type === "number" ? "number" : field.type === "date" ? "date" : field.type === "url" ? "url" : "text"}
+          type={
+            field.type === "number"
+              ? "number"
+              : field.type === "date"
+                ? "date"
+                : field.type === "url"
+                  ? "url"
+                  : "text"
+          }
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
@@ -228,9 +230,7 @@ function CreateFormField({
         />
       )}
 
-      {field.helpText && (
-        <p className="mt-1 text-xs text-rosely-mist">{field.helpText}</p>
-      )}
+      {field.helpText && <p className="mt-1 text-xs text-rosely-mist">{field.helpText}</p>}
     </div>
   );
 }

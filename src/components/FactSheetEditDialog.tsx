@@ -93,9 +93,7 @@ export function FactSheetEditDialog({
       <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 className="text-lg font-semibold text-rosely-night">
-            Edit {config.displayName}
-          </h2>
+          <h2 className="text-lg font-semibold text-rosely-night">Edit {config.displayName}</h2>
           <button
             onClick={onClose}
             aria-label="Close dialog"
@@ -148,11 +146,7 @@ export function FactSheetEditDialog({
                   : "bg-rosely-plum hover:bg-rosely-plum/90"
               )}
             >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               {saving ? "Saving…" : "Save Changes"}
             </button>
           </div>
@@ -215,7 +209,15 @@ function FormField({
         />
       ) : (
         <input
-          type={field.type === "number" ? "number" : field.type === "date" ? "date" : field.type === "url" ? "url" : "text"}
+          type={
+            field.type === "number"
+              ? "number"
+              : field.type === "date"
+                ? "date"
+                : field.type === "url"
+                  ? "url"
+                  : "text"
+          }
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
@@ -224,9 +226,7 @@ function FormField({
         />
       )}
 
-      {field.helpText && (
-        <p className="mt-1 text-xs text-rosely-mist">{field.helpText}</p>
-      )}
+      {field.helpText && <p className="mt-1 text-xs text-rosely-mist">{field.helpText}</p>}
     </div>
   );
 }

@@ -56,20 +56,20 @@ Phase 9 code has been scaffolded locally. This document covers what was implemen
 
 The `[type]` dynamic segment maps to fact sheet slugs defined in `src/lib/fact-sheet-config.ts`:
 
-| Slug | Type | Detail URL | Create URL |
-| ---- | ---- | ---------- | ---------- |
-| `capabilities` | BusinessCapability | `/capabilities/{id}` | `/capabilities/new` |
-| `applications` | Application | `/applications/{id}` | `/applications/new` |
-| `objectives` | StrategicObjective | `/objectives/{id}` | `/objectives/new` |
-| `initiatives` | Initiative | `/initiatives/{id}` | `/initiatives/new` |
-| `it-components` | ITComponent | `/it-components/{id}` | `/it-components/new` |
-| `organizations` | Organization | `/organizations/{id}` | `/organizations/new` |
-| `data-objects` | DataObject | `/data-objects/{id}` | `/data-objects/new` |
-| `interfaces` | Interface | `/interfaces/{id}` | `/interfaces/new` |
-| `providers` | Provider | `/providers/{id}` | `/providers/new` |
-| `platforms` | Platform | `/platforms/{id}` | `/platforms/new` |
-| `tech-categories` | TechCategory | `/tech-categories/{id}` | `/tech-categories/new` |
-| `business-contexts` | BusinessContext | `/business-contexts/{id}` | `/business-contexts/new` |
+| Slug                | Type               | Detail URL                | Create URL               |
+| ------------------- | ------------------ | ------------------------- | ------------------------ |
+| `capabilities`      | BusinessCapability | `/capabilities/{id}`      | `/capabilities/new`      |
+| `applications`      | Application        | `/applications/{id}`      | `/applications/new`      |
+| `objectives`        | StrategicObjective | `/objectives/{id}`        | `/objectives/new`        |
+| `initiatives`       | Initiative         | `/initiatives/{id}`       | `/initiatives/new`       |
+| `it-components`     | ITComponent        | `/it-components/{id}`     | `/it-components/new`     |
+| `organizations`     | Organization       | `/organizations/{id}`     | `/organizations/new`     |
+| `data-objects`      | DataObject         | `/data-objects/{id}`      | `/data-objects/new`      |
+| `interfaces`        | Interface          | `/interfaces/{id}`        | `/interfaces/new`        |
+| `providers`         | Provider           | `/providers/{id}`         | `/providers/new`         |
+| `platforms`         | Platform           | `/platforms/{id}`         | `/platforms/new`         |
+| `tech-categories`   | TechCategory       | `/tech-categories/{id}`   | `/tech-categories/new`   |
+| `business-contexts` | BusinessContext    | `/business-contexts/{id}` | `/business-contexts/new` |
 
 ---
 
@@ -176,4 +176,7 @@ src/app/applications/page.tsx — Added CreateButton, row-click navigation
 src/app/capabilities/page.tsx — Added CreateButton
 src/components/ApplicationsView.tsx — Added router and onRowClick
 ```
+
+```
+
 ```

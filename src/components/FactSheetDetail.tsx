@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Pencil, Trash2, Link2, Clock } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { FactSheetConfig } from "@/lib/fact-sheet-config";
 import type { Relationship, FactSheetType } from "@/lib/types";
@@ -80,8 +80,14 @@ export function FactSheetDetail({
           <h1 className="text-2xl font-bold text-rosely-night">{name}</h1>
           {description && <p className="text-sm text-rosely-dusk max-w-2xl">{description}</p>}
           <div className="flex flex-wrap items-center gap-3 mt-2">
-            {health && <HealthBadge health={health as Parameters<typeof HealthBadge>[0]["health"]} />}
-            {lifecycle && <LifecycleTag lifecycle={lifecycle as Parameters<typeof LifecycleTag>[0]["lifecycle"]} />}
+            {health && (
+              <HealthBadge health={health as Parameters<typeof HealthBadge>[0]["health"]} />
+            )}
+            {lifecycle && (
+              <LifecycleTag
+                lifecycle={lifecycle as Parameters<typeof LifecycleTag>[0]["lifecycle"]}
+              />
+            )}
             {qualitySeal && (
               <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-periwinkle/20 text-rosely-cornflower">
                 {qualitySeal}
@@ -168,7 +174,7 @@ export function FactSheetDetail({
           ))}
 
           {/* Custom Fields */}
-          {entity.customFields && Object.keys(entity.customFields as object).length > 0 && (
+          {!!entity.customFields && Object.keys(entity.customFields as object).length > 0 && (
             <div className="rounded-xl border border-rosely-blush bg-white p-5">
               <h3 className="text-sm font-semibold text-rosely-night mb-4">Custom Fields</h3>
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
@@ -246,14 +252,13 @@ function AuditHistoryPlaceholder({
     <div className="mt-4 space-y-3">
       <p className="text-xs text-rosely-mist italic">
         Audit entries for {entityType} {entityId.slice(0, 8)}… will be fetched from{" "}
-        <code className="font-mono">/api/audit?targetType={entityType}&targetId={entityId}</code>
+        <code className="font-mono">
+          /api/audit?targetType={entityType}&targetId={entityId}
+        </code>
       </p>
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-12 rounded-lg bg-rosely-cream/50 animate-pulse"
-          />
+          <div key={i} className="h-12 rounded-lg bg-rosely-cream/50 animate-pulse" />
         ))}
       </div>
     </div>

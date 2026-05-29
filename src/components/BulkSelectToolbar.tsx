@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckSquare, X, Pencil, Trash2 } from "lucide-react";
+import { CheckSquare, X, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BulkSelectToolbarProps {
