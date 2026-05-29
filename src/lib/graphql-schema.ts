@@ -302,8 +302,8 @@ const paginationArgs = {
 
 // ── Query Helper ────────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function paginatedQuery(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   table: any,
   args: { page: number; pageSize: number; search?: string },
   entityType: string
