@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { Application, HealthStatus, LifecyclePhase } from "@/lib/types";
-import { healthBg, lifecycleColour } from "@/lib/types";
+import type { Application } from "@/lib/types";
 import { DataTable, useTableSort, type Column } from "@/components/DataTable";
 import { SearchInput } from "@/components/SearchInput";
-import { StatusBadge, HealthBadge } from "@/components/StatusBadge";
+import { HealthBadge } from "@/components/StatusBadge";
 import { LifecycleTag } from "@/components/LifecycleTag";
 import { Pagination } from "@/components/Pagination";
 
@@ -29,9 +28,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
-        (a) =>
-          a.name.toLowerCase().includes(q) ||
-          a.description?.toLowerCase().includes(q)
+        (a) => a.name.toLowerCase().includes(q) || a.description?.toLowerCase().includes(q)
       );
     }
 
@@ -50,8 +47,8 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
   const sorted = useMemo(() => {
     const arr = [...filtered];
     arr.sort((a, b) => {
-      const aVal = (a as Record<string, unknown>)[sortBy] ?? "";
-      const bVal = (b as Record<string, unknown>)[sortBy] ?? "";
+      const aVal = (a as unknown as Record<string, unknown>)[sortBy] ?? "";
+      const bVal = (b as unknown as Record<string, unknown>)[sortBy] ?? "";
       const cmp = String(aVal).localeCompare(String(bVal));
       return sortDirection === "asc" ? cmp : -cmp;
     });
@@ -73,9 +70,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
       key: "name",
       header: "Name",
       sortable: true,
-      render: (row) => (
-        <span className="font-medium text-rosely-night">{row.name}</span>
-      ),
+      render: (row) => <span className="font-medium text-rosely-night">{row.name}</span>,
     },
     {
       key: "health",
@@ -96,9 +91,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
       header: "Criticality",
       sortable: true,
       render: (row) => (
-        <span className="text-xs text-rosely-dusk">
-          {row.businessCriticality || "—"}
-        </span>
+        <span className="text-xs text-rosely-dusk">{row.businessCriticality || "—"}</span>
       ),
       className: "w-32",
     },
@@ -107,9 +100,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
       header: "TIME",
       sortable: true,
       render: (row) => (
-        <span className="text-xs text-rosely-dusk">
-          {row.timeClassification || "—"}
-        </span>
+        <span className="text-xs text-rosely-dusk">{row.timeClassification || "—"}</span>
       ),
       className: "w-24",
     },
@@ -117,22 +108,14 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
       key: "technicalFit",
       header: "Tech Fit",
       sortable: true,
-      render: (row) => (
-        <span className="text-xs text-rosely-dusk">
-          {row.technicalFit || "—"}
-        </span>
-      ),
+      render: (row) => <span className="text-xs text-rosely-dusk">{row.technicalFit || "—"}</span>,
       className: "w-24",
     },
     {
       key: "functionalFit",
       header: "Func. Fit",
       sortable: true,
-      render: (row) => (
-        <span className="text-xs text-rosely-dusk">
-          {row.functionalFit || "—"}
-        </span>
-      ),
+      render: (row) => <span className="text-xs text-rosely-dusk">{row.functionalFit || "—"}</span>,
       className: "w-24",
     },
   ];

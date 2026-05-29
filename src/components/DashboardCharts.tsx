@@ -36,10 +36,7 @@ interface DashboardChartsProps {
   statusDist: Record<string, number>;
 }
 
-export function DashboardCharts({
-  healthDist,
-  statusDist,
-}: DashboardChartsProps) {
+export function DashboardCharts({ healthDist, statusDist }: DashboardChartsProps) {
   const healthData = Object.entries(healthDist)
     .filter(([, count]) => count > 0)
     .map(([name, value]) => ({ name, value }));
@@ -68,10 +65,7 @@ export function DashboardCharts({
                 dataKey="value"
               >
                 {healthData.map((entry) => (
-                  <Cell
-                    key={entry.name}
-                    fill={HEALTH_COLORS[entry.name] || "#a49e9e"}
-                  />
+                  <Cell key={entry.name} fill={HEALTH_COLORS[entry.name] || "#a49e9e"} />
                 ))}
               </Pie>
               <Tooltip />
@@ -85,17 +79,13 @@ export function DashboardCharts({
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <p className="py-12 text-center text-sm text-rosely-mist">
-            No health data available
-          </p>
+          <p className="py-12 text-center text-sm text-rosely-mist">No health data available</p>
         )}
       </div>
 
       {/* Initiative Status */}
       <div className="rounded-xl border border-rosely-blush bg-white p-5">
-        <h3 className="text-sm font-semibold text-rosely-night mb-4">
-          Initiative Status
-        </h3>
+        <h3 className="text-sm font-semibold text-rosely-night mb-4">Initiative Status</h3>
         {statusData.length > 0 ? (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={statusData} layout="vertical">
@@ -110,18 +100,13 @@ export function DashboardCharts({
               <Tooltip />
               <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                 {statusData.map((entry) => (
-                  <Cell
-                    key={entry.name}
-                    fill={STATUS_COLORS[entry.name] || "#a49e9e"}
-                  />
+                  <Cell key={entry.name} fill={STATUS_COLORS[entry.name] || "#a49e9e"} />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <p className="py-12 text-center text-sm text-rosely-mist">
-            No initiative data available
-          </p>
+          <p className="py-12 text-center text-sm text-rosely-mist">No initiative data available</p>
         )}
       </div>
     </div>

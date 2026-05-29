@@ -19,10 +19,7 @@ export default async function CapabilitiesPage() {
   const level2 = capabilities.filter((c) => c.level === "2");
   const level3 = capabilities.filter((c) => c.level === "3");
 
-  function getChildren(
-    parentId: string,
-    pool: BusinessCapability[]
-  ): BusinessCapability[] {
+  function getChildren(parentId: string, pool: BusinessCapability[]): BusinessCapability[] {
     return pool.filter((c) => c.parentId === parentId);
   }
 
@@ -30,9 +27,7 @@ export default async function CapabilitiesPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-rosely-night">
-            Business Capabilities
-          </h1>
+          <h1 className="text-2xl font-bold text-rosely-night">Business Capabilities</h1>
           <p className="text-sm text-rosely-mist mt-1">
             Hierarchical view of enterprise business capabilities.
           </p>
@@ -51,9 +46,7 @@ export default async function CapabilitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-rosely-night">
-            Business Capabilities
-          </h1>
+          <h1 className="text-2xl font-bold text-rosely-night">Business Capabilities</h1>
           <p className="text-sm text-rosely-mist mt-1">
             {capabilities.length} capabilities across {level1.length} domains
           </p>
@@ -81,25 +74,16 @@ export default async function CapabilitiesPage() {
         {level1.map((l1) => {
           const l2Children = getChildren(l1.id, level2);
           return (
-            <div
-              key={l1.id}
-              className="rounded-xl border-2 border-rosely-plum/30 bg-white p-4"
-            >
+            <div key={l1.id} className="rounded-xl border-2 border-rosely-plum/30 bg-white p-4">
               {/* Level 1 header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-semibold text-rosely-night">
-                    {l1.name}
-                  </h2>
+                  <h2 className="text-base font-semibold text-rosely-night">{l1.name}</h2>
                   <HealthIndicator health={l1.health} showLabel />
                 </div>
                 <LifecycleTag lifecycle={l1.lifecycle} />
               </div>
-              {l1.description && (
-                <p className="text-xs text-rosely-mist mb-3">
-                  {l1.description}
-                </p>
-              )}
+              {l1.description && <p className="text-xs text-rosely-mist mb-3">{l1.description}</p>}
 
               {/* Level 2 grid */}
               {l2Children.length > 0 && (
@@ -112,9 +96,7 @@ export default async function CapabilitiesPage() {
                         className="rounded-lg border border-rosely-cornflower/30 bg-rosely-cream/30 p-3"
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-sm font-medium text-rosely-night">
-                            {l2.name}
-                          </h3>
+                          <h3 className="text-sm font-medium text-rosely-night">{l2.name}</h3>
                           <HealthIndicator health={l2.health} />
                         </div>
 

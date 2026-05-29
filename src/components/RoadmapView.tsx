@@ -30,9 +30,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
-        (i) =>
-          i.name.toLowerCase().includes(q) ||
-          i.description?.toLowerCase().includes(q)
+        (i) => i.name.toLowerCase().includes(q) || i.description?.toLowerCase().includes(q)
       );
     }
 
@@ -74,9 +72,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
     const start = new Date(min.getFullYear(), min.getMonth() - 1, 1);
     const end = new Date(max.getFullYear(), max.getMonth() + 2, 0);
     const months =
-      (end.getFullYear() - start.getFullYear()) * 12 +
-      (end.getMonth() - start.getMonth()) +
-      1;
+      (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
 
     return { timelineStart: start, timelineEnd: end, monthCount: months };
   }, [initiatives]);
@@ -85,11 +81,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
   const months = useMemo(() => {
     const result: { label: string; year: number }[] = [];
     for (let i = 0; i < monthCount; i++) {
-      const d = new Date(
-        timelineStart.getFullYear(),
-        timelineStart.getMonth() + i,
-        1
-      );
+      const d = new Date(timelineStart.getFullYear(), timelineStart.getMonth() + i, 1);
       result.push({
         label: d.toLocaleDateString("en-US", { month: "short" }),
         year: d.getFullYear(),
@@ -102,9 +94,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
     const totalMs = timelineEnd.getTime() - timelineStart.getTime();
     if (totalMs === 0) return { left: "0%", width: "100%" };
 
-    const start = startDate
-      ? new Date(startDate).getTime()
-      : timelineStart.getTime();
+    const start = startDate ? new Date(startDate).getTime() : timelineStart.getTime();
     const end = endDate ? new Date(endDate).getTime() : timelineEnd.getTime();
 
     const leftPct = ((start - timelineStart.getTime()) / totalMs) * 100;
@@ -154,11 +144,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
       {/* Status Legend */}
       <div className="flex flex-wrap gap-3">
         {STATUS_ORDER.map((status) => (
-          <StatusBadge
-            key={status}
-            status={status}
-            colorMap={initiativeStatusColour}
-          />
+          <StatusBadge key={status} status={status} colorMap={initiativeStatusColour} />
         ))}
       </div>
 
@@ -167,9 +153,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
         {/* Month Headers */}
         <div className="flex border-b border-rosely-blush bg-rosely-cream/30">
           <div className="w-56 shrink-0 border-r border-rosely-blush px-3 py-2">
-            <span className="text-xs font-medium text-rosely-mist">
-              Initiative
-            </span>
+            <span className="text-xs font-medium text-rosely-mist">Initiative</span>
           </div>
           <div className="flex-1 flex overflow-x-auto">
             {months.map((m, idx) => (
@@ -177,13 +161,9 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
                 key={idx}
                 className="flex-1 min-w-[60px] border-r border-rosely-petal px-1 py-2 text-center"
               >
-                <span className="text-[10px] text-rosely-mist block">
-                  {m.label}
-                </span>
+                <span className="text-[10px] text-rosely-mist block">{m.label}</span>
                 {(idx === 0 || m.label === "Jan") && (
-                  <span className="text-[9px] text-rosely-mist/60">
-                    {m.year}
-                  </span>
+                  <span className="text-[9px] text-rosely-mist/60">{m.year}</span>
                 )}
               </div>
             ))}
@@ -198,16 +178,15 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
         ) : (
           <div className="divide-y divide-rosely-petal">
             {filtered.map((initiative) => {
-              const pos = getBarPosition(
-                initiative.startDate,
-                initiative.endDate
-              );
+              const pos = getBarPosition(initiative.startDate, initiative.endDate);
               const barColor =
-                STATUS_BAR_COLORS[initiative.status || "Not Started"] ||
-                "bg-rosely-mist/40";
+                STATUS_BAR_COLORS[initiative.status || "Not Started"] || "bg-rosely-mist/40";
 
               return (
-                <div key={initiative.id} className="flex hover:bg-rosely-petal/20 transition-colors">
+                <div
+                  key={initiative.id}
+                  className="flex hover:bg-rosely-petal/20 transition-colors"
+                >
                   {/* Name column */}
                   <div className="w-56 shrink-0 border-r border-rosely-petal px-3 py-2.5 flex items-center gap-2">
                     <HealthIndicator health={initiative.health} />
@@ -218,10 +197,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
                   {/* Timeline column */}
                   <div className="flex-1 relative py-2.5 px-1">
                     <div
-                      className={cn(
-                        "absolute top-1/2 -translate-y-1/2 h-5 rounded-full",
-                        barColor
-                      )}
+                      className={cn("absolute top-1/2 -translate-y-1/2 h-5 rounded-full", barColor)}
                       style={{ left: pos.left, width: pos.width }}
                       title={`${initiative.startDate || "?"} → ${initiative.endDate || "?"}`}
                     >
@@ -252,24 +228,15 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
           <tbody className="divide-y divide-rosely-petal">
             {filtered.map((i) => (
               <tr key={i.id} className="hover:bg-rosely-petal/40 transition-colors">
-                <td className="px-4 py-3 font-medium text-rosely-night">
-                  {i.name}
-                </td>
+                <td className="px-4 py-3 font-medium text-rosely-night">{i.name}</td>
                 <td className="px-4 py-3">
-                  <StatusBadge
-                    status={i.status || "Unknown"}
-                    colorMap={initiativeStatusColour}
-                  />
+                  <StatusBadge status={i.status || "Unknown"} colorMap={initiativeStatusColour} />
                 </td>
                 <td className="px-4 py-3 text-xs text-rosely-dusk">
-                  {i.startDate
-                    ? new Date(i.startDate).toLocaleDateString()
-                    : "—"}
+                  {i.startDate ? new Date(i.startDate).toLocaleDateString() : "—"}
                 </td>
                 <td className="px-4 py-3 text-xs text-rosely-dusk">
-                  {i.endDate
-                    ? new Date(i.endDate).toLocaleDateString()
-                    : "—"}
+                  {i.endDate ? new Date(i.endDate).toLocaleDateString() : "—"}
                 </td>
                 <td className="px-4 py-3">
                   <HealthIndicator health={i.health} showLabel />

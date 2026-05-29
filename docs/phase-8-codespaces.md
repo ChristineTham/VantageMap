@@ -6,30 +6,30 @@ All six frontend views have been implemented as Next.js 16 Server Component page
 
 ### New files created
 
-| File | Purpose |
-| --- | --- |
-| `src/app/page.tsx` | Dashboard — summary cards, health distribution pie chart, initiative status bar chart, attention alerts, navigation cards |
-| `src/components/DashboardCharts.tsx` | Client Component with Recharts (PieChart + BarChart) for dashboard |
-| `src/app/capabilities/page.tsx` | Business Capability Map — hierarchical 3-level layout with health indicators |
-| `src/app/capabilities/loading.tsx` | Loading skeleton for capabilities route |
-| `src/app/applications/page.tsx` | Application Portfolio — server-side data fetch, delegates to client view |
-| `src/app/applications/loading.tsx` | Loading skeleton for applications route |
-| `src/components/ApplicationsView.tsx` | Client Component — interactive table with search, filter by health/lifecycle, sort, pagination |
-| `src/app/strategy/page.tsx` | Strategy Map — Balanced Scorecard with 4 perspectives (Financial, Customer, Internal Process, Learning & Growth) |
-| `src/app/strategy/loading.tsx` | Loading skeleton for strategy route |
-| `src/app/radar/page.tsx` | Technology Radar — server-side fetch, delegates to client view |
-| `src/app/radar/loading.tsx` | Loading skeleton for radar route |
-| `src/components/TechRadarView.tsx` | Client Component — filterable quadrant grid with ring groups, search, filter by ring/quadrant |
-| `src/app/roadmap/page.tsx` | Strategic Roadmap — server-side fetch, delegates to client view |
-| `src/app/roadmap/loading.tsx` | Loading skeleton for roadmap route |
-| `src/components/RoadmapView.tsx` | Client Component — Gantt-style timeline with colored bars, summary table, search/filter |
+| File                                  | Purpose                                                                                                                   |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `src/app/page.tsx`                    | Dashboard — summary cards, health distribution pie chart, initiative status bar chart, attention alerts, navigation cards |
+| `src/components/DashboardCharts.tsx`  | Client Component with Recharts (PieChart + BarChart) for dashboard                                                        |
+| `src/app/capabilities/page.tsx`       | Business Capability Map — hierarchical 3-level layout with health indicators                                              |
+| `src/app/capabilities/loading.tsx`    | Loading skeleton for capabilities route                                                                                   |
+| `src/app/applications/page.tsx`       | Application Portfolio — server-side data fetch, delegates to client view                                                  |
+| `src/app/applications/loading.tsx`    | Loading skeleton for applications route                                                                                   |
+| `src/components/ApplicationsView.tsx` | Client Component — interactive table with search, filter by health/lifecycle, sort, pagination                            |
+| `src/app/strategy/page.tsx`           | Strategy Map — Balanced Scorecard with 4 perspectives (Financial, Customer, Internal Process, Learning & Growth)          |
+| `src/app/strategy/loading.tsx`        | Loading skeleton for strategy route                                                                                       |
+| `src/app/radar/page.tsx`              | Technology Radar — server-side fetch, delegates to client view                                                            |
+| `src/app/radar/loading.tsx`           | Loading skeleton for radar route                                                                                          |
+| `src/components/TechRadarView.tsx`    | Client Component — filterable quadrant grid with ring groups, search, filter by ring/quadrant                             |
+| `src/app/roadmap/page.tsx`            | Strategic Roadmap — server-side fetch, delegates to client view                                                           |
+| `src/app/roadmap/loading.tsx`         | Loading skeleton for roadmap route                                                                                        |
+| `src/components/RoadmapView.tsx`      | Client Component — Gantt-style timeline with colored bars, summary table, search/filter                                   |
 
 ### Modified files
 
-| File | Changes |
-| --- | --- |
+| File               | Changes                                                                 |
+| ------------------ | ----------------------------------------------------------------------- |
 | `src/app/page.tsx` | Replaced placeholder with full dashboard (async, data-fetching, charts) |
-| `docs/PLAN.md` | Marked Phase 8 as ✅ |
+| `docs/PLAN.md`     | Marked Phase 8 as ✅                                                    |
 
 ### Architecture decisions
 
@@ -68,6 +68,7 @@ npx tsc --noEmit
 ```
 
 **Potential issues:**
+
 - `HealthIndicator` component was recreated — if there's a duplicate, delete the older one and keep the version that matches imports
 - Ensure `src/lib/data.ts` exports `getCapability` (singular) in addition to `getCapabilities`
 - If TypeScript errors on unused imports (`Link` in capabilities page), just remove the unused import
@@ -122,18 +123,19 @@ npm run dev
 
 Open each route and verify:
 
-| Route | What to check |
-| --- | --- |
+| Route           | What to check                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `/` (Dashboard) | Summary cards with counts, pie chart (health), bar chart (initiative status), attention alerts for critical apps, navigation cards |
-| `/capabilities` | Hierarchical 3-level layout with colour-coded borders, health dots, lifecycle tags |
-| `/applications` | Table with sortable columns, search input, health/lifecycle filter dropdowns, pagination |
-| `/strategy` | 4 perspective lanes (Financial=golden, Customer=teal, Internal=cornflower, Learning=lilac), objective cards with health dots |
-| `/radar` | 4-quadrant grid, ring badges within each quadrant, search + ring/quadrant filters |
-| `/roadmap` | Gantt timeline with month headers, coloured bars by status, summary table below, search + status filter |
+| `/capabilities` | Hierarchical 3-level layout with colour-coded borders, health dots, lifecycle tags                                                 |
+| `/applications` | Table with sortable columns, search input, health/lifecycle filter dropdowns, pagination                                           |
+| `/strategy`     | 4 perspective lanes (Financial=golden, Customer=teal, Internal=cornflower, Learning=lilac), objective cards with health dots       |
+| `/radar`        | 4-quadrant grid, ring badges within each quadrant, search + ring/quadrant filters                                                  |
+| `/roadmap`      | Gantt timeline with month headers, coloured bars by status, summary table below, search + status filter                            |
 
 ### 10. Verify loading states
 
 Simulate slow network by throttling in browser DevTools:
+
 - Each route should show a `PageSkeleton` while loading
 - The root `/` should show a skeleton on hard refresh
 
@@ -197,6 +199,7 @@ src/app/roadmap/page.tsx (Server)
 ## Ready for Phase 9
 
 Phase 8 provides all read-only views. Phase 9 adds:
+
 - 9.1: Universal detail page (`/[type]/[id]`) showing all fields, relationships, audit history
 - 9.2: Create fact sheet form (modal or page-based)
 - 9.3: Edit fact sheet form (inline or page-based)

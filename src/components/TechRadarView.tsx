@@ -26,7 +26,7 @@ interface TechRadarViewProps {
   categories: TechCategory[];
 }
 
-export function TechRadarView({ components, categories }: TechRadarViewProps) {
+export function TechRadarView({ components, categories: _categories }: TechRadarViewProps) {
   const [search, setSearch] = useState("");
   const [filterRing, setFilterRing] = useState<string>("all");
   const [filterQuadrant, setFilterQuadrant] = useState<string>("all");
@@ -37,9 +37,7 @@ export function TechRadarView({ components, categories }: TechRadarViewProps) {
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.description?.toLowerCase().includes(q)
+        (c) => c.name.toLowerCase().includes(q) || c.description?.toLowerCase().includes(q)
       );
     }
 
@@ -124,34 +122,19 @@ export function TechRadarView({ components, categories }: TechRadarViewProps) {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {QUADRANTS.map((quadrant) => {
           const items = groupedByQuadrant.get(quadrant.key) || [];
-          return (
-            <QuadrantCard
-              key={quadrant.key}
-              label={quadrant.label}
-              items={items}
-            />
-          );
+          return <QuadrantCard key={quadrant.key} label={quadrant.label} items={items} />;
         })}
       </div>
 
       {/* Unassigned */}
       {groupedByQuadrant.has("Unassigned") && (
-        <QuadrantCard
-          label="Unassigned"
-          items={groupedByQuadrant.get("Unassigned") || []}
-        />
+        <QuadrantCard label="Unassigned" items={groupedByQuadrant.get("Unassigned") || []} />
       )}
     </div>
   );
 }
 
-function QuadrantCard({
-  label,
-  items,
-}: {
-  label: string;
-  items: ITComponent[];
-}) {
+function QuadrantCard({ label, items }: { label: string; items: ITComponent[] }) {
   // Group items by ring within this quadrant
   const byRing = new Map<string, ITComponent[]>();
   for (const ring of RINGS) {
@@ -165,15 +148,11 @@ function QuadrantCard({
     <div className="rounded-xl border border-rosely-blush bg-white p-4">
       <h3 className="text-sm font-semibold text-rosely-night mb-3">
         {label}
-        <span className="ml-2 text-xs font-normal text-rosely-mist">
-          ({items.length})
-        </span>
+        <span className="ml-2 text-xs font-normal text-rosely-mist">({items.length})</span>
       </h3>
 
       {items.length === 0 ? (
-        <p className="text-xs text-rosely-mist italic">
-          No technologies in this quadrant.
-        </p>
+        <p className="text-xs text-rosely-mist italic">No technologies in this quadrant.</p>
       ) : (
         <div className="space-y-3">
           {RINGS.map((ring) => {
@@ -194,9 +173,7 @@ function QuadrantCard({
                       <HealthIndicator health={item.health} />
                       {item.name}
                       {item.version && (
-                        <span className="text-rosely-mist ml-0.5">
-                          v{item.version}
-                        </span>
+                        <span className="text-rosely-mist ml-0.5">v{item.version}</span>
                       )}
                     </span>
                   ))}

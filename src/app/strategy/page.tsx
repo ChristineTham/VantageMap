@@ -8,8 +8,7 @@ import { Target } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Strategy Map – VantageMap",
-  description:
-    "Balanced Scorecard strategy map with objectives grouped by perspective.",
+  description: "Balanced Scorecard strategy map with objectives grouped by perspective.",
 };
 
 const PERSPECTIVES: {
@@ -45,10 +44,7 @@ const PERSPECTIVES: {
 ];
 
 export default async function StrategyPage() {
-  const [objectives, initiatives] = await Promise.all([
-    getObjectives(),
-    getInitiatives(),
-  ]);
+  const [objectives, initiatives] = await Promise.all([getObjectives(), getInitiatives()]);
 
   if (objectives.length === 0) {
     return (
@@ -83,8 +79,8 @@ export default async function StrategyPage() {
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Strategy Map</h1>
         <p className="text-sm text-rosely-mist mt-1">
-          {objectives.length} objectives across {PERSPECTIVES.length}{" "}
-          perspectives • {initiatives.length} linked initiatives
+          {objectives.length} objectives across {PERSPECTIVES.length} perspectives •{" "}
+          {initiatives.length} linked initiatives
         </p>
       </div>
 
@@ -113,11 +109,7 @@ export default async function StrategyPage() {
               ) : (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((obj) => (
-                    <ObjectiveCard
-                      key={obj.id}
-                      objective={obj}
-                      initiativeCount={0}
-                    />
+                    <ObjectiveCard key={obj.id} objective={obj} initiativeCount={0} />
                   ))}
                 </div>
               )}
@@ -131,7 +123,7 @@ export default async function StrategyPage() {
 
 function ObjectiveCard({
   objective,
-  initiativeCount,
+  initiativeCount: _initiativeCount,
 }: {
   objective: StrategicObjective;
   initiativeCount: number;
@@ -139,15 +131,11 @@ function ObjectiveCard({
   return (
     <div className="rounded-lg border border-white/60 bg-white p-3 shadow-sm">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-sm font-medium text-rosely-night">
-          {objective.name}
-        </h3>
+        <h3 className="text-sm font-medium text-rosely-night">{objective.name}</h3>
         <HealthIndicator health={objective.health} />
       </div>
       {objective.description && (
-        <p className="mt-1 text-xs text-rosely-mist line-clamp-2">
-          {objective.description}
-        </p>
+        <p className="mt-1 text-xs text-rosely-mist line-clamp-2">{objective.description}</p>
       )}
       <div className="mt-2 flex items-center gap-2">
         <LifecycleTag lifecycle={objective.lifecycle} />

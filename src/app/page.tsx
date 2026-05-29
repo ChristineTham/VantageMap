@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Layers,
-  AppWindow,
-  Target,
-  Radar,
-  GanttChart,
-  AlertTriangle,
-} from "lucide-react";
+import { Layers, AppWindow, Target, Radar, GanttChart, AlertTriangle } from "lucide-react";
 import {
   getCapabilities,
   getApplications,
@@ -25,19 +18,16 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [capabilities, applications, objectives, initiatives, itComponents] =
-    await Promise.all([
-      getCapabilities(),
-      getApplications(),
-      getObjectives(),
-      getInitiatives(),
-      getITComponents(),
-    ]);
+  const [capabilities, applications, objectives, initiatives, itComponents] = await Promise.all([
+    getCapabilities(),
+    getApplications(),
+    getObjectives(),
+    getInitiatives(),
+    getITComponents(),
+  ]);
 
   // Compute health distribution across applications
-  const healthDist = computeHealthDistribution(
-    applications.map((a) => a.health)
-  );
+  const healthDist = computeHealthDistribution(applications.map((a) => a.health));
 
   // Compute initiative status distribution
   const statusDist = {
@@ -48,9 +38,7 @@ export default async function HomePage() {
     Cancelled: initiatives.filter((i) => i.status === "Cancelled").length,
   };
 
-  const criticalApps = applications.filter(
-    (a) => a.health === "Critical" || a.health === "Poor"
-  );
+  const criticalApps = applications.filter((a) => a.health === "Critical" || a.health === "Poor");
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -58,8 +46,7 @@ export default async function HomePage() {
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Dashboard</h1>
         <p className="text-sm text-rosely-mist mt-1">
-          Enterprise architecture overview — capabilities, applications,
-          strategy, and roadmap.
+          Enterprise architecture overview — capabilities, applications, strategy, and roadmap.
         </p>
       </div>
 
@@ -105,27 +92,17 @@ export default async function HomePage() {
         <div className="rounded-xl border border-rosely-flamingo/30 bg-rosely-flamingo/5 p-5">
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="h-4 w-4 text-rosely-flamingo" />
-            <h2 className="text-sm font-semibold text-rosely-night">
-              Attention Needed
-            </h2>
+            <h2 className="text-sm font-semibold text-rosely-night">Attention Needed</h2>
           </div>
           <div className="space-y-2">
             {criticalApps.slice(0, 5).map((app) => (
-              <div
-                key={app.id}
-                className="flex items-center justify-between text-sm"
-              >
+              <div key={app.id} className="flex items-center justify-between text-sm">
                 <span className="text-rosely-night">{app.name}</span>
-                <span className="text-xs text-rosely-rose font-medium">
-                  {app.health}
-                </span>
+                <span className="text-xs text-rosely-rose font-medium">{app.health}</span>
               </div>
             ))}
             {criticalApps.length > 5 && (
-              <Link
-                href="/applications"
-                className="text-xs text-rosely-plum hover:underline"
-              >
+              <Link href="/applications" className="text-xs text-rosely-plum hover:underline">
                 +{criticalApps.length - 5} more
               </Link>
             )}
@@ -172,9 +149,7 @@ export default async function HomePage() {
 
 // ── Helper Functions ────────────────────────────────────────────────────────
 
-function computeHealthDistribution(
-  healthValues: (HealthStatus | null)[]
-): Record<string, number> {
+function computeHealthDistribution(healthValues: (HealthStatus | null)[]): Record<string, number> {
   const dist: Record<string, number> = {
     Excellent: 0,
     Good: 0,

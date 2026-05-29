@@ -6,8 +6,7 @@ import { AppWindow } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Application Portfolio – VantageMap",
-  description:
-    "Filterable application portfolio with health, lifecycle, and fit scores.",
+  description: "Filterable application portfolio with health, lifecycle, and fit scores.",
 };
 
 export default async function ApplicationsPage() {
@@ -17,9 +16,7 @@ export default async function ApplicationsPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-rosely-night">
-            Application Portfolio
-          </h1>
+          <h1 className="text-2xl font-bold text-rosely-night">Application Portfolio</h1>
           <p className="text-sm text-rosely-mist mt-1">
             Manage your enterprise application landscape.
           </p>
@@ -36,9 +33,7 @@ export default async function ApplicationsPage() {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-rosely-night">
-          Application Portfolio
-        </h1>
+        <h1 className="text-2xl font-bold text-rosely-night">Application Portfolio</h1>
         <p className="text-sm text-rosely-mist mt-1">
           {applications.length} applications in the enterprise landscape
         </p>
