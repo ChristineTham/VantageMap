@@ -13,7 +13,7 @@ import { db } from "@/db";
 import { webhooks, webhookDeliveries } from "@/db/schema";
 import { withErrorHandler, ok, notFound, unauthorized } from "@/lib/api-response";
 import { parseBody } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 // ── Validation Schemas ──────────────────────────────────────────────────────
@@ -36,8 +36,8 @@ export const GET = withErrorHandler(async (request: NextRequest, context: RouteC
     return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   const { id } = await context.params;
 
@@ -72,8 +72,8 @@ export const PATCH = withErrorHandler(async (request: NextRequest, context: Rout
     return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   const { id } = await context.params;
 
@@ -107,8 +107,8 @@ export const DELETE = withErrorHandler(async (request: NextRequest, context: Rou
     return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   const { id } = await context.params;
 

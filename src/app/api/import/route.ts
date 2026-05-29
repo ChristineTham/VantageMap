@@ -35,7 +35,7 @@ import {
   interfaces as interfacesTable,
 } from "@/db/schema";
 import { withErrorHandler, ok, badRequest, unauthorized } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { dispatchWebhookEvent } from "@/lib/webhook-engine";
 
@@ -102,8 +102,9 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     );
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
+  const auth = authResult.auth;
 
   // Parse multipart form data
   const formData = await request.formData();
@@ -238,7 +239,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     inserted: insertedCount,
     updated: updatedCount,
     errors: rowErrors.length,
-  }, { userId: session.user.id });
+  }, { userId: auth.userId });
 
   return ok({
     data: {

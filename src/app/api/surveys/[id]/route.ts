@@ -71,7 +71,7 @@ export const PATCH = withErrorHandler(
     if (!authz.ok) return authz.response;
 
     const body = await parseBody(request, updateSurveySchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const updates: Record<string, unknown> = {};
     if (body.data.title !== undefined) updates.title = body.data.title;

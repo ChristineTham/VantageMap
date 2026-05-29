@@ -398,10 +398,11 @@ export async function getPortfolioHealthReport(): Promise<PortfolioHealthReport>
   }
 
   // Fit score averages
+  const fitScoreMap: Record<string, number> = { Insufficient: 1, Adequate: 3, Full: 5 };
   let techSum = 0, techCount = 0, funcSum = 0, funcCount = 0;
   for (const app of allApps) {
-    if (app.technicalFit !== null) { techSum += app.technicalFit as number; techCount++; }
-    if (app.functionalFit !== null) { funcSum += app.functionalFit as number; funcCount++; }
+    if (app.technicalFit !== null) { techSum += fitScoreMap[app.technicalFit as string] ?? 0; techCount++; }
+    if (app.functionalFit !== null) { funcSum += fitScoreMap[app.functionalFit as string] ?? 0; funcCount++; }
   }
 
   // Criticality distribution
@@ -494,7 +495,7 @@ export async function getCapabilityCoverageReport(): Promise<CapabilityCoverageR
   const capabilities = caps.map((cap) => ({
     id: cap.id,
     name: cap.name,
-    level: cap.level,
+    level: cap.level ? Number(cap.level) : null,
     appCount: capAppMap.get(cap.id)?.size ?? 0,
     healthScore: null as number | null, // Could be computed from linked app health
   }));

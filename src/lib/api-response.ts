@@ -10,7 +10,7 @@
  *   { error: { code, message, details?, correlationId } } — error
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ZodError, type ZodSchema } from "zod";
 import { randomUUID } from "crypto";
 
@@ -170,16 +170,18 @@ export function zodError(err: ZodError): NextResponse<ApiErrorBody> {
  *   return ok(items);
  * });
  */
-export function withErrorHandler(
+export function withErrorHandler<
+  TContext extends { params: Promise<Record<string, string>> } = { params: Promise<Record<string, string>> }
+>(
   handler: (
-    request: Request,
-    context: { params: Promise<Record<string, string>> }
-  ) => Promise<NextResponse>
-) {
+    request: NextRequest,
+    context: TContext
+  ) => Promise<Response>
+): (request: NextRequest, context: TContext) => Promise<Response> {
   return async (
-    request: Request,
-    context: { params: Promise<Record<string, string>> } = { params: Promise.resolve({}) }
-  ): Promise<NextResponse> => {
+    request: NextRequest,
+    context: TContext = { params: Promise.resolve({}) } as TContext
+  ): Promise<Response> => {
     try {
       return await handler(request, context);
     } catch (err) {

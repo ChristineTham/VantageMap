@@ -106,7 +106,7 @@ export const POST = withErrorHandler(
     }
 
     const body = await parseBody(request, assignTagSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     // Verify tag exists
     const [tag] = await db.select().from(tags).where(eq(tags.id, body.data.tagId)).limit(1);
@@ -148,7 +148,7 @@ export const DELETE = withErrorHandler(
     }
 
     const body = await parseBody(request, removeTagSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const deleted = await db
       .delete(tagAssignments)

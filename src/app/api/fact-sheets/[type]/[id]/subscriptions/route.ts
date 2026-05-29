@@ -95,7 +95,7 @@ export const POST = withErrorHandler(
     }
 
     const body = await parseBody(request, subscribeSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const [subscription] = await db
       .insert(subscriptions)
@@ -134,7 +134,7 @@ export const DELETE = withErrorHandler(
     }
 
     const body = await parseBody(request, unsubscribeSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const deleted = await db
       .delete(subscriptions)

@@ -52,7 +52,7 @@ export const POST = withErrorHandler(
     if (!group) return notFound("Tag group not found");
 
     const body = await parseBody(request, createTagSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const [tag] = await db
       .insert(tags)

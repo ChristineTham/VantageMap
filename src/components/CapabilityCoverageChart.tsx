@@ -75,7 +75,7 @@ export function CapabilityCoverageChart({
             tick={{ fontSize: 11, fill: "#615f5f" }}
           />
           <Tooltip
-            formatter={(value: number) => [`${value} apps`, "Applications"]}
+            formatter={(value) => [`${value ?? 0} apps`, "Applications"]}
             contentStyle={{ fontSize: 12 }}
           />
           <Bar dataKey="apps" radius={[0, 4, 4, 0]}>

@@ -120,7 +120,7 @@ export const POST = withErrorHandler(
     }
 
     const body = await parseBody(request, createCommentSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     const [comment] = await db
       .insert(comments)

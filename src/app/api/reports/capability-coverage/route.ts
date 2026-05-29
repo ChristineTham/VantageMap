@@ -10,12 +10,12 @@
 
 import { NextRequest } from "next/server";
 import { withErrorHandler, ok, unauthorized } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { getCapabilityCoverageReport } from "@/lib/reports";
 
 export const GET = withErrorHandler(async (request: NextRequest) => {
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   const report = await getCapabilityCoverageReport();
 

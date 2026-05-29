@@ -14,7 +14,7 @@ import { db } from "@/db";
 import { webhooks } from "@/db/schema";
 import { withErrorHandler, ok, created, badRequest, unauthorized, forbidden } from "@/lib/api-response";
 import { parseBody } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { parseListParams, buildPaginationMeta } from "@/lib/query";
 import { WEBHOOK_EVENTS } from "@/lib/webhook-engine";
@@ -38,14 +38,15 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
+  const auth = authResult.auth;
 
-  const { page, pageSize } = parseListParams(request.url);
+  const { pagination } = parseListParams(new URL(request.url).searchParams);
+  const { page, pageSize, offset } = pagination;
 
   const [countResult] = await db.select({ value: count() }).from(webhooks);
   const total = countResult?.value ?? 0;
-  const offset = (page - 1) * pageSize;
 
   const rows = await db
     .select({
@@ -65,7 +66,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
   return ok({
     data: rows,
-    meta: buildPaginationMeta(page, pageSize, total),
+    meta: buildPaginationMeta(total, pagination),
   });
 });
 
@@ -76,14 +77,15 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     return Response.json({ error: { code: "NOT_FOUND", message: "Webhooks API not enabled", correlationId: crypto.randomUUID() } }, { status: 404 });
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
+  const auth = authResult.auth;
 
   const body = await parseBody(request, createWebhookSchema);
-  if (body instanceof Response) return body;
+  if ("error" in body) return body.error;
 
   // Validate event names
-  const invalidEvents = body.events.filter(
+  const invalidEvents = body.data.events.filter(
     (e) => e !== "*" && !WEBHOOK_EVENTS.includes(e as never)
   );
   if (invalidEvents.length > 0) {
@@ -91,20 +93,20 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   }
 
   // Validate URL is HTTPS in production
-  if (process.env.NODE_ENV === "production" && !body.url.startsWith("https://")) {
+  if (process.env.NODE_ENV === "production" && !body.data.url.startsWith("https://")) {
     return badRequest("Webhook URL must use HTTPS in production");
   }
 
   const [webhook] = await db
     .insert(webhooks)
     .values({
-      url: body.url,
-      events: body.events,
-      secret: body.secret ?? null,
-      name: body.name ?? null,
-      description: body.description ?? null,
-      active: body.active,
-      createdBy: session.user.id,
+      url: body.data.url,
+      events: body.data.events,
+      secret: body.data.secret ?? null,
+      name: body.data.name ?? null,
+      description: body.data.description ?? null,
+      active: body.data.active,
+      createdBy: auth.userId,
     })
     .returning();
 

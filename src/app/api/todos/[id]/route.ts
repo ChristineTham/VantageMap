@@ -38,7 +38,7 @@ export const PATCH = withErrorHandler(
     if (!authz.ok) return authz.response;
 
     const body = await parseBody(request, updateTodoSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     // Build update object
     const updates: Record<string, unknown> = {};

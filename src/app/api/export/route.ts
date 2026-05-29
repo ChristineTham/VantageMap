@@ -31,7 +31,7 @@ import {
   interfaces as interfacesTable,
 } from "@/db/schema";
 import { withErrorHandler, badRequest, unauthorized } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { dispatchWebhookEvent } from "@/lib/webhook-engine";
 
@@ -62,8 +62,9 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     );
   }
 
-  const session = await getSession(request);
-  if (!session) return unauthorized("Authentication required");
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
+  const auth = authResult.auth;
 
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
@@ -117,7 +118,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     factSheetType: type,
     rowCount: rows.length,
     format,
-  }, { userId: session.user.id }).catch(() => {});
+  }, { userId: auth.userId }).catch(() => {});
 
   // Return as downloadable file
   const filename = `${type.toLowerCase()}-export-${new Date().toISOString().slice(0, 10)}.csv`;

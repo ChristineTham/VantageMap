@@ -25,6 +25,7 @@ export default function ApiDocsPage() {
           })}
         />
         {/* Scalar API Reference — lightweight OpenAPI viewer loaded from CDN */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference" />
       </body>
     </html>

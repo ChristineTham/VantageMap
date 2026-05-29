@@ -7,6 +7,7 @@
  * - Survey management
  */
 
+import Link from "next/link";
 import { ShieldCheck, Tags, ClipboardList } from "lucide-react";
 
 export default function GovernancePage() {
@@ -21,8 +22,7 @@ export default function GovernancePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Tag Management */}
-        <a
-          href="/governance/tags"
+        <Link href="/governance/tags"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <Tags className="w-8 h-8 text-rosely-plum mb-3" />
@@ -32,11 +32,10 @@ export default function GovernancePage() {
           <p className="text-sm text-rosely-mist mt-1">
             Create and manage tag groups, define tagging modes, and organize tags.
           </p>
-        </a>
+        </Link>
 
         {/* Quality Seal */}
-        <a
-          href="/governance/quality-seal"
+        <Link href="/governance/quality-seal"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <ShieldCheck className="w-8 h-8 text-rosely-teal mb-3" />
@@ -46,11 +45,10 @@ export default function GovernancePage() {
           <p className="text-sm text-rosely-mist mt-1">
             Review and approve fact sheets through the quality seal workflow.
           </p>
-        </a>
+        </Link>
 
         {/* Surveys */}
-        <a
-          href="/governance/surveys"
+        <Link href="/governance/surveys"
           className="bg-white rounded-xl border border-rosely-blush p-5 hover:border-rosely-lilac hover:shadow-sm transition-all group"
         >
           <ClipboardList className="w-8 h-8 text-rosely-periwinkle mb-3" />
@@ -60,7 +58,7 @@ export default function GovernancePage() {
           <p className="text-sm text-rosely-mist mt-1">
             Create surveys to collect data quality feedback from stakeholders.
           </p>
-        </a>
+        </Link>
       </div>
 
       {/* Summary stats placeholder */}

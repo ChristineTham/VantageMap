@@ -78,7 +78,7 @@ export const POST = withErrorHandler(async (request: Request) => {
   if (!authz.ok) return authz.response;
 
   const body = await parseBody(request, createSurveySchema);
-  if (!body.ok) return body.response;
+  if ("error" in body) return body.error;
 
   // Create survey
   const [survey] = await db

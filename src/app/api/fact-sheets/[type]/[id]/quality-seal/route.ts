@@ -121,7 +121,7 @@ export const POST = withErrorHandler(
     }
 
     const body = await parseBody(request, transitionSchema);
-    if (!body.ok) return body.response;
+    if ("error" in body) return body.error;
 
     // Determine current state
     const [latest] = await db

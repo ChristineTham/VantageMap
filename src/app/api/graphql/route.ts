@@ -16,7 +16,7 @@ import { NextRequest } from "next/server";
 import { graphql, validate, parse } from "graphql";
 import { schema } from "@/lib/graphql-schema";
 import { withErrorHandler, unauthorized } from "@/lib/api-response";
-import { getSession } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 
 // Maximum allowed query depth
@@ -46,10 +46,8 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   }
 
   // Auth check
-  const session = await getSession(request);
-  if (!session) {
-    return unauthorized("Authentication required");
-  }
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   // Parse request body
   const body = await request.json();
@@ -96,7 +94,7 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     source: query,
     variableValues: variables,
     operationName,
-    contextValue: { session },
+    contextValue: { auth: authResult.auth },
   });
 
   return Response.json(result, {
@@ -114,10 +112,8 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     );
   }
 
-  const session = await getSession(request);
-  if (!session) {
-    return unauthorized("Authentication required");
-  }
+  const authResult = await requireAuth(request);
+  if (!authResult.ok) return authResult.response;
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
@@ -141,7 +137,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     schema,
     source: query,
     variableValues: {},
-    contextValue: { session },
+    contextValue: { auth: authResult.auth },
   });
 
   return Response.json(result);
