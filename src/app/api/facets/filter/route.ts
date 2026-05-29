@@ -263,9 +263,7 @@ export const GET = withErrorHandler(async (request: Request) => {
 
   // Count total
   const countQuery = `SELECT COUNT(*)::int AS total FROM (${unionQuery}) AS filtered`;
-  const countResult = (await db.execute(sql.raw(countQuery))) as unknown as Array<{
-    total: number;
-  }>;
+  const countResult = (await db.execute(sql.raw(countQuery))).rows as Array<{ total: number }>;
   const total = Number(countResult[0]?.total ?? 0);
 
   // Map sort field for the outer query
@@ -279,7 +277,7 @@ export const GET = withErrorHandler(async (request: Request) => {
     LIMIT ${pagination.pageSize}
     OFFSET ${pagination.offset}
   `;
-  const rows = (await db.execute(sql.raw(dataQuery))) as unknown as FilteredResult[];
+  const rows = (await db.execute(sql.raw(dataQuery))).rows as unknown as FilteredResult[];
 
   const meta = buildPaginationMeta(total, pagination);
 

@@ -8,7 +8,7 @@
  * - Feature flag gating for data access functions
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import {
   FACT_SHEET_CONFIGS,
   getConfigByType,

@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { X, Plus, Loader2, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { X, Plus, Loader2, Search, CheckCircle2 } from "lucide-react";
+import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetType } from "@/lib/types";
 
 import { VALID_RELATIONSHIP_PAIRS } from "@/lib/relationship-rules";
+
+interface SearchHit {
+  id: string;
+  name: string;
+  description: string | null;
+  entityType: string;
+}
 
 interface RelationshipAddDialogProps {
   entityType: FactSheetType;
@@ -23,8 +30,13 @@ export function RelationshipAddDialog({
   const [step, setStep] = useState<"type" | "target">("type");
   const [selectedRelType, setSelectedRelType] = useState("");
   const [selectedTargetType, setSelectedTargetType] = useState<FactSheetType | "">("");
-  const [targetId, setTargetId] = useState("");
-  const [targetSearch, setTargetSearch] = useState("");
+  // step-1 filter text
+  const [typeSearch, setTypeSearch] = useState("");
+  // step-2 entity search
+  const [entitySearch, setEntitySearch] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchHit[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [selectedTarget, setSelectedTarget] = useState<SearchHit | null>(null);
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,10 +66,46 @@ export function RelationshipAddDialog({
   // Filter based on search
   const filteredOptions = useMemo(() => {
     const allValid = [...validOutgoing, ...validIncoming];
-    if (!targetSearch) return allValid;
-    const q = targetSearch.toLowerCase();
+    if (!typeSearch) return allValid;
+    const q = typeSearch.toLowerCase();
     return allValid.filter((o) => o.label.toLowerCase().includes(q));
-  }, [validOutgoing, validIncoming, targetSearch]);
+  }, [validOutgoing, validIncoming, typeSearch]);
+
+  // Debounced search for target entities
+  const searchEntities = useCallback(
+    async (q: string, type: FactSheetType | "") => {
+      if (!type || q.trim().length < 1) {
+        setSearchResults([]);
+        return;
+      }
+      setSearching(true);
+      try {
+        const params = new URLSearchParams({ q: q.trim(), types: type, pageSize: "10", nameOnly: "true" });
+        const res = await fetch(`/api/search?${params}`, {
+          headers: { ...clientAuthHeaders() },
+        });
+        if (!res.ok) throw new Error("Search failed");
+        const body = await res.json();
+        const data = body.data ?? body;
+        const hits: SearchHit[] = (data.results ?? []).map(
+          (r: SearchHit) => ({ id: r.id, name: r.name, description: r.description, entityType: r.entityType })
+        );
+        setSearchResults(hits);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void searchEntities(entitySearch, selectedTargetType);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [entitySearch, selectedTargetType, searchEntities]);
 
   const handleSelectRelType = (
     relType: string,
@@ -66,11 +114,14 @@ export function RelationshipAddDialog({
   ) => {
     setSelectedRelType(relType);
     setSelectedTargetType(targetType);
+    setEntitySearch("");
+    setSearchResults([]);
+    setSelectedTarget(null);
     setStep("target");
   };
 
   const handleSubmit = async () => {
-    if (!selectedRelType || !selectedTargetType || !targetId) return;
+    if (!selectedRelType || !selectedTargetType || !selectedTarget) return;
     setSaving(true);
     setError(null);
 
@@ -85,13 +136,13 @@ export function RelationshipAddDialog({
             sourceType: entityType,
             sourceId: entityId,
             targetType: selectedTargetType,
-            targetId: targetId.trim(),
+            targetId: selectedTarget.id,
             relationshipType: selectedRelType,
             description: description || null,
           }
         : {
             sourceType: selectedTargetType,
-            sourceId: targetId.trim(),
+            sourceId: selectedTarget.id,
             targetType: entityType,
             targetId: entityId,
             relationshipType: selectedRelType,
@@ -100,7 +151,7 @@ export function RelationshipAddDialog({
 
       const res = await fetch("/api/relationships", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...clientAuthHeaders() },
         body: JSON.stringify(payload),
       });
 
@@ -157,8 +208,8 @@ export function RelationshipAddDialog({
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rosely-mist" />
                 <input
                   type="text"
-                  value={targetSearch}
-                  onChange={(e) => setTargetSearch(e.target.value)}
+                  value={typeSearch}
+                  onChange={(e) => setTypeSearch(e.target.value)}
                   placeholder="Filter relationship types…"
                   className={cn(
                     "w-full rounded-lg border border-rosely-blush bg-white py-2 pl-10 pr-4 text-sm text-rosely-night",
@@ -201,25 +252,72 @@ export function RelationshipAddDialog({
                 <span className="font-medium">{selectedTargetType}</span>
               </p>
 
-              <div>
-                <label className="block text-xs font-medium text-rosely-dusk mb-1">
-                  Target Entity ID
-                </label>
-                <input
-                  type="text"
-                  value={targetId}
-                  onChange={(e) => setTargetId(e.target.value)}
-                  placeholder="Enter UUID of the target entity"
-                  className={cn(
-                    "w-full rounded-lg border border-rosely-blush bg-white px-3 py-2 text-sm text-rosely-night",
-                    "placeholder:text-rosely-mist",
-                    "focus:border-rosely-lilac focus:outline-none focus:ring-2 focus:ring-rosely-lilac/30"
+              {/* Selected entity display */}
+              {selectedTarget ? (
+                <div className="flex items-center gap-2 rounded-lg border border-rosely-lilac/40 bg-rosely-petal px-3 py-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-rosely-plum" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-rosely-night">{selectedTarget.name}</p>
+                    {selectedTarget.description && (
+                      <p className="truncate text-xs text-rosely-mist">{selectedTarget.description}</p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => { setSelectedTarget(null); setEntitySearch(""); setSearchResults([]); }}
+                    className="shrink-0 text-xs text-rosely-mist hover:text-rosely-night transition-colors"
+                  >
+                    Change
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <label className="block text-xs font-medium text-rosely-dusk">
+                    Search for a {selectedTargetType}
+                  </label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rosely-mist" />
+                    <input
+                      type="text"
+                      autoFocus
+                      value={entitySearch}
+                      onChange={(e) => setEntitySearch(e.target.value)}
+                      placeholder={`Type a name to search…`}
+                      className={cn(
+                        "w-full rounded-lg border border-rosely-blush bg-white py-2 pl-10 pr-4 text-sm text-rosely-night",
+                        "placeholder:text-rosely-mist",
+                        "focus:border-rosely-lilac focus:outline-none focus:ring-2 focus:ring-rosely-lilac/30"
+                      )}
+                    />
+                    {searching && (
+                      <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-rosely-mist" />
+                    )}
+                  </div>
+
+                  {/* Results */}
+                  {entitySearch.trim() && (
+                    <div className="max-h-48 overflow-y-auto rounded-lg border border-rosely-blush bg-white shadow-sm">
+                      {searching ? (
+                        <p className="py-4 text-center text-sm text-rosely-mist">Searching…</p>
+                      ) : searchResults.length === 0 ? (
+                        <p className="py-4 text-center text-sm text-rosely-mist">No results found.</p>
+                      ) : (
+                        searchResults.map((hit) => (
+                          <button
+                            key={hit.id}
+                            onClick={() => setSelectedTarget(hit)}
+                            className="w-full flex flex-col items-start gap-0.5 px-3 py-2 text-left text-sm hover:bg-rosely-petal transition-colors border-b border-rosely-blush/50 last:border-0"
+                          >
+                            <span className="font-medium text-rosely-night">{hit.name}</span>
+                            {hit.description && (
+                              <span className="text-xs text-rosely-mist line-clamp-1">{hit.description}</span>
+                            )}
+                          </button>
+                        ))
+                      )}
+                    </div>
                   )}
-                />
-                <p className="mt-1 text-xs text-rosely-mist">
-                  Paste the UUID of the {selectedTargetType} you want to link.
-                </p>
-              </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-medium text-rosely-dusk mb-1">
@@ -241,7 +339,7 @@ export function RelationshipAddDialog({
               {/* Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-rosely-blush">
                 <button
-                  onClick={() => setStep("type")}
+                  onClick={() => { setStep("type"); setSelectedTarget(null); setEntitySearch(""); setSearchResults([]); }}
                   className="text-sm text-rosely-mist hover:text-rosely-night transition-colors"
                 >
                   ← Back
@@ -256,10 +354,10 @@ export function RelationshipAddDialog({
                   </button>
                   <button
                     onClick={handleSubmit}
-                    disabled={!targetId.trim() || saving}
+                    disabled={!selectedTarget || saving}
                     className={cn(
                       "inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors",
-                      targetId.trim() && !saving
+                      selectedTarget && !saving
                         ? "bg-rosely-plum hover:bg-rosely-plum/90"
                         : "bg-rosely-plum/40 cursor-not-allowed"
                     )}

@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetConfig, FieldDefinition } from "@/lib/fact-sheet-config";
 
 interface FactSheetCreateFormProps {
@@ -44,7 +44,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
 
       const res = await fetch(config.apiPath, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...clientAuthHeaders() },
         body: JSON.stringify(payload),
       });
 

@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { X, Save, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetConfig, FieldDefinition } from "@/lib/fact-sheet-config";
 
 interface FactSheetEditDialogProps {
@@ -58,7 +58,7 @@ export function FactSheetEditDialog({
 
       const res = await fetch(`${config.apiPath}/${entityId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...clientAuthHeaders() },
         body: JSON.stringify(payload),
       });
 

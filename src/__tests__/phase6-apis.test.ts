@@ -440,8 +440,8 @@ describe("GET /api/search", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
     vi.mocked(db.execute)
-      .mockResolvedValueOnce([{ total: "1" }] as never)
-      .mockResolvedValueOnce(searchRows as never);
+      .mockResolvedValueOnce({ rows: [{ total: "1" }] } as never)
+      .mockResolvedValueOnce({ rows: searchRows } as never);
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -487,8 +487,8 @@ describe("GET /api/search", () => {
 
   it("respects type filter", async () => {
     vi.mocked(db.execute)
-      .mockResolvedValueOnce([{ total: "1" }] as never)
-      .mockResolvedValueOnce(searchRows as never);
+      .mockResolvedValueOnce({ rows: [{ total: "1" }] } as never)
+      .mockResolvedValueOnce({ rows: searchRows } as never);
     const res = await searchGET(makeRequest(`${BASE}/api/search?q=customer&types=Application`));
     expect(res.status).toBe(200);
   });
@@ -501,7 +501,7 @@ describe("GET /api/search", () => {
 describe("GET /api/facets", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
-    vi.mocked(db.execute).mockResolvedValue([] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [] } as never);
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -511,7 +511,7 @@ describe("GET /api/facets", () => {
   });
 
   it("returns facet groups", async () => {
-    vi.mocked(db.execute).mockResolvedValue([{ value: "Application", count: 5 }] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [{ value: "Application", count: 5 }] } as never);
     const res = await facetsGET(makeRequest(`${BASE}/api/facets`));
     const body = await res.json();
     expect(res.status).toBe(200);
@@ -526,7 +526,7 @@ describe("GET /api/facets", () => {
   });
 
   it("accepts valid types filter", async () => {
-    vi.mocked(db.execute).mockResolvedValue([] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [] } as never);
     const res = await facetsGET(makeRequest(`${BASE}/api/facets?types=Application,ITComponent`));
     expect(res.status).toBe(200);
   });
@@ -554,8 +554,8 @@ describe("GET /api/facets/filter", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
     vi.mocked(db.execute)
-      .mockResolvedValueOnce([{ total: 1 }] as never)
-      .mockResolvedValueOnce(filterRows as never);
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] } as never)
+      .mockResolvedValueOnce({ rows: filterRows } as never);
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -596,8 +596,8 @@ describe("GET /api/facets/filter", () => {
 
   it("accepts multiple types and lifecycle values", async () => {
     vi.mocked(db.execute)
-      .mockResolvedValueOnce([{ total: 0 }] as never)
-      .mockResolvedValueOnce([] as never);
+      .mockResolvedValueOnce({ rows: [{ total: 0 }] } as never)
+      .mockResolvedValueOnce({ rows: [] } as never);
     const res = await facetsFilterGET(
       makeRequest(
         `${BASE}/api/facets/filter?types=Application,ITComponent&lifecycle=Active,Phase%20In`
@@ -614,7 +614,7 @@ describe("GET /api/facets/filter", () => {
 describe("POST /api/bulk — update (default)", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
-    vi.mocked(db.execute).mockResolvedValue([] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [] } as never);
     vi.mocked(db.insert).mockReturnValue(insertChain([]) as never);
   });
 
@@ -645,7 +645,7 @@ describe("POST /api/bulk — update (default)", () => {
   });
 
   it("bulk updates lifecycle for valid entities", async () => {
-    vi.mocked(db.execute).mockResolvedValue([{ id: VALID_UUID }] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [{ id: VALID_UUID }] } as never);
     const res = await bulkPOST(
       makeRequest(`${BASE}/api/bulk`, "POST", {
         entities: [
@@ -675,7 +675,7 @@ describe("POST /api/bulk — update (default)", () => {
 describe("POST /api/bulk?action=delete", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
-    vi.mocked(db.execute).mockResolvedValue([{ id: VALID_UUID }] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [{ id: VALID_UUID }] } as never);
   });
 
   it("bulk deletes entities", async () => {
@@ -700,7 +700,7 @@ describe("POST /api/bulk?action=delete", () => {
 describe("POST /api/bulk?action=upsert", () => {
   beforeEach(() => {
     vi.mocked(requireAuth).mockResolvedValue(authFor());
-    vi.mocked(db.execute).mockResolvedValue([] as never);
+    vi.mocked(db.execute).mockResolvedValue({ rows: [] } as never);
   });
 
   it("bulk upserts items by name", async () => {

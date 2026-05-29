@@ -84,7 +84,7 @@ export const GET = withErrorHandler(async (request: Request) => {
   );
   const typeResults = (await db.execute(
     sql.raw(typeCountQueries.join(" UNION ALL "))
-  )) as unknown as FacetValue[];
+  )).rows as unknown as FacetValue[];
   facets.push({
     field: "type",
     values: typeResults.filter((r) => r.count > 0),
@@ -102,7 +102,7 @@ export const GET = withErrorHandler(async (request: Request) => {
       sql.raw(
         `SELECT value, SUM(count)::int AS count FROM (${lifecycleQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
       )
-    )) as unknown as FacetValue[];
+    )).rows as unknown as FacetValue[];
     facets.push({ field: "lifecycle", values: lifecycleRaw });
   }
 
@@ -118,7 +118,7 @@ export const GET = withErrorHandler(async (request: Request) => {
       sql.raw(
         `SELECT value, SUM(count)::int AS count FROM (${healthQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
       )
-    )) as unknown as FacetValue[];
+    )).rows as unknown as FacetValue[];
     facets.push({ field: "health", values: healthRaw });
   }
 
@@ -134,7 +134,7 @@ export const GET = withErrorHandler(async (request: Request) => {
       sql.raw(
         `SELECT value, SUM(count)::int AS count FROM (${sealQueries.join(" UNION ALL ")}) sub GROUP BY value ORDER BY count DESC`
       )
-    )) as unknown as FacetValue[];
+    )).rows as unknown as FacetValue[];
     facets.push({ field: "qualitySeal", values: sealRaw });
   }
 
@@ -150,7 +150,7 @@ export const GET = withErrorHandler(async (request: Request) => {
       ORDER BY count DESC
       LIMIT 50
     `;
-    const tagResults = (await db.execute(sql.raw(tagQuery))) as unknown as FacetValue[];
+    const tagResults = (await db.execute(sql.raw(tagQuery))).rows as unknown as FacetValue[];
     facets.push({ field: "tags", values: tagResults });
   }
 

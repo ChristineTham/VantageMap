@@ -145,7 +145,7 @@ async function handleBulkUpdate(
       if (setClauses.length > 1) {
         const idList = ids.map((id) => `'${id}'`).join(",");
         const query = `UPDATE ${table} SET ${setClauses.join(", ")} WHERE id IN (${idList}) RETURNING id`;
-        const updated = (await db.execute(sql.raw(query))) as unknown as Array<{ id: string }>;
+        const updated = (await db.execute(sql.raw(query))).rows as Array<{ id: string }>;
 
         for (const row of updated) {
           results.push({ id: row.id, type: entityType, status: "updated" });
@@ -257,7 +257,7 @@ async function handleBulkDelete(
     // Delete the entities
     const deleted = (await db.execute(
       sql.raw(`DELETE FROM ${table} WHERE id IN (${idList}) RETURNING id`)
-    )) as unknown as Array<{ id: string }>;
+    )).rows as Array<{ id: string }>;
 
     for (const row of deleted) {
       results.push({ id: row.id, type: entityType, status: "deleted" });
@@ -312,7 +312,7 @@ async function handleBulkUpsert(
     // Try to find existing by name + type (idempotent upsert)
     const existing = (await db.execute(
       sql.raw(`SELECT id FROM ${table} WHERE name = '${name}' LIMIT 1`)
-    )) as unknown as Array<{ id: string }>;
+    )).rows as Array<{ id: string }>;
 
     if (existing.length > 0) {
       // Update existing
@@ -365,7 +365,7 @@ async function handleBulkUpsert(
         sql.raw(
           `INSERT INTO ${table} (${cols.join(", ")}) VALUES (${vals.join(", ")}) RETURNING id`
         )
-      )) as unknown as Array<{ id: string }>;
+      )).rows as Array<{ id: string }>;
 
       const newId = insertResult[0]?.id ?? "unknown";
       results.push({ name: item.name, type: item.type, action: "created", id: newId });

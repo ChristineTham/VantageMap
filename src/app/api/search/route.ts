@@ -107,13 +107,33 @@ export const GET = withErrorHandler(async (request: Request) => {
       ? SEARCHABLE_TABLES.filter((t) => requestedTypes.includes(t.type))
       : [...SEARCHABLE_TABLES];
 
-  // Build the UNION ALL query for cross-entity search using PostgreSQL FTS
-  // Sanitize query for to_tsquery: replace spaces with & for AND semantics
-  // Use plainto_tsquery for safe parsing of user input
+  // nameOnly mode: substring ILIKE match on name — used by relationship pickers
+  // for partial-word search without FTS word-boundary constraints
+  const nameOnly = url.searchParams.get("nameOnly") === "true";
+  const escapedLike = query.replace(/[%_\\]/g, (c) => `\\${c}`);
+  const likePattern = sanitizeForSql(`%${escapedLike}%`);
+
   const searchUnion = tablesToSearch
     .map((tableConfig) => {
       const lifecycleCol = tableConfig.hasLifecycle ? "lifecycle" : "NULL";
       const healthCol = tableConfig.hasHealth ? "health" : "NULL";
+
+      if (nameOnly) {
+        return `
+        SELECT
+          id,
+          name,
+          description,
+          '${tableConfig.type}' AS entity_type,
+          ${lifecycleCol}::text AS lifecycle,
+          ${healthCol}::text AS health,
+          0::float AS rank,
+          name AS headline
+        FROM ${tableConfig.table}
+        WHERE name ILIKE ${likePattern}
+          OR coalesce(description, '') ILIKE ${likePattern}
+      `;
+      }
 
       return `
         SELECT
@@ -142,17 +162,18 @@ export const GET = withErrorHandler(async (request: Request) => {
 
   // Count total results
   const countQuery = `SELECT COUNT(*) AS total FROM (${searchUnion}) AS search_results`;
-  const countResult = await db.execute(sql.raw(countQuery));
-  const total = Number((countResult as unknown as Array<{ total: string }>)[0]?.total ?? 0);
+  const countRows = (await db.execute(sql.raw(countQuery))).rows as Array<{ total: string }>;
+  const total = Number(countRows[0]?.total ?? 0);
 
-  // Fetch paginated results ordered by rank
+  // Fetch paginated results ordered by rank (or name for nameOnly mode)
+  const orderBy = nameOnly ? "name ASC" : "rank DESC, name ASC";
   const dataQuery = `
     SELECT * FROM (${searchUnion}) AS search_results
-    ORDER BY rank DESC, name ASC
+    ORDER BY ${orderBy}
     LIMIT ${pagination.pageSize}
     OFFSET ${pagination.offset}
   `;
-  const rows = (await db.execute(sql.raw(dataQuery))) as unknown as SearchResult[];
+  const rows = (await db.execute(sql.raw(dataQuery))).rows as unknown as SearchResult[];
 
   // Group results by type
   const grouped: Record<string, GroupedResults> = {};

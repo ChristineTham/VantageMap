@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useEffect, useTransition } from "react";
+import { useState, useCallback, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, Filter, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, clientAuthHeaders } from "@/lib/utils";
 import { FACT_SHEET_CONFIGS } from "@/lib/fact-sheet-config";
 import { HealthBadge } from "@/components/StatusBadge";
 import { LifecycleTag } from "@/components/LifecycleTag";
@@ -56,12 +56,14 @@ export function SearchPageView({ initialQuery, initialTypes, initialPage }: Sear
     }
 
     try {
-      const params = new URLSearchParams({ q: q.trim() });
+      const params = new URLSearchParams({ q: q.trim(), nameOnly: "true" });
       if (types.length > 0) params.set("types", types.join(","));
       if (p > 1) params.set("page", String(p));
       params.set("pageSize", "20");
 
-      const res = await fetch(`/api/search?${params}`);
+      const res = await fetch(`/api/search?${params}`, {
+        headers: { ...clientAuthHeaders() },
+      });
       if (!res.ok) throw new Error("Search failed");
 
       const body = await res.json();
@@ -88,6 +90,21 @@ export function SearchPageView({ initialQuery, initialTypes, initialPage }: Sear
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Debounced auto-search as-you-type
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      setPage(1);
+      setHasSearched(!!query.trim());
+      doSearch(query, selectedTypes, 1);
+    }, 300);
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, selectedTypes]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

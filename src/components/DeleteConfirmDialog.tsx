@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Loader2, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetConfig } from "@/lib/fact-sheet-config";
 
 interface DeleteConfirmDialogProps {
@@ -36,6 +36,7 @@ export function DeleteConfirmDialog({
     try {
       const res = await fetch(`${config.apiPath}/${entityId}`, {
         method: "DELETE",
+        headers: { ...clientAuthHeaders() },
       });
 
       if (!res.ok && res.status !== 204) {
