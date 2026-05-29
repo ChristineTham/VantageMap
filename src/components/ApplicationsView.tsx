@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import type { Application } from "@/lib/types";
 import { DataTable, useTableSort, type Column } from "@/components/DataTable";
 import { SearchInput } from "@/components/SearchInput";
@@ -15,6 +16,7 @@ interface ApplicationsViewProps {
 }
 
 export function ApplicationsView({ applications }: ApplicationsViewProps) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [filterHealth, setFilterHealth] = useState<string>("all");
   const [filterLifecycle, setFilterLifecycle] = useState<string>("all");
@@ -136,6 +138,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
             setFilterHealth(e.target.value);
             setPage(1);
           }}
+          aria-label="Filter by health status"
           className="rounded-lg border border-rosely-blush bg-white px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none"
         >
           <option value="all">All Health</option>
@@ -151,6 +154,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
             setFilterLifecycle(e.target.value);
             setPage(1);
           }}
+          aria-label="Filter by lifecycle phase"
           className="rounded-lg border border-rosely-blush bg-white px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none"
         >
           <option value="all">All Lifecycle</option>
@@ -170,6 +174,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
         columns={columns}
         data={paginated}
         getRowKey={(row) => row.id}
+        onRowClick={(row) => router.push(`/applications/${row.id}`)}
         sortBy={sortBy}
         sortDirection={sortDirection}
         onSort={toggleSort}

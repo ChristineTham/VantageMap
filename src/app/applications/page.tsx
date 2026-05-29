@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getApplications } from "@/lib/data";
 import { ApplicationsView } from "@/components/ApplicationsView";
 import { EmptyState } from "@/components/EmptyState";
+import { CreateButton } from "@/components/CreateButton";
 import { AppWindow } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -32,11 +33,14 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold text-rosely-night">Application Portfolio</h1>
-        <p className="text-sm text-rosely-mist mt-1">
-          {applications.length} applications in the enterprise landscape
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-rosely-night">Application Portfolio</h1>
+          <p className="text-sm text-rosely-mist mt-1">
+            {applications.length} applications in the enterprise landscape
+          </p>
+        </div>
+        <CreateButton href="/applications/new" label="New Application" />
       </div>
       <ApplicationsView applications={applications} />
     </div>

@@ -190,9 +190,9 @@ One step per route/view. All steps are independent and parallelizable. Each step
 
 ---
 
-### Phase 9 — CRUD and Editing UI
+### Phase 9 — CRUD and Editing UI (In Progress)
 
-Add create, edit, and detail views to support data stewardship workflows from [USER-GUIDE.md](USER-GUIDE.md).
+Add create, edit, and detail views to support data stewardship workflows from [USER-GUIDE.md](USER-GUIDE.md). **Status: Code scaffolded. Needs type-check, build validation, and integration testing in Codespaces. See [phase-9-codespaces.md](phase-9-codespaces.md).**
 
 | Step | Title                  | Scope                                                                                                                                                   | Depends on               |
 | ---- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |

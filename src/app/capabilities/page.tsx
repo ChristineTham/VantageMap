@@ -4,6 +4,7 @@ import type { BusinessCapability } from "@/lib/types";
 import { HealthIndicator } from "@/components/HealthIndicator";
 import { LifecycleTag } from "@/components/LifecycleTag";
 import { EmptyState } from "@/components/EmptyState";
+import { CreateButton } from "@/components/CreateButton";
 import { Layers } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -51,6 +52,7 @@ export default async function CapabilitiesPage() {
             {capabilities.length} capabilities across {level1.length} domains
           </p>
         </div>
+        <CreateButton href="/capabilities/new" label="New Capability" />
       </div>
 
       {/* Legend */}

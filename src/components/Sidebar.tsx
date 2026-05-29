@@ -11,6 +11,7 @@ import {
   GanttChart,
   ChevronLeft,
   ChevronRight,
+  Search,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/strategy", label: "Strategy", icon: Target },
   { href: "/radar", label: "Tech Radar", icon: Radar },
   { href: "/roadmap", label: "Roadmap", icon: GanttChart },
+  { href: "/search", label: "Search", icon: Search },
 ];
 
 // ── Sidebar Component ───────────────────────────────────────────────────────

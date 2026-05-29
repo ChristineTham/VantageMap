@@ -22,6 +22,8 @@ import {
   interfacesApi,
   providersApi,
   platformsApi,
+  relationshipsApi,
+  searchEntities,
   type ListParams,
 } from "@/lib/api";
 
@@ -37,6 +39,8 @@ import type {
   InterfaceEntity,
   Provider,
   Platform,
+  Relationship,
+  FactSheetType,
 } from "@/lib/types";
 
 // Re-export types and colour maps for convenience
@@ -269,5 +273,84 @@ export async function getPlatforms(params?: ListParams): Promise<Platform[]> {
     return res.data;
   } catch {
     return [];
+  }
+}
+
+// ── Relationship Data Access ────────────────────────────────────────────────
+
+/**
+ * Fetch relationships for a specific entity (as source or target).
+ */
+export async function getRelationshipsForEntity(
+  entityType: FactSheetType,
+  entityId: string
+): Promise<Relationship[]> {
+  try {
+    const [asSource, asTarget] = await Promise.all([
+      relationshipsApi.list({
+        pageSize: 200,
+        filters: { sourceType: entityType, sourceId: entityId },
+      }),
+      relationshipsApi.list({
+        pageSize: 200,
+        filters: { targetType: entityType, targetId: entityId },
+      }),
+    ]);
+    return [...asSource.data, ...asTarget.data];
+  } catch {
+    return [];
+  }
+}
+
+// ── Generic Entity Lookup ───────────────────────────────────────────────────
+
+/**
+ * Fetch any fact sheet by type and ID.
+ * Returns the entity record or null if not found.
+ */
+export async function getEntityByTypeAndId(
+  type: FactSheetType,
+  id: string
+): Promise<Record<string, unknown> | null> {
+  try {
+    const apiClientMap: Record<FactSheetType, { getById: (id: string) => Promise<{ data: unknown }> }> = {
+      BusinessCapability: capabilitiesApi,
+      Application: applicationsApi,
+      StrategicObjective: objectivesApi,
+      Initiative: initiativesApi,
+      ITComponent: itComponentsApi,
+      TechCategory: techCategoriesApi,
+      Organization: organizationsApi,
+      DataObject: dataObjectsApi,
+      Interface: interfacesApi,
+      Provider: providersApi,
+      Platform: platformsApi,
+      BusinessContext: { getById: async () => ({ data: null }) },
+    };
+
+    const client = apiClientMap[type];
+    if (!client) return null;
+
+    const res = await client.getById(id);
+    return res.data as Record<string, unknown> | null;
+  } catch {
+    return null;
+  }
+}
+
+// ── Search ──────────────────────────────────────────────────────────────────
+
+/**
+ * Perform a cross-entity search.
+ */
+export async function searchAllEntities(
+  query: string,
+  options?: { types?: string[]; page?: number; pageSize?: number }
+) {
+  try {
+    const res = await searchEntities(query, options);
+    return res.data;
+  } catch {
+    return { query, results: [], grouped: [], meta: { page: 1, pageSize: 20, total: 0, totalPages: 0 } };
   }
 }
