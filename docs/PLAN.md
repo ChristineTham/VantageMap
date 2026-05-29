@@ -175,7 +175,7 @@ Build the application shell and reusable UI component library before individual 
 
 ---
 
-### Phase 8 — Frontend Views
+### Phase 8 — Frontend Views ✅
 
 One step per route/view. All steps are independent and parallelizable. Each step creates a Server Component page that fetches data from the API layer (via `src/lib/api.ts` or `src/lib/data.ts`) and renders it with shared components. Follow the [add-page skill](../.github/skills/add-page/SKILL.md) checklist.
 
