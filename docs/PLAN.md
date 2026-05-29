@@ -205,9 +205,9 @@ Add create, edit, and detail views to support data stewardship workflows from [U
 
 ---
 
-### Phase 10 — User Management
+### Phase 10 — User Management ✅
 
-Implement user lifecycle and administration workflows from [UAM.md](UAM.md) and [ADMIN.md](ADMIN.md).
+Implement user lifecycle and administration workflows from [UAM.md](UAM.md) and [ADMIN.md](ADMIN.md). **Status: Complete. Better Auth integrated with email/password auth, session management, password reset. Route-level middleware protects authenticated pages. Login, register, forgot-password, and reset-password pages. User profile with password change and notification preferences. Admin pages for user management (invite, role assignment, archive), API token management (create, revoke, expiry), and role/permissions matrix. See [phase-10-codespaces.md](phase-10-codespaces.md).**
 
 | Step | Title                              | Scope                                                                                                                               | Depends on |
 | ---- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------- |

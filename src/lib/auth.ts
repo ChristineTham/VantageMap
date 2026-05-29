@@ -1,5 +1,5 @@
 /**
- * Step 4.2 — Authentication Middleware
+ * Step 4.2 + Phase 10 — Authentication Middleware
  *
  * Extracts and validates the authenticated user from the request.
  * Supports two auth modes:
@@ -9,16 +9,15 @@
  * Returns an AuthContext with the user's identity and role,
  * or a 401 response if authentication fails.
  *
- * Better Auth integration is wired up in Phase 10. Until then,
- * this module provides a pluggable auth interface so all API routes
- * can be built auth-aware from day one.
+ * Phase 10: Better Auth session validation is now integrated.
  */
 
 import { db } from "@/db";
-import { users, userWorkspaceRoles } from "@/db/schema";
+import { users, userWorkspaceRoles, apiTokens } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { unauthorized, type ApiErrorBody } from "@/lib/api-response";
 import type { NextResponse } from "next/server";
+import { auth } from "@/lib/auth-server";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -110,29 +109,87 @@ export async function authenticate(request: Request): Promise<AuthResult> {
 
 /**
  * Authenticate using a Bearer token.
- * Phase 10 will integrate with Better Auth's API token system.
- * For now, tokens are not validated — this returns 401.
+ * First tries Better Auth session-based token validation.
+ * Then checks the api_tokens table for hashed API tokens.
  */
-async function authenticateWithToken(_token: string): Promise<AuthResult> {
-  // TODO: Phase 10 — validate token via Better Auth
-  // For now, bearer tokens are not yet supported
-  return {
-    ok: false,
-    response: unauthorized("Bearer token authentication not yet configured"),
-  };
+async function authenticateWithToken(token: string): Promise<AuthResult> {
+  // Try Better Auth session-based validation first
+  try {
+    const response = await auth.api.getSession({
+      headers: new Headers({ Authorization: `Bearer ${token}` }),
+    });
+
+    if (response && response.user) {
+      return resolveUserContext(response.user.id);
+    }
+  } catch {
+    // Fall through to API token check
+  }
+
+  // Check API tokens table (hash and compare)
+  try {
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(token));
+    const tokenHash = Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    const [apiToken] = await db
+      .select()
+      .from(apiTokens)
+      .where(eq(apiTokens.tokenHash, tokenHash))
+      .limit(1);
+
+    if (!apiToken) {
+      return { ok: false, response: unauthorized("Invalid bearer token") };
+    }
+
+    // Check expiry
+    if (apiToken.expiresAt && new Date(apiToken.expiresAt) < new Date()) {
+      return { ok: false, response: unauthorized("API token has expired") };
+    }
+
+    // Update last used timestamp (fire-and-forget)
+    db.update(apiTokens)
+      .set({ lastUsedAt: new Date() })
+      .where(eq(apiTokens.id, apiToken.id))
+      .catch(() => {});
+
+    return resolveUserContext(apiToken.userId);
+  } catch {
+    return {
+      ok: false,
+      response: unauthorized("Bearer token validation failed"),
+    };
+  }
 }
 
 /**
  * Authenticate using a session cookie.
- * Phase 10 will integrate with Better Auth's session validation.
- * For now, sessions are not validated — this returns 401.
+ * Validates the session via Better Auth's session API.
  */
-async function authenticateWithSession(_sessionToken: string): Promise<AuthResult> {
-  // TODO: Phase 10 — validate session via Better Auth
-  return {
-    ok: false,
-    response: unauthorized("Session authentication not yet configured"),
-  };
+async function authenticateWithSession(sessionToken: string): Promise<AuthResult> {
+  try {
+    const response = await auth.api.getSession({
+      headers: new Headers({
+        cookie: `better-auth.session_token=${sessionToken}`,
+      }),
+    });
+
+    if (!response || !response.user) {
+      return {
+        ok: false,
+        response: unauthorized("Invalid or expired session"),
+      };
+    }
+
+    return resolveUserContext(response.user.id);
+  } catch {
+    return {
+      ok: false,
+      response: unauthorized("Session validation failed"),
+    };
+  }
 }
 
 /**

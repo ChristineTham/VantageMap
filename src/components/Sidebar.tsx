@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { SearchModal } from "@/components/SearchModal";
 import { SearchBar } from "@/components/SearchBar";
+import { UserMenu } from "@/components/UserMenu";
 
 // ── Navigation Items ────────────────────────────────────────────────────────
 
@@ -109,6 +110,7 @@ export function Sidebar() {
 
         {/* Collapse Toggle */}
         <div className="border-t border-rosely-blush p-2">
+          <UserMenu collapsed={collapsed} />
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="flex w-full items-center justify-center rounded-lg p-2 text-rosely-mist hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"

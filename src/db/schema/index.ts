@@ -11,6 +11,7 @@
  *   tags.ts          — TagGroup, Tag, TagAssignment, Subscription
  *   audit.ts         — AuditEntry
  *   users.ts         — User, Workspace, UserWorkspaceRole
+ *   api-tokens.ts    — API Tokens for technical users (Phase 10)
  */
 
 export * from "./enums";
@@ -22,3 +23,4 @@ export * from "./relationships";
 export * from "./tags";
 export * from "./audit";
 export * from "./users";
+export * from "./api-tokens";
