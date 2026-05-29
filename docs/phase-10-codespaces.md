@@ -41,12 +41,12 @@ npx @better-auth/cli generate --config src/lib/auth-server.ts --output src/db/sc
 If the CLI is not available, Better Auth will create its tables automatically
 when the first auth request hits `/api/auth/*`. The tables it creates:
 
-| Table          | Purpose                              |
-| -------------- | ------------------------------------ |
-| `user`         | Core user (email, name, image)       |
-| `session`      | Active sessions with expiry          |
-| `account`      | OAuth/credential accounts per user   |
-| `verification` | Email verification & password reset  |
+| Table          | Purpose                             |
+| -------------- | ----------------------------------- |
+| `user`         | Core user (email, name, image)      |
+| `session`      | Active sessions with expiry         |
+| `account`      | OAuth/credential accounts per user  |
+| `verification` | Email verification & password reset |
 
 > **NOTE**: Better Auth's `user` table is separate from VantageMap's `users` table
 > (Phase 3.8). You may need to sync user records between the two — see "Known Issues"
@@ -83,70 +83,70 @@ npm run dev
 
 ### Auth Core
 
-| File | Purpose |
-| ---- | ------- |
-| `src/lib/auth-server.ts` | Better Auth server configuration (plugins, session, DB adapter) |
-| `src/lib/auth-client.ts` | Client-side auth utilities (signIn, signUp, signOut, useSession) |
-| `src/app/api/auth/[...all]/route.ts` | Better Auth catch-all API route |
-| `src/middleware.ts` | Route protection — redirects unauthenticated to /login |
+| File                                 | Purpose                                                          |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| `src/lib/auth-server.ts`             | Better Auth server configuration (plugins, session, DB adapter)  |
+| `src/lib/auth-client.ts`             | Client-side auth utilities (signIn, signUp, signOut, useSession) |
+| `src/app/api/auth/[...all]/route.ts` | Better Auth catch-all API route                                  |
+| `src/middleware.ts`                  | Route protection — redirects unauthenticated to /login           |
 
 ### Auth Pages (Route Group `(auth)`)
 
-| File | Purpose |
-| ---- | ------- |
-| `src/app/(auth)/layout.tsx` | Minimal centered layout (no sidebar) |
-| `src/app/(auth)/login/page.tsx` | Email/password sign-in form |
-| `src/app/(auth)/register/page.tsx` | Account creation form |
-| `src/app/(auth)/forgot-password/page.tsx` | Password reset request |
-| `src/app/(auth)/reset-password/page.tsx` | Password reset with token |
+| File                                      | Purpose                              |
+| ----------------------------------------- | ------------------------------------ |
+| `src/app/(auth)/layout.tsx`               | Minimal centered layout (no sidebar) |
+| `src/app/(auth)/login/page.tsx`           | Email/password sign-in form          |
+| `src/app/(auth)/register/page.tsx`        | Account creation form                |
+| `src/app/(auth)/forgot-password/page.tsx` | Password reset request               |
+| `src/app/(auth)/reset-password/page.tsx`  | Password reset with token            |
 
 ### User Profile (10.2)
 
-| File | Purpose |
-| ---- | ------- |
+| File                       | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
 | `src/app/profile/page.tsx` | Profile info, password change, notification prefs |
 
 ### Admin UI (10.3, 10.4, 10.5)
 
-| File | Purpose |
-| ---- | ------- |
-| `src/app/admin/layout.tsx` | Admin sub-navigation bar |
-| `src/app/admin/users/page.tsx` | User list, invite, role change, archive |
-| `src/app/admin/technical-users/page.tsx` | API token create/revoke UI |
-| `src/app/admin/roles/page.tsx` | Permission matrix and role assignments |
+| File                                     | Purpose                                 |
+| ---------------------------------------- | --------------------------------------- |
+| `src/app/admin/layout.tsx`               | Admin sub-navigation bar                |
+| `src/app/admin/users/page.tsx`           | User list, invite, role change, archive |
+| `src/app/admin/technical-users/page.tsx` | API token create/revoke UI              |
+| `src/app/admin/roles/page.tsx`           | Permission matrix and role assignments  |
 
 ### Admin API Routes
 
-| File | Purpose |
-| ---- | ------- |
-| `src/app/api/admin/users/route.ts` | GET /api/admin/users (list) |
-| `src/app/api/admin/users/invite/route.ts` | POST invite |
-| `src/app/api/admin/users/[id]/role/route.ts` | PATCH role |
+| File                                           | Purpose                        |
+| ---------------------------------------------- | ------------------------------ |
+| `src/app/api/admin/users/route.ts`             | GET /api/admin/users (list)    |
+| `src/app/api/admin/users/invite/route.ts`      | POST invite                    |
+| `src/app/api/admin/users/[id]/role/route.ts`   | PATCH role                     |
 | `src/app/api/admin/users/[id]/status/route.ts` | PATCH status (archive/restore) |
-| `src/app/api/admin/tokens/route.ts` | GET list, POST create |
-| `src/app/api/admin/tokens/[id]/route.ts` | DELETE revoke |
+| `src/app/api/admin/tokens/route.ts`            | GET list, POST create          |
+| `src/app/api/admin/tokens/[id]/route.ts`       | DELETE revoke                  |
 
 ### Components
 
-| File | Purpose |
-| ---- | ------- |
+| File                                     | Purpose                                              |
+| ---------------------------------------- | ---------------------------------------------------- |
 | `src/components/AuthSessionProvider.tsx` | React context providing session to client components |
-| `src/components/UserMenu.tsx` | User dropdown in sidebar (profile, admin, sign out) |
+| `src/components/UserMenu.tsx`            | User dropdown in sidebar (profile, admin, sign out)  |
 
 ### Database Schema
 
-| File | Purpose |
-| ---- | ------- |
+| File                          | Purpose                     |
+| ----------------------------- | --------------------------- |
 | `src/db/schema/api-tokens.ts` | API tokens table definition |
-| `src/db/schema/index.ts` | Updated barrel export |
+| `src/db/schema/index.ts`      | Updated barrel export       |
 
 ### Modified Files
 
-| File | Change |
-| ---- | ------ |
-| `src/lib/auth.ts` | Integrated Better Auth session + API token validation |
-| `src/app/layout.tsx` | Added `AuthSessionProvider` wrapper |
-| `src/components/Sidebar.tsx` | Added `UserMenu` component |
+| File                         | Change                                                |
+| ---------------------------- | ----------------------------------------------------- |
+| `src/lib/auth.ts`            | Integrated Better Auth session + API token validation |
+| `src/app/layout.tsx`         | Added `AuthSessionProvider` wrapper                   |
+| `src/components/Sidebar.tsx` | Added `UserMenu` component                            |
 
 ## Testing Checklist
 

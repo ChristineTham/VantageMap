@@ -7,7 +7,7 @@
  * change password, and manage notification preferences.
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/components/AuthSessionProvider";
 import { authClient } from "@/lib/auth-client";
@@ -262,7 +262,10 @@ function PasswordTab() {
         </div>
 
         <div>
-          <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-rosely-night">
+          <label
+            htmlFor="confirmNewPassword"
+            className="block text-sm font-medium text-rosely-night"
+          >
             Confirm New Password
           </label>
           <input
@@ -291,25 +294,29 @@ function PasswordTab() {
 
 // ── Notifications Tab ───────────────────────────────────────────────────────
 
+function getStoredNotifPrefs() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("notification-preferences");
+    return raw ? (JSON.parse(raw) as Record<string, boolean>) : null;
+  } catch {
+    return null;
+  }
+}
+
 function NotificationsTab() {
-  const [emailNotifs, setEmailNotifs] = useState(true);
-  const [factSheetChanges, setFactSheetChanges] = useState(true);
-  const [subscriptionAlerts, setSubscriptionAlerts] = useState(true);
-  const [weeklyDigest, setWeeklyDigest] = useState(false);
+  const [emailNotifs, setEmailNotifs] = useState(() => getStoredNotifPrefs()?.emailNotifs ?? true);
+  const [factSheetChanges, setFactSheetChanges] = useState(
+    () => getStoredNotifPrefs()?.factSheetChanges ?? true
+  );
+  const [subscriptionAlerts, setSubscriptionAlerts] = useState(
+    () => getStoredNotifPrefs()?.subscriptionAlerts ?? true
+  );
+  const [weeklyDigest, setWeeklyDigest] = useState(
+    () => getStoredNotifPrefs()?.weeklyDigest ?? false
+  );
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    // Load preferences from localStorage for now (Phase 11 will add server-side storage)
-    const prefs = localStorage.getItem("notification-preferences");
-    if (prefs) {
-      const parsed = JSON.parse(prefs);
-      setEmailNotifs(parsed.emailNotifs ?? true);
-      setFactSheetChanges(parsed.factSheetChanges ?? true);
-      setSubscriptionAlerts(parsed.subscriptionAlerts ?? true);
-      setWeeklyDigest(parsed.weeklyDigest ?? false);
-    }
-  }, []);
 
   function handleSave() {
     setSaving(true);

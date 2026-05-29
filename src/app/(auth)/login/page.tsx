@@ -45,9 +45,7 @@ export default function LoginPage() {
   return (
     <div className="rounded-xl border border-rosely-blush bg-white p-8 shadow-sm">
       <h2 className="text-xl font-bold text-rosely-night">Sign In</h2>
-      <p className="mt-1 text-sm text-rosely-mist">
-        Enter your credentials to access VantageMap
-      </p>
+      <p className="mt-1 text-sm text-rosely-mist">Enter your credentials to access VantageMap</p>
 
       {error && (
         <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">

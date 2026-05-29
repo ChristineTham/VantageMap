@@ -5,15 +5,14 @@
  * POST /api/admin/users — Not used (invite flow instead)
  */
 
-import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { users, userWorkspaceRoles } from "@/db/schema";
 import { eq, like, or, desc } from "drizzle-orm";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
-import { ok, list, withErrorHandler } from "@/lib/api-response";
+import { list, withErrorHandler } from "@/lib/api-response";
 
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (request: Request) => {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
 
@@ -40,15 +39,15 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   // Apply filters
   const conditions = [];
   if (searchName) {
-    conditions.push(
-      or(
-        like(users.name, `%${searchName}%`),
-        like(users.email, `%${searchName}%`)
-      )
-    );
+    conditions.push(or(like(users.name, `%${searchName}%`), like(users.email, `%${searchName}%`)));
   }
   if (filterStatus) {
-    conditions.push(eq(users.status, filterStatus as "Active" | "Invited" | "Requested" | "Not Invited" | "Archived"));
+    conditions.push(
+      eq(
+        users.status,
+        filterStatus as "Active" | "Invited" | "Requested" | "Not Invited" | "Archived"
+      )
+    );
   }
 
   if (conditions.length > 0) {
@@ -66,15 +65,16 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
 
   // Get roles for each user
   const userIds = results.map((u) => u.id);
-  const roles = userIds.length > 0
-    ? await db
-        .select({
-          userId: userWorkspaceRoles.userId,
-          role: userWorkspaceRoles.role,
-        })
-        .from(userWorkspaceRoles)
-        .where(eq(userWorkspaceRoles.workspaceId, auth.auth.workspaceId))
-    : [];
+  const roles =
+    userIds.length > 0
+      ? await db
+          .select({
+            userId: userWorkspaceRoles.userId,
+            role: userWorkspaceRoles.role,
+          })
+          .from(userWorkspaceRoles)
+          .where(eq(userWorkspaceRoles.workspaceId, auth.auth.workspaceId))
+      : [];
 
   const roleMap = new Map(roles.map((r) => [r.userId, r.role]));
 
@@ -83,5 +83,10 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     role: roleMap.get(u.id) || "Viewer",
   }));
 
-  return list(data, { page, pageSize, total: data.length });
+  return list(data, {
+    page,
+    pageSize,
+    total: data.length,
+    totalPages: Math.ceil(data.length / pageSize) || 1,
+  });
 });

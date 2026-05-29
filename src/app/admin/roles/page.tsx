@@ -31,7 +31,11 @@ const OPERATIONS = [
   { key: "edit", label: "Edit Fact Sheets", description: "Modify existing entities" },
   { key: "delete", label: "Delete Fact Sheets", description: "Remove entities permanently" },
   { key: "manage_users", label: "Manage Users", description: "Invite, archive, and assign roles" },
-  { key: "manage_workspace", label: "Manage Workspace", description: "Configure workspace settings" },
+  {
+    key: "manage_workspace",
+    label: "Manage Workspace",
+    description: "Configure workspace settings",
+  },
   { key: "view_audit", label: "View Audit Logs", description: "Access audit trail" },
 ] as const;
 
@@ -56,7 +60,6 @@ export default function RolesPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await fetch("/api/admin/users?pageSize=100");
       if (res.ok) {
@@ -72,6 +75,7 @@ export default function RolesPage() {
 
   useEffect(() => {
     if (!isPending && user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchUsers();
     }
   }, [isPending, user, fetchUsers]);
@@ -169,9 +173,7 @@ export default function RolesPage() {
                   </td>
                 </tr>
               ) : (
-                users.map((u) => (
-                  <RoleAssignmentRow key={u.id} user={u} onChanged={fetchUsers} />
-                ))
+                users.map((u) => <RoleAssignmentRow key={u.id} user={u} onChanged={fetchUsers} />)
               )}
             </tbody>
           </table>
@@ -183,13 +185,7 @@ export default function RolesPage() {
 
 // ── Role Assignment Row ─────────────────────────────────────────────────────
 
-function RoleAssignmentRow({
-  user: u,
-  onChanged,
-}: {
-  user: UserRole;
-  onChanged: () => void;
-}) {
+function RoleAssignmentRow({ user: u, onChanged }: { user: UserRole; onChanged: () => void }) {
   const [changing, setChanging] = useState(false);
 
   async function handleRoleChange(newRole: string) {

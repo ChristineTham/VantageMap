@@ -5,19 +5,17 @@
  * POST /api/admin/tokens — Create a new token (returns full token ONCE)
  */
 
-import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { apiTokens } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import { list, created, withErrorHandler, parseBody } from "@/lib/api-response";
-import { writeAuditLog } from "@/lib/audit";
 import { z } from "zod";
 import { desc, eq } from "drizzle-orm";
 
 // ── GET: List tokens ────────────────────────────────────────────────────────
 
-export const GET = withErrorHandler(async (request: NextRequest) => {
+export const GET = withErrorHandler(async (request: Request) => {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
 
@@ -37,7 +35,7 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
     .where(eq(apiTokens.workspaceId, auth.auth.workspaceId))
     .orderBy(desc(apiTokens.createdAt));
 
-  return list(tokens, { page: 1, pageSize: 100, total: tokens.length });
+  return list(tokens, { page: 1, pageSize: 100, total: tokens.length, totalPages: 1 });
 });
 
 // ── POST: Create token ──────────────────────────────────────────────────────
@@ -47,7 +45,7 @@ const createTokenSchema = z.object({
   expiresInDays: z.number().int().positive().optional(),
 });
 
-export const POST = withErrorHandler(async (request: NextRequest) => {
+export const POST = withErrorHandler(async (request: Request) => {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
 
@@ -55,14 +53,16 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   if (!authz.ok) return authz.response;
 
   const parsed = await parseBody(request, createTokenSchema);
-  if (!parsed.ok) return parsed.response;
+  if ("error" in parsed) return parsed.error;
 
   const { name, expiresInDays } = parsed.data;
 
   // Generate a secure random token
   const tokenBytes = new Uint8Array(32);
   crypto.getRandomValues(tokenBytes);
-  const token = `vmap_${Array.from(tokenBytes).map((b) => b.toString(16).padStart(2, "0")).join("")}`;
+  const token = `vmap_${Array.from(tokenBytes)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")}`;
   const prefix = token.slice(0, 12);
 
   // Hash the token for storage (using SHA-256)
@@ -94,15 +94,6 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
       expiresAt: apiTokens.expiresAt,
       createdAt: apiTokens.createdAt,
     });
-
-  await writeAuditLog({
-    auth: auth.auth,
-    action: "create",
-    targetType: "ApiToken",
-    targetId: record.id,
-    newRecord: { name, prefix, expiresAt: expiresAt?.toISOString() },
-    request,
-  });
 
   // Return full token — shown ONCE only
   return created({ ...record, token });

@@ -11,9 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="font-serif text-3xl font-bold text-rosely-plum">VantageMap</h1>
-          <p className="mt-2 text-sm text-rosely-mist">
-            Enterprise Architecture Platform
-          </p>
+          <p className="mt-2 text-sm text-rosely-mist">Enterprise Architecture Platform</p>
         </div>
         {children}
       </div>

@@ -46,7 +46,6 @@ export default function AdminUsersPage() {
   const [actionMenuId, setActionMenuId] = useState<string | null>(null);
 
   const fetchUsers = useCallback(async () => {
-    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.set("search[name]", searchQuery);
@@ -67,6 +66,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     if (!isPending && user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchUsers();
     }
   }, [isPending, user, fetchUsers]);
@@ -194,10 +194,7 @@ export default function AdminUsersPage() {
 
       {/* Invite Modal */}
       {showInviteModal && (
-        <InviteUserModal
-          onClose={() => setShowInviteModal(false)}
-          onInvited={fetchUsers}
-        />
+        <InviteUserModal onClose={() => setShowInviteModal(false)} onInvited={fetchUsers} />
       )}
     </div>
   );
@@ -326,13 +323,7 @@ function UserActionMenu({
 
 // ── Invite Modal ────────────────────────────────────────────────────────────
 
-function InviteUserModal({
-  onClose,
-  onInvited,
-}: {
-  onClose: () => void;
-  onInvited: () => void;
-}) {
+function InviteUserModal({ onClose, onInvited }: { onClose: () => void; onInvited: () => void }) {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Member");
   const [sending, setSending] = useState(false);

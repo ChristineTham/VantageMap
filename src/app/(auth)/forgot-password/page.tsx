@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
 import { Mail } from "lucide-react";
 
 export default function ForgotPasswordPage() {
@@ -17,10 +16,12 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      await authClient.forgetPassword({
-        email,
-        redirectTo: "/reset-password",
+      const res = await fetch("/api/auth/request-password-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, redirectTo: "/reset-password" }),
       });
+      if (!res.ok) throw new Error("Request failed");
 
       setSubmitted(true);
     } catch {

@@ -11,18 +11,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Routes that do not require authentication
-const PUBLIC_PATHS = [
-  "/login",
-  "/register",
-  "/forgot-password",
-  "/reset-password",
-  "/api/auth",
-];
+const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password", "/api/auth"];
 
 function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(path + "/")
-  );
+  return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"));
 }
 
 export function middleware(request: NextRequest) {
@@ -34,11 +26,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Allow static files and Next.js internals
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
-    pathname.includes(".")
-  ) {
+  if (pathname.startsWith("/_next") || pathname.startsWith("/favicon") || pathname.includes(".")) {
     return NextResponse.next();
   }
 

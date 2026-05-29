@@ -10,15 +10,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Key,
-  Plus,
-  Trash2,
-  Copy,
-  Check,
-  AlertTriangle,
-  Clock,
-} from "lucide-react";
+import { Key, Plus, Trash2, Copy, Check, AlertTriangle, Clock } from "lucide-react";
 import { useAuthSession } from "@/components/AuthSessionProvider";
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -43,7 +35,6 @@ export default function TechnicalUsersPage() {
   const [newToken, setNewToken] = useState<string | null>(null);
 
   const fetchTokens = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await fetch("/api/admin/tokens");
       if (res.ok) {
@@ -59,6 +50,7 @@ export default function TechnicalUsersPage() {
 
   useEffect(() => {
     if (!isPending && user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchTokens();
     }
   }, [isPending, user, fetchTokens]);
@@ -96,9 +88,7 @@ export default function TechnicalUsersPage() {
       </div>
 
       {/* Show newly created token warning */}
-      {newToken && (
-        <NewTokenBanner token={newToken} onDismiss={() => setNewToken(null)} />
-      )}
+      {newToken && <NewTokenBanner token={newToken} onDismiss={() => setNewToken(null)} />}
 
       {/* Token List */}
       <div className="rounded-xl border border-rosely-blush bg-white">
@@ -125,16 +115,14 @@ export default function TechnicalUsersPage() {
                 <td colSpan={6} className="px-4 py-8 text-center text-rosely-mist">
                   <Key className="mx-auto h-8 w-8 text-rosely-blush" />
                   <p className="mt-2">No API tokens created yet</p>
-                  <p className="text-xs">Create a token for CI/CD pipelines or external integrations</p>
+                  <p className="text-xs">
+                    Create a token for CI/CD pipelines or external integrations
+                  </p>
                 </td>
               </tr>
             ) : (
               tokens.map((token) => (
-                <TokenRow
-                  key={token.id}
-                  token={token}
-                  onRevoke={fetchTokens}
-                />
+                <TokenRow key={token.id} token={token} onRevoke={fetchTokens} />
               ))
             )}
           </tbody>
@@ -233,7 +221,9 @@ function TokenRow({ token, onRevoke }: { token: ApiToken; onRevoke: () => void }
       </td>
       <td className="px-4 py-3">
         {token.expiresAt ? (
-          <span className={`flex items-center gap-1 text-xs ${isExpired ? "text-rosely-rose" : "text-rosely-dusk"}`}>
+          <span
+            className={`flex items-center gap-1 text-xs ${isExpired ? "text-rosely-rose" : "text-rosely-dusk"}`}
+          >
             <Clock className="h-3 w-3" />
             {isExpired ? "Expired" : new Date(token.expiresAt).toLocaleDateString()}
           </span>

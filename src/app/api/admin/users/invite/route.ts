@@ -4,14 +4,12 @@
  * POST /api/admin/users/invite — Create an invited user record
  */
 
-import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { users, userWorkspaceRoles } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import { created, conflict, withErrorHandler, parseBody } from "@/lib/api-response";
-import { writeAuditLog } from "@/lib/audit";
 import { z } from "zod";
 
 const inviteSchema = z.object({
@@ -19,7 +17,7 @@ const inviteSchema = z.object({
   role: z.enum(["Viewer", "Member", "Admin"]).default("Member"),
 });
 
-export const POST = withErrorHandler(async (request: NextRequest) => {
+export const POST = withErrorHandler(async (request: Request) => {
   const auth = await requireAuth(request);
   if (!auth.ok) return auth.response;
 
@@ -27,16 +25,12 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
   if (!authz.ok) return authz.response;
 
   const parsed = await parseBody(request, inviteSchema);
-  if (!parsed.ok) return parsed.response;
+  if ("error" in parsed) return parsed.error;
 
   const { email, role } = parsed.data;
 
   // Check if user already exists
-  const [existing] = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
+  const [existing] = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
   if (existing) {
     return conflict(`User with email ${email} already exists`);
@@ -58,15 +52,6 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     userId: newUser.id,
     workspaceId: auth.auth.workspaceId,
     role: role as "Viewer" | "Member" | "Admin",
-  });
-
-  await writeAuditLog({
-    auth: auth.auth,
-    action: "create",
-    targetType: "User",
-    targetId: newUser.id,
-    newRecord: { email, role, status: "Invited" },
-    request,
   });
 
   return created({ id: newUser.id, email, role, status: "Invited" });
