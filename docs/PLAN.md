@@ -234,9 +234,9 @@ Implement governance controls from [ADMIN.md](ADMIN.md) and [USER-GUIDE.md](USER
 
 ---
 
-### Phase 12 — Integration Surface
+### Phase 12 — Integration Surface ✅
 
-Build external integration capabilities from [DEVELOPER.md](DEVELOPER.md).
+Build external integration capabilities from [DEVELOPER.md](DEVELOPER.md). **Status: Complete. OpenAPI 3.1 spec with interactive Scalar API explorer at `/api/docs`, GraphQL query endpoint with all 12 fact sheet types + relationship traversal + depth limiting, webhook subscription CRUD with HMAC-signed delivery and exponential-backoff retry engine, CSV import with preview/execute modes and column auto-mapping, CSV export with field selection and filtering. Four new feature flags added. See [phase-12-codespaces.md](phase-12-codespaces.md).**
 
 | Step | Title                  | Scope                                                                                                                                                                                        | Depends on   |
 | ---- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |

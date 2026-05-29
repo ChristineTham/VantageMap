@@ -41,6 +41,14 @@ const FLAG_DEFAULTS = {
   FEATURE_RELATIONSHIPS_API: true,
   /** Enable bulk operations API. */
   FEATURE_BULK_API: true,
+  /** Enable GraphQL query endpoint (Phase 12). */
+  FEATURE_GRAPHQL_API: true,
+  /** Enable webhook subscriptions and delivery (Phase 12). */
+  FEATURE_WEBHOOKS_API: true,
+  /** Enable CSV/Excel import endpoint (Phase 12). */
+  FEATURE_IMPORT_API: true,
+  /** Enable CSV/Excel export endpoint (Phase 12). */
+  FEATURE_EXPORT_API: true,
 } as const;
 
 export type FeatureFlag = keyof typeof FLAG_DEFAULTS;

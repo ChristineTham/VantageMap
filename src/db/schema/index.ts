@@ -26,3 +26,4 @@ export * from "./audit";
 export * from "./users";
 export * from "./api-tokens";
 export * from "./governance";
+export * from "./webhooks";
