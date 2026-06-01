@@ -229,7 +229,9 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
                 .where(eq(table.id, row.id as string));
               return { action: "updated" as const };
             } else {
-              await db.insert(table).values({ ...row, createdAt: new Date(), updatedAt: new Date() });
+              await db
+                .insert(table)
+                .values({ ...row, createdAt: new Date(), updatedAt: new Date() });
               return { action: "inserted" as const };
             }
           } else {

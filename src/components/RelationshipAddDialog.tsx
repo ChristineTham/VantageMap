@@ -180,7 +180,9 @@ export function RelationshipAddDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="relationship-dialog-title"
-      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />

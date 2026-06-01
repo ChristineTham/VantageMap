@@ -7,7 +7,7 @@
  */
 
 import { useState } from "react";
-import { Plus, FileText, CheckCircle2, Clock, Archive } from "lucide-react";
+import { Plus, FileText, CheckCircle2, Clock, Archive, ClipboardList } from "lucide-react";
 import { createSurvey, type Survey } from "@/lib/api";
 
 interface SurveyListViewProps {
@@ -61,9 +61,7 @@ export function SurveyListView({ initialSurveys }: SurveyListViewProps) {
   }
 
   function updateQuestion(index: number, field: "text" | "type", value: string) {
-    setQuestions((prev) =>
-      prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
-    );
+    setQuestions((prev) => prev.map((q, i) => (i === index ? { ...q, [field]: value } : q)));
   }
 
   function removeQuestion(index: number) {
@@ -229,7 +227,9 @@ export function SurveyListView({ initialSurveys }: SurveyListViewProps) {
                       <p className="text-xs text-rosely-dusk mt-0.5">{survey.description}</p>
                     )}
                     <div className="flex items-center gap-3 mt-2">
-                      <span className={`inline-flex items-center gap-1 text-xs font-medium ${statusConf.color}`}>
+                      <span
+                        className={`inline-flex items-center gap-1 text-xs font-medium ${statusConf.color}`}
+                      >
                         <StatusIcon className="size-3" />
                         {statusConf.label}
                       </span>

@@ -52,8 +52,8 @@
   --font-mono: var(--font-noto-sans-mono);
 
   /* Custom font sizes for compact UI elements */
-  --font-size-3xs: 0.5625rem;  /* 9px */
-  --font-size-2xs: 0.625rem;   /* 10px */
+  --font-size-3xs: 0.5625rem; /* 9px */
+  --font-size-2xs: 0.625rem; /* 10px */
 
   /* ── Rosely colour tokens ── */
   --color-rosely-night: var(--rosely0);

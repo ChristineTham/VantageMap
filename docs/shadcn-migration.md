@@ -4,13 +4,13 @@
 
 The following mechanical fixes have already been applied:
 
-| Fix | Count | Status |
-|-----|-------|--------|
-| `w-N h-N` → `size-N` | 173 | ✅ Done |
-| `space-y-N` → `flex flex-col gap-N` | 92 | ✅ Done |
-| Dialog a11y (`role`, `aria-modal`, `aria-labelledby`, Escape key) | 4 dialogs | ✅ Done |
-| `dark:` overrides | 0 found | ✅ Clean |
-| Raw Tailwind colors | 0 found | ✅ Clean |
+| Fix                                                               | Count     | Status   |
+| ----------------------------------------------------------------- | --------- | -------- |
+| `w-N h-N` → `size-N`                                              | 173       | ✅ Done  |
+| `space-y-N` → `flex flex-col gap-N`                               | 92        | ✅ Done  |
+| Dialog a11y (`role`, `aria-modal`, `aria-labelledby`, Escape key) | 4 dialogs | ✅ Done  |
+| `dark:` overrides                                                 | 0 found   | ✅ Clean |
+| Raw Tailwind colors                                               | 0 found   | ✅ Clean |
 
 ---
 
@@ -32,13 +32,13 @@ This creates `src/components/ui/` with all the primitives needed for the migrati
 
 ### Files to Migrate
 
-| Current File | Notes |
-|-------------|-------|
-| `src/components/BulkEditDialog.tsx` | Has tabbed content + form |
-| `src/components/DeleteConfirmDialog.tsx` | Confirmation pattern → use `AlertDialog` |
-| `src/components/FactSheetEditDialog.tsx` | Large form, scrollable |
-| `src/components/RelationshipAddDialog.tsx` | Multi-step wizard |
-| `src/components/SearchModal.tsx` | Already has good a11y; could use `Command` inside `Dialog` |
+| Current File                               | Notes                                                      |
+| ------------------------------------------ | ---------------------------------------------------------- |
+| `src/components/BulkEditDialog.tsx`        | Has tabbed content + form                                  |
+| `src/components/DeleteConfirmDialog.tsx`   | Confirmation pattern → use `AlertDialog`                   |
+| `src/components/FactSheetEditDialog.tsx`   | Large form, scrollable                                     |
+| `src/components/RelationshipAddDialog.tsx` | Multi-step wizard                                          |
+| `src/components/SearchModal.tsx`           | Already has good a11y; could use `Command` inside `Dialog` |
 
 ### Migration Pattern
 
@@ -52,11 +52,16 @@ Replace the hand-rolled overlay:
     <h2>Title</h2>
     ...
   </div>
-</div>
+</div>;
 
 // AFTER (shadcn Dialog)
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 
 <Dialog open={open} onOpenChange={onClose}>
@@ -66,19 +71,23 @@ import {
       <DialogDescription>Subtitle if needed</DialogDescription>
     </DialogHeader>
     {/* body */}
-    <DialogFooter>
-      {/* actions */}
-    </DialogFooter>
+    <DialogFooter>{/* actions */}</DialogFooter>
   </DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 For `DeleteConfirmDialog`, use `AlertDialog` instead (blocks interaction until confirmed):
 
 ```tsx
 import {
-  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 ```
 
@@ -113,7 +122,7 @@ All auth pages and admin forms:
     type="email"
     className="w-full rounded-lg border border-rosely-blush bg-white px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-2 focus:ring-rosely-lilac/30"
   />
-</div>
+</div>;
 
 // AFTER (shadcn)
 import { Input } from "@/components/ui/input";
@@ -122,7 +131,7 @@ import { Label } from "@/components/ui/label";
 <div className="flex flex-col gap-2">
   <Label htmlFor="email">Email</Label>
   <Input id="email" type="email" />
-</div>
+</div>;
 ```
 
 **Note:** The shadcn `Input` component will need its default styles customized to match Rosely tokens. Edit `src/components/ui/input.tsx` after installation to use `border-rosely-blush focus-visible:ring-rosely-lilac`.
@@ -155,25 +164,30 @@ src/app/admin/technical-users/page.tsx
 
 ```tsx
 // BEFORE (16 identical copies)
-{error && (
-  <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-    {error}
-  </div>
-)}
+{
+  error && (
+    <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
+      {error}
+    </div>
+  );
+}
 
 // AFTER (shadcn Alert)
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-{error && (
-  <Alert variant="destructive">
-    <AlertCircle className="size-4" />
-    <AlertDescription>{error}</AlertDescription>
-  </Alert>
-)}
+{
+  error && (
+    <Alert variant="destructive">
+      <AlertCircle className="size-4" />
+      <AlertDescription>{error}</AlertDescription>
+    </Alert>
+  );
+}
 ```
 
 **Style customization:** Edit `src/components/ui/alert.tsx` variants to use Rosely tokens:
+
 - `destructive`: `border-rosely-rose/30 bg-rosely-rose/10 text-rosely-rose`
 
 ---
@@ -184,11 +198,11 @@ import { AlertCircle } from "lucide-react";
 
 ### Files to Migrate
 
-| Current Component | Purpose |
-|------------------|---------|
-| `src/components/StatusBadge.tsx` | Health status pills |
-| `src/components/LifecycleTag.tsx` | Lifecycle phase tags |
-| Inline `<span>` badges | Various one-off badges |
+| Current Component                 | Purpose                |
+| --------------------------------- | ---------------------- |
+| `src/components/StatusBadge.tsx`  | Health status pills    |
+| `src/components/LifecycleTag.tsx` | Lifecycle phase tags   |
+| Inline `<span>` badges            | Various one-off badges |
 
 ### Migration Pattern
 
@@ -196,12 +210,12 @@ import { AlertCircle } from "lucide-react";
 // BEFORE (custom)
 <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-teal/20 text-rosely-teal">
   Active
-</span>
+</span>;
 
 // AFTER (shadcn Badge with custom variants)
 import { Badge } from "@/components/ui/badge";
 
-<Badge variant="success">Active</Badge>
+<Badge variant="success">Active</Badge>;
 ```
 
 **Customization:** Add Rosely variants to `src/components/ui/badge.tsx`:
@@ -230,10 +244,10 @@ const badgeVariants = cva("...", {
 
 ### Files to Migrate
 
-| File | Current Pattern |
-|------|----------------|
+| File                                              | Current Pattern                                  |
+| ------------------------------------------------- | ------------------------------------------------ |
 | `src/app/admin/users/page.tsx` (`UserActionMenu`) | Absolute-positioned div, manual open/close state |
-| `src/components/UserMenu.tsx` | Bottom-anchored popover in sidebar |
+| `src/components/UserMenu.tsx`                     | Bottom-anchored popover in sidebar               |
 
 ### Migration Pattern
 
@@ -248,11 +262,15 @@ const [open, setOpen] = useState(false);
       <button onClick={action2}>Delete</button>
     </div>
   )}
-</div>
+</div>;
 
 // AFTER (shadcn)
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 <DropdownMenu>
@@ -262,9 +280,11 @@ import {
   <DropdownMenuContent align="end">
     <DropdownMenuItem onClick={action1}>Edit</DropdownMenuItem>
     <DropdownMenuSeparator />
-    <DropdownMenuItem onClick={action2} className="text-rosely-rose">Delete</DropdownMenuItem>
+    <DropdownMenuItem onClick={action2} className="text-rosely-rose">
+      Delete
+    </DropdownMenuItem>
   </DropdownMenuContent>
-</DropdownMenu>
+</DropdownMenu>;
 ```
 
 ---
@@ -280,7 +300,7 @@ import {
 <div className="rounded-xl border border-rosely-blush bg-white p-5">
   <h3>Title</h3>
   <p>Content</p>
-</div>
+</div>;
 
 // AFTER
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -292,10 +312,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
   <CardContent>
     <p>Content</p>
   </CardContent>
-</Card>
+</Card>;
 ```
 
 **Style customization:** Edit `src/components/ui/card.tsx` to use:
+
 - `border-rosely-blush rounded-xl` (instead of default gray border)
 
 ---
@@ -322,11 +343,11 @@ src/components/FactSheetDetail.tsx
 
 ```tsx
 // BEFORE
-<div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" />
+<div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" />;
 
 // AFTER
 import { Skeleton } from "@/components/Skeleton";
-<Skeleton className="h-60" />
+<Skeleton className="h-60" />;
 ```
 
 ---
@@ -354,7 +375,7 @@ src/components/RelationshipAddDialog.tsx
 <button disabled={saving} className="...">
   {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
   {saving ? "Saving..." : "Save"}
-</button>
+</button>;
 
 // AFTER (shadcn Button)
 import { Button } from "@/components/ui/button";
@@ -362,7 +383,7 @@ import { Button } from "@/components/ui/button";
 <Button disabled={saving}>
   {saving && <Loader2 className="animate-spin" data-icon="inline-start" />}
   {saving ? "Saving..." : "Save"}
-</Button>
+</Button>;
 ```
 
 ---

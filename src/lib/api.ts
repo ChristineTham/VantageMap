@@ -399,9 +399,7 @@ export async function getFactSheetComments(
   type: string,
   id: string
 ): Promise<ApiSuccessResponse<Comment[]>> {
-  return apiFetch<ApiSuccessResponse<Comment[]>>(
-    `/api/fact-sheets/${type}/${id}/comments`
-  );
+  return apiFetch<ApiSuccessResponse<Comment[]>>(`/api/fact-sheets/${type}/${id}/comments`);
 }
 
 /** Post a new comment. */
@@ -410,10 +408,10 @@ export async function createFactSheetComment(
   id: string,
   data: { content: string; parentId?: string }
 ): Promise<ApiSuccessResponse<Comment>> {
-  return apiFetch<ApiSuccessResponse<Comment>>(
-    `/api/fact-sheets/${type}/${id}/comments`,
-    { method: "POST", body: JSON.stringify(data) }
-  );
+  return apiFetch<ApiSuccessResponse<Comment>>(`/api/fact-sheets/${type}/${id}/comments`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
 /** Fetch todos for a fact sheet. */
@@ -421,9 +419,7 @@ export async function getFactSheetTodos(
   type: string,
   id: string
 ): Promise<ApiSuccessResponse<TodoItem[]>> {
-  return apiFetch<ApiSuccessResponse<TodoItem[]>>(
-    `/api/fact-sheets/${type}/${id}/todos`
-  );
+  return apiFetch<ApiSuccessResponse<TodoItem[]>>(`/api/fact-sheets/${type}/${id}/todos`);
 }
 
 /** Create a todo on a fact sheet. */
@@ -432,10 +428,10 @@ export async function createFactSheetTodo(
   id: string,
   data: { title: string; assigneeId?: string; dueDate?: string }
 ): Promise<ApiSuccessResponse<TodoItem>> {
-  return apiFetch<ApiSuccessResponse<TodoItem>>(
-    `/api/fact-sheets/${type}/${id}/todos`,
-    { method: "POST", body: JSON.stringify(data) }
-  );
+  return apiFetch<ApiSuccessResponse<TodoItem>>(`/api/fact-sheets/${type}/${id}/todos`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
 /** Fetch subscriptions for a fact sheet. */
@@ -466,10 +462,10 @@ export async function unsubscribeFromFactSheet(
   id: string,
   role: "Responsible" | "Accountable" | "Observer"
 ): Promise<void> {
-  await apiFetch<void>(
-    `/api/fact-sheets/${type}/${id}/subscriptions`,
-    { method: "DELETE", body: JSON.stringify({ role }) }
-  );
+  await apiFetch<void>(`/api/fact-sheets/${type}/${id}/subscriptions`, {
+    method: "DELETE",
+    body: JSON.stringify({ role }),
+  });
 }
 
 /** Fetch tags for a fact sheet. */
@@ -477,9 +473,7 @@ export async function getFactSheetTags(
   type: string,
   id: string
 ): Promise<ApiSuccessResponse<TagAssignment[]>> {
-  return apiFetch<ApiSuccessResponse<TagAssignment[]>>(
-    `/api/fact-sheets/${type}/${id}/tags`
-  );
+  return apiFetch<ApiSuccessResponse<TagAssignment[]>>(`/api/fact-sheets/${type}/${id}/tags`);
 }
 
 /** Get quality seal info for a fact sheet. */
@@ -511,9 +505,11 @@ export async function getTagGroups(): Promise<ApiSuccessResponse<TagGroup[]>> {
 }
 
 /** Create a tag group. */
-export async function createTagGroup(
-  data: { name: string; description?: string; mode: string }
-): Promise<ApiSuccessResponse<TagGroup>> {
+export async function createTagGroup(data: {
+  name: string;
+  description?: string;
+  mode: string;
+}): Promise<ApiSuccessResponse<TagGroup>> {
   return apiFetch<ApiSuccessResponse<TagGroup>>("/api/tag-groups", {
     method: "POST",
     body: JSON.stringify(data),
@@ -544,21 +540,17 @@ export async function deleteTag(groupId: string, tagId: string): Promise<void> {
 }
 
 /** Fetch all surveys. */
-export async function getSurveys(
-  status?: string
-): Promise<ApiSuccessResponse<Survey[]>> {
+export async function getSurveys(status?: string): Promise<ApiSuccessResponse<Survey[]>> {
   const params = status ? `?filter[status]=${status}` : "";
   return apiFetch<ApiSuccessResponse<Survey[]>>(`/api/surveys${params}`);
 }
 
 /** Create a survey. */
-export async function createSurvey(
-  data: {
-    title: string;
-    description?: string;
-    questions: { text: string; type: string; options?: string[] }[];
-  }
-): Promise<ApiSuccessResponse<Survey>> {
+export async function createSurvey(data: {
+  title: string;
+  description?: string;
+  questions: { text: string; type: string; options?: string[] }[];
+}): Promise<ApiSuccessResponse<Survey>> {
   return apiFetch<ApiSuccessResponse<Survey>>("/api/surveys", {
     method: "POST",
     body: JSON.stringify(data),

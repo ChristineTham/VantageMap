@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Layers, AppWindow, Target, Radar, GanttChart, AlertTriangle } from "lucide-react";
 import {
   getCapabilities,
@@ -14,16 +13,10 @@ import {
   getPortfolioHealth,
 } from "@/lib/data";
 import type { HealthStatus } from "@/lib/types";
-
-const DashboardCharts = dynamic(
-  () => import("@/components/DashboardCharts").then((m) => m.DashboardCharts),
-  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
-);
-
-const ReportingCharts = dynamic(
-  () => import("@/components/ReportingCharts").then((m) => m.ReportingCharts),
-  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
-);
+import {
+  DashboardChartsLazy as DashboardCharts,
+  ReportingChartsLazy as ReportingCharts,
+} from "@/components/LazyCharts";
 
 export const metadata: Metadata = {
   title: "Dashboard – VantageMap",

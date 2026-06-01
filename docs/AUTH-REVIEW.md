@@ -4,6 +4,7 @@ Review of VantageMap's Better Auth implementation against the [Better Auth best 
 
 **Date:** 2025-06-01  
 **Files reviewed:**
+
 - `src/lib/auth-server.ts` — Server configuration
 - `src/lib/auth-client.ts` — Client configuration
 - `src/lib/auth.ts` — Custom authentication middleware
@@ -19,22 +20,22 @@ Review of VantageMap's Better Auth implementation against the [Better Auth best 
 
 ## Summary
 
-| Area | Verdict | Priority |
-|------|---------|----------|
-| Environment variables | ✅ Correct | — |
-| Server configuration | ⚠️ 3 issues | Medium |
-| Client configuration | ⚠️ 1 issue | Low |
-| Route handler | ✅ Correct | — |
-| Middleware (Next.js) | ⚠️ 2 issues | Medium |
-| Session management | ✅ Correct | — |
-| Password flows | ⚠️ 2 issues | Medium |
-| Email verification | ❌ Missing | High |
-| Rate limiting | ❌ Missing | High |
-| Type safety | ⚠️ 1 issue | Low |
-| CSRF / trusted origins | ✅ Correct | — |
-| Plugin imports | ✅ Correct | — |
-| Database adapter | ✅ Correct | — |
-| Custom middleware (auth.ts) | ⚠️ 1 issue | Low |
+| Area                        | Verdict     | Priority |
+| --------------------------- | ----------- | -------- |
+| Environment variables       | ✅ Correct  | —        |
+| Server configuration        | ⚠️ 3 issues | Medium   |
+| Client configuration        | ⚠️ 1 issue  | Low      |
+| Route handler               | ✅ Correct  | —        |
+| Middleware (Next.js)        | ⚠️ 2 issues | Medium   |
+| Session management          | ✅ Correct  | —        |
+| Password flows              | ⚠️ 2 issues | Medium   |
+| Email verification          | ❌ Missing  | High     |
+| Rate limiting               | ❌ Missing  | High     |
+| Type safety                 | ⚠️ 1 issue  | Low      |
+| CSRF / trusted origins      | ✅ Correct  | —        |
+| Plugin imports              | ✅ Correct  | —        |
+| Database adapter            | ✅ Correct  | —        |
+| Custom middleware (auth.ts) | ⚠️ 1 issue  | Low      |
 
 ---
 
@@ -45,11 +46,13 @@ Review of VantageMap's Better Auth implementation against the [Better Auth best 
 **File:** `src/lib/auth-server.ts`
 
 Better Auth supports email verification out of the box, but the config has no `emailVerification` block. This means:
+
 - Users can register with any email address without proof of ownership
 - Password reset emails cannot be sent (no `sendResetPassword` handler defined)
 - The forgot-password page calls `/api/auth/request-password-reset` but Better Auth has no email transport configured
 
 **Recommendation:**
+
 ```typescript
 emailVerification: {
   sendVerificationEmail: async ({ user, url }) => {
@@ -77,6 +80,7 @@ Until an email provider is wired, password reset is non-functional and email ver
 No `rateLimit` configuration exists. Auth endpoints (login, registration, password reset) are vulnerable to brute-force attacks.
 
 **Recommendation:**
+
 ```typescript
 rateLimit: {
   enabled: true,
@@ -112,7 +116,7 @@ const sessionToken = request.cookies.get("better-auth.session_token");
 if (!sessionToken?.value) { ... redirect ... }
 ```
 
-The middleware only checks whether the cookie *exists*, not whether the session is valid or expired. An expired or revoked session cookie will still pass the middleware. The actual validation happens in API routes via `auth.ts`, but pages/components that do not make API calls will render authenticated content even with a stale cookie.
+The middleware only checks whether the cookie _exists_, not whether the session is valid or expired. An expired or revoked session cookie will still pass the middleware. The actual validation happens in API routes via `auth.ts`, but pages/components that do not make API calls will render authenticated content even with a stale cookie.
 
 **Recommendation:** Use Better Auth's `getSession` server-side in the middleware, or accept this as intentional (session validated on API call, stale page content is acceptable UX-wise).
 
@@ -150,6 +154,7 @@ const res = await fetch("/api/auth/request-password-reset", { ... });
 ```
 
 Other auth pages use the typed `authClient` methods (`signIn.email()`, `signUp.email()`, `authClient.resetPassword()`). The forgot-password page uses a raw `fetch` call which misses:
+
 - Automatic CSRF token handling
 - Type safety on request/response
 - Error normalization
@@ -179,6 +184,7 @@ The `NEXT_PUBLIC_APP_URL` env var is optional (per `env.ts`). If not set, this f
 The file exports `type Auth = typeof auth`, but no `Session` or `User` types are derived using `auth.$Infer.Session`. Components like `AuthSessionProvider` manually define the user shape instead of inferring from the auth instance.
 
 **Recommendation:**
+
 ```typescript
 export type Session = typeof auth.$Infer.Session;
 export type User = typeof auth.$Infer.Session.user;
@@ -195,7 +201,9 @@ Then use these in `AuthSessionProvider` instead of manually declaring the interf
 ```typescript
 if (process.env.NODE_ENV === "development") {
   const devUserId = request.headers.get("x-dev-user-id");
-  if (devUserId) { return resolveUserContext(devUserId); }
+  if (devUserId) {
+    return resolveUserContext(devUserId);
+  }
 }
 ```
 
@@ -220,11 +228,11 @@ This is gated by `NODE_ENV`, which is correctly set in production. However, best
 
 ## Remediation Priority
 
-| # | Issue | Effort | Impact |
-|---|-------|--------|--------|
-| 1 | Add rate limiting | Small | Prevents brute-force |
-| 2 | Configure email transport + verification | Medium | Enables password reset, proves email ownership |
-| 3 | Replace raw `fetch` in forgot-password with `authClient.forgetPassword()` | Small | Type safety + CSRF |
-| 4 | Remove redundant `baseURL`/`secret` from server config | Trivial | Cleaner config |
-| 5 | Export inferred types from auth instance | Small | Better type safety |
-| 6 | Make `NEXT_PUBLIC_APP_URL` required in production | Small | Prevents misconfiguration |
+| #   | Issue                                                                     | Effort  | Impact                                         |
+| --- | ------------------------------------------------------------------------- | ------- | ---------------------------------------------- |
+| 1   | Add rate limiting                                                         | Small   | Prevents brute-force                           |
+| 2   | Configure email transport + verification                                  | Medium  | Enables password reset, proves email ownership |
+| 3   | Replace raw `fetch` in forgot-password with `authClient.forgetPassword()` | Small   | Type safety + CSRF                             |
+| 4   | Remove redundant `baseURL`/`secret` from server config                    | Trivial | Cleaner config                                 |
+| 5   | Export inferred types from auth instance                                  | Small   | Better type safety                             |
+| 6   | Make `NEXT_PUBLIC_APP_URL` required in production                         | Small   | Prevents misconfiguration                      |

@@ -1,5 +1,5 @@
 /**
- * Phase 10 — Next.js Middleware for Route Protection
+ * Phase 10 — Next.js Proxy for Route Protection
  *
  * Protects authenticated routes by checking for a valid session cookie.
  * Redirects unauthenticated users to /login.
@@ -17,7 +17,7 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"));
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths through without auth check

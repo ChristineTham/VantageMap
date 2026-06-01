@@ -70,26 +70,26 @@ npm run dev
 
 Verify these return valid JSON with correct pagination:
 
-| Method | Endpoint | Query Params |
-|--------|----------|--------------|
-| GET | `/api/audit` | `targetType`, `targetId`, `actorId`, `action`, `page`, `pageSize` |
-| GET | `/api/governance/comments` | `factSheetId` |
-| POST | `/api/governance/comments` | body: `{ factSheetId, content }` |
-| GET | `/api/governance/todos` | `factSheetId` |
-| POST | `/api/governance/todos` | body: `{ factSheetId, title }` |
-| GET | `/api/governance/subscriptions` | `factSheetId` |
-| POST | `/api/governance/subscriptions` | body: `{ factSheetId }` |
-| DELETE | `/api/governance/subscriptions` | body: `{ factSheetId }` |
-| GET | `/api/governance/tags` | `factSheetId` |
-| GET | `/api/governance/quality-seal` | `factSheetId` |
-| POST | `/api/governance/quality-seal` | body: `{ factSheetId, transition }` |
-| GET | `/api/governance/tag-groups` | — |
-| POST | `/api/governance/tag-groups` | body: `{ name }` |
-| DELETE | `/api/governance/tag-groups` | body: `{ id }` |
-| POST | `/api/governance/tag-groups/tags` | body: `{ tagGroupId, name, color? }` |
-| DELETE | `/api/governance/tag-groups/tags` | body: `{ id }` |
-| GET | `/api/governance/surveys` | `status?` |
-| POST | `/api/governance/surveys` | body: `{ title, description?, questions }` |
+| Method | Endpoint                          | Query Params                                                      |
+| ------ | --------------------------------- | ----------------------------------------------------------------- |
+| GET    | `/api/audit`                      | `targetType`, `targetId`, `actorId`, `action`, `page`, `pageSize` |
+| GET    | `/api/governance/comments`        | `factSheetId`                                                     |
+| POST   | `/api/governance/comments`        | body: `{ factSheetId, content }`                                  |
+| GET    | `/api/governance/todos`           | `factSheetId`                                                     |
+| POST   | `/api/governance/todos`           | body: `{ factSheetId, title }`                                    |
+| GET    | `/api/governance/subscriptions`   | `factSheetId`                                                     |
+| POST   | `/api/governance/subscriptions`   | body: `{ factSheetId }`                                           |
+| DELETE | `/api/governance/subscriptions`   | body: `{ factSheetId }`                                           |
+| GET    | `/api/governance/tags`            | `factSheetId`                                                     |
+| GET    | `/api/governance/quality-seal`    | `factSheetId`                                                     |
+| POST   | `/api/governance/quality-seal`    | body: `{ factSheetId, transition }`                               |
+| GET    | `/api/governance/tag-groups`      | —                                                                 |
+| POST   | `/api/governance/tag-groups`      | body: `{ name }`                                                  |
+| DELETE | `/api/governance/tag-groups`      | body: `{ id }`                                                    |
+| POST   | `/api/governance/tag-groups/tags` | body: `{ tagGroupId, name, color? }`                              |
+| DELETE | `/api/governance/tag-groups/tags` | body: `{ id }`                                                    |
+| GET    | `/api/governance/surveys`         | `status?`                                                         |
+| POST   | `/api/governance/surveys`         | body: `{ title, description?, questions }`                        |
 
 ## Authentication
 
@@ -140,12 +140,12 @@ sendResetPassword: async ({ user, url }) => {
 
 ### Environment Variables
 
-| Variable | Required | Notes |
-|----------|----------|-------|
-| `BETTER_AUTH_SECRET` | Always | Min 32 chars. Generate: `openssl rand -base64 32` |
-| `BETTER_AUTH_URL` | Always | Base URL (e.g. `https://app.example.com`) |
+| Variable              | Required        | Notes                                                                            |
+| --------------------- | --------------- | -------------------------------------------------------------------------------- |
+| `BETTER_AUTH_SECRET`  | Always          | Min 32 chars. Generate: `openssl rand -base64 32`                                |
+| `BETTER_AUTH_URL`     | Always          | Base URL (e.g. `https://app.example.com`)                                        |
 | `NEXT_PUBLIC_APP_URL` | Production only | Must be set in production; optional in dev (defaults to `http://localhost:3000`) |
-| `DATABASE_URL` | Always | PostgreSQL connection string |
+| `DATABASE_URL`        | Always          | PostgreSQL connection string                                                     |
 
 ## Next.js Best Practices Verification
 
@@ -170,12 +170,12 @@ Auth pages (`/login`, `/reset-password`) use `useSearchParams()` which requires 
 
 Verify the browser tab shows the correct title on each page:
 
-| Route | Expected Title |
-|-------|---------------|
-| `/login` | "Sign In — VantageMap" |
-| `/admin/*` | "Administration — VantageMap" |
-| `/governance` | "Governance — VantageMap" |
-| `/profile` | "Profile — VantageMap" |
+| Route           | Expected Title                       |
+| --------------- | ------------------------------------ |
+| `/login`        | "Sign In — VantageMap"               |
+| `/admin/*`      | "Administration — VantageMap"        |
+| `/governance`   | "Governance — VantageMap"            |
+| `/profile`      | "Profile — VantageMap"               |
 | `/capabilities` | "Business Capabilities — VantageMap" |
 | `/applications` | "Application Portfolio — VantageMap" |
 
@@ -202,13 +202,13 @@ CRUD operations (create/update/delete) use `after()` from `next/server` to write
 
 Server components use `Promise.all()` for independent queries. Verify page load times:
 
-| Page | Pattern |
-|------|---------|
-| `/` (Dashboard) | 5 entity queries + 4 report queries in parallel |
-| `/governance` | Facets + surveys fetched in parallel |
-| `/governance/quality-seal` | All 4 seal state queries in parallel |
-| `/strategy` | Objectives + initiatives in parallel |
-| `/radar` | Components + categories in parallel |
+| Page                       | Pattern                                         |
+| -------------------------- | ----------------------------------------------- |
+| `/` (Dashboard)            | 5 entity queries + 4 report queries in parallel |
+| `/governance`              | Facets + surveys fetched in parallel            |
+| `/governance/quality-seal` | All 4 seal state queries in parallel            |
+| `/strategy`                | Objectives + initiatives in parallel            |
+| `/radar`                   | Components + categories in parallel             |
 
 ### Batched Import Operations
 
@@ -250,7 +250,7 @@ The theme defines `text-2xs` (10px) and `text-3xs` (9px) for compact UI elements
 
 ## shadcn/ui Compliance
 
-### Spacing: gap-* Instead of space-y-*
+### Spacing: gap-_ Instead of space-y-_
 
 All vertical spacing now uses `flex flex-col gap-N` instead of `space-y-N`. Verify:
 

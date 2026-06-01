@@ -19,9 +19,19 @@ interface SealGroup {
 
 async function getFactSheetsBySealState(): Promise<SealGroup[]> {
   const states = [
-    { state: "Check Needed", icon: Clock, color: "text-rosely-golden", bgColor: "bg-rosely-golden/10" },
+    {
+      state: "Check Needed",
+      icon: Clock,
+      color: "text-rosely-golden",
+      bgColor: "bg-rosely-golden/10",
+    },
     { state: "Draft", icon: FileText, color: "text-rosely-mist", bgColor: "bg-rosely-mist/10" },
-    { state: "Approved", icon: CheckCircle2, color: "text-rosely-teal", bgColor: "bg-rosely-teal/10" },
+    {
+      state: "Approved",
+      icon: CheckCircle2,
+      color: "text-rosely-teal",
+      bgColor: "bg-rosely-teal/10",
+    },
     { state: "Rejected", icon: XCircle, color: "text-rosely-rose", bgColor: "bg-rosely-rose/10" },
   ];
 
@@ -29,12 +39,14 @@ async function getFactSheetsBySealState(): Promise<SealGroup[]> {
     states.map(async (s) => {
       try {
         const res = await filterByFacets({ qualitySeal: s.state, pageSize: "50" });
-        const items = (res.data.results as { id: string; name: string; entityType: string }[]).map((r) => ({
-          id: r.id,
-          name: r.name,
-          type: r.entityType,
-          slug: entityTypeToSlug(r.entityType),
-        }));
+        const items = (res.data.results as { id: string; name: string; entityType: string }[]).map(
+          (r) => ({
+            id: r.id,
+            name: r.name,
+            type: r.entityType,
+            slug: entityTypeToSlug(r.entityType),
+          })
+        );
         return { ...s, items };
       } catch {
         return { ...s, items: [] };

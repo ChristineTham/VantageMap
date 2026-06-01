@@ -53,7 +53,9 @@ export function FactSheetDetail({
 }: FactSheetDetailProps) {
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [activeTab, setActiveTab] = useState<"details" | "relationships" | "governance" | "audit">("details");
+  const [activeTab, setActiveTab] = useState<"details" | "relationships" | "governance" | "audit">(
+    "details"
+  );
 
   // Governance state (lazy-loaded on tab switch)
   const [comments, setComments] = useState<Comment[]>([]);
@@ -73,7 +75,7 @@ export function FactSheetDetail({
   const description = entity.description as string | null;
   const health = entity.health as string | null;
   const lifecycle = entity.lifecycle as string | null;
-  const qualitySeal = entity.qualitySeal as string | null;
+  const entitySealLabel = entity.qualitySeal as string | null;
   const owner = entity.owner as string | null;
   const createdAt = entity.createdAt as string | null;
   const updatedAt = entity.updatedAt as string | null;
@@ -105,7 +107,9 @@ export function FactSheetDetail({
       const [commentsRes, todosRes, subsRes, tagsRes, sealRes] = await Promise.all([
         getFactSheetComments(entityType, entityId).catch(() => ({ data: [] as Comment[] })),
         getFactSheetTodos(entityType, entityId).catch(() => ({ data: [] as TodoItem[] })),
-        getFactSheetSubscriptions(entityType, entityId).catch(() => ({ data: [] as Subscription[] })),
+        getFactSheetSubscriptions(entityType, entityId).catch(() => ({
+          data: [] as Subscription[],
+        })),
         getFactSheetTags(entityType, entityId).catch(() => ({ data: [] as TagAssignment[] })),
         getFactSheetQualitySeal(entityType, entityId).catch(() => ({ data: null })),
       ]);
@@ -124,7 +128,11 @@ export function FactSheetDetail({
   const loadAudit = useCallback(async () => {
     if (auditLoaded) return;
     try {
-      const res = await getAuditEntries({ targetType: entityType, targetId: entityId, pageSize: 50 });
+      const res = await getAuditEntries({
+        targetType: entityType,
+        targetId: entityId,
+        pageSize: 50,
+      });
       setAuditEntries(res.data);
       setAuditLoaded(true);
     } catch {
@@ -133,6 +141,7 @@ export function FactSheetDetail({
   }, [entityType, entityId, auditLoaded]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (activeTab === "governance") loadGovernance();
     if (activeTab === "audit") loadAudit();
   }, [activeTab, loadGovernance, loadAudit]);
@@ -166,9 +175,9 @@ export function FactSheetDetail({
                 lifecycle={lifecycle as Parameters<typeof LifecycleTag>[0]["lifecycle"]}
               />
             )}
-            {qualitySeal && (
+            {entitySealLabel && (
               <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-rosely-periwinkle/20 text-rosely-cornflower">
-                {qualitySeal}
+                {entitySealLabel}
               </span>
             )}
             {owner && (
@@ -281,15 +290,13 @@ export function FactSheetDetail({
       )}
 
       {activeTab === "governance" && (
-        <GovernancePanel
-          factSheetType={entityType}
-          factSheetId={entityId}
-          factSheetName={name}
-        >
+        <GovernancePanel factSheetType={entityType} factSheetId={entityId} factSheetName={name}>
           {{
             seal: qualitySeal ? (
               <QualitySealBadge
-                currentState={qualitySeal.currentState as "Draft" | "Check Needed" | "Approved" | "Rejected"}
+                currentState={
+                  qualitySeal.currentState as "Draft" | "Check Needed" | "Approved" | "Rejected"
+                }
                 validTransitions={qualitySeal.validTransitions.map((t) => ({
                   toState: t.toState as "Draft" | "Check Needed" | "Approved" | "Rejected",
                   label: t.label,
@@ -299,7 +306,9 @@ export function FactSheetDetail({
                   try {
                     const res = await transitionQualitySeal(entityType, entityId, toState, reason);
                     setQualitySealInfo(res.data);
-                  } catch { /* handled by component */ }
+                  } catch {
+                    /* handled by component */
+                  }
                 }}
               />
             ) : (
@@ -333,13 +342,19 @@ export function FactSheetDetail({
                   try {
                     const res = await subscribeToFactSheet(entityType, entityId, role);
                     setSubscriptions((prev) => [...prev, res.data]);
-                  } catch { /* handled */ }
+                  } catch {
+                    /* handled */
+                  }
                 }}
                 onUnsubscribe={async (role) => {
                   try {
                     await unsubscribeFromFactSheet(entityType, entityId, role);
-                    setSubscriptions((prev) => prev.filter((s) => !(s.userId === currentUserId && s.role === role)));
-                  } catch { /* handled */ }
+                    setSubscriptions((prev) =>
+                      prev.filter((s) => !(s.userId === currentUserId && s.role === role))
+                    );
+                  } catch {
+                    /* handled */
+                  }
                 }}
               />
             ),
@@ -349,14 +364,19 @@ export function FactSheetDetail({
                 currentUserId={currentUserId}
                 onSubmitComment={async (content, parentId) => {
                   try {
-                    const res = await createFactSheetComment(entityType, entityId, { content, parentId });
+                    const res = await createFactSheetComment(entityType, entityId, {
+                      content,
+                      parentId,
+                    });
                     if (parentId) {
                       // Add reply inline — simplistic approach
                       setComments((prev) => [...prev, res.data]);
                     } else {
                       setComments((prev) => [...prev, res.data]);
                     }
-                  } catch { /* handled */ }
+                  } catch {
+                    /* handled */
+                  }
                 }}
               />
             ),
@@ -364,13 +384,25 @@ export function FactSheetDetail({
               <TodoList
                 todos={todos}
                 onToggle={async (id, done) => {
-                  setTodos((prev) => prev.map((t) => t.id === id ? { ...t, done, completedAt: done ? new Date().toISOString() : null } : t));
+                  setTodos((prev) =>
+                    prev.map((t) =>
+                      t.id === id
+                        ? { ...t, done, completedAt: done ? new Date().toISOString() : null }
+                        : t
+                    )
+                  );
                 }}
                 onCreate={async (title, assigneeId, dueDate) => {
                   try {
-                    const res = await createFactSheetTodo(entityType, entityId, { title, assigneeId, dueDate });
+                    const res = await createFactSheetTodo(entityType, entityId, {
+                      title,
+                      assigneeId,
+                      dueDate,
+                    });
                     setTodos((prev) => [...prev, res.data]);
-                  } catch { /* handled */ }
+                  } catch {
+                    /* handled */
+                  }
                 }}
               />
             ),
@@ -392,15 +424,21 @@ export function FactSheetDetail({
           ) : (
             <div className="flex flex-col gap-3">
               {auditEntries.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-rosely-petal last:border-0">
+                <div
+                  key={entry.id}
+                  className="flex items-start gap-3 py-2 border-b border-rosely-petal last:border-0"
+                >
                   <div className="shrink-0 mt-0.5">
-                    <span className={cn(
-                      "inline-flex items-center justify-center size-6 rounded-full text-xs font-medium",
-                      entry.action === "Create" && "bg-rosely-teal/20 text-rosely-teal",
-                      entry.action === "Update" && "bg-rosely-golden/20 text-rosely-golden",
-                      entry.action === "Delete" && "bg-rosely-rose/20 text-rosely-rose",
-                      !["Create", "Update", "Delete"].includes(entry.action) && "bg-rosely-mist/20 text-rosely-mist"
-                    )}>
+                    <span
+                      className={cn(
+                        "inline-flex items-center justify-center size-6 rounded-full text-xs font-medium",
+                        entry.action === "Create" && "bg-rosely-teal/20 text-rosely-teal",
+                        entry.action === "Update" && "bg-rosely-golden/20 text-rosely-golden",
+                        entry.action === "Delete" && "bg-rosely-rose/20 text-rosely-rose",
+                        !["Create", "Update", "Delete"].includes(entry.action) &&
+                          "bg-rosely-mist/20 text-rosely-mist"
+                      )}
+                    >
                       {entry.action[0]}
                     </span>
                   </div>

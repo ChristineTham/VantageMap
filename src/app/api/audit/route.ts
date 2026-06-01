@@ -14,11 +14,15 @@
 
 import { db } from "@/db";
 import { auditEntries } from "@/db/schema";
+import { factSheetTypeEnum, auditActionEnum } from "@/db/schema/enums";
 import { eq, and, desc, count, type SQL } from "drizzle-orm";
 import { withErrorHandler, list } from "@/lib/api-response";
 import { requireAuth } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac";
 import { parsePagination, buildPaginationMeta } from "@/lib/query";
+
+type FactSheetType = (typeof factSheetTypeEnum.enumValues)[number];
+type AuditAction = (typeof auditActionEnum.enumValues)[number];
 
 export const GET = withErrorHandler(async (req) => {
   const auth = await requireAuth(req);
@@ -48,8 +52,8 @@ export const GET = withErrorHandler(async (req) => {
   const conditions: SQL[] = [];
 
   const targetType = searchParams.get("targetType");
-  if (targetType) {
-    conditions.push(eq(auditEntries.targetType, targetType));
+  if (targetType && (factSheetTypeEnum.enumValues as readonly string[]).includes(targetType)) {
+    conditions.push(eq(auditEntries.targetType, targetType as FactSheetType));
   }
 
   const targetId = searchParams.get("targetId");
@@ -63,17 +67,14 @@ export const GET = withErrorHandler(async (req) => {
   }
 
   const action = searchParams.get("action");
-  if (action) {
-    conditions.push(eq(auditEntries.action, action));
+  if (action && (auditActionEnum.enumValues as readonly string[]).includes(action)) {
+    conditions.push(eq(auditEntries.action, action as AuditAction));
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   // Get total count
-  const [countResult] = await db
-    .select({ value: count() })
-    .from(auditEntries)
-    .where(whereClause);
+  const [countResult] = await db.select({ value: count() }).from(auditEntries).where(whereClause);
 
   const total = countResult?.value ?? 0;
 

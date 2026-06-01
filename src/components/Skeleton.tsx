@@ -16,7 +16,12 @@ export function Skeleton({ className }: SkeletonProps) {
  */
 export function CardSkeleton({ className }: SkeletonProps) {
   return (
-    <div className={cn("flex flex-col gap-3 rounded-xl border border-rosely-blush bg-white p-4", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-3 rounded-xl border border-rosely-blush bg-white p-4",
+        className
+      )}
+    >
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-4/5" />

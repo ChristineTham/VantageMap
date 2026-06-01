@@ -9,17 +9,17 @@ Comprehensive review of the VantageMap codebase against the Vercel React Best Pr
 
 ## Summary
 
-| Category | Verdict | Critical Issues |
-|----------|---------|-----------------|
-| Eliminating Waterfalls | ⚠️ 5 issues | 2 critical (import loop, bulk tags) |
-| Bundle Size Optimization | ⚠️ 1 issue | Recharts not dynamically imported |
-| Server-Side Performance | ⚠️ 1 issue | Audit logging blocks response |
-| Client-Side Data Fetching | ⚠️ Minor | No SWR; useEffect-based fetches |
-| Re-render Optimization | ✅ Good | Correct useMemo patterns |
-| Barrel Imports | ✅ Good | Named imports throughout |
-| RSC Boundaries | ✅ Good | Proper serialization |
-| Server Action Auth | ✅ N/A | Uses route handlers with auth |
-| Module-Level State | ✅ Safe | No request-leaking state |
+| Category                  | Verdict     | Critical Issues                     |
+| ------------------------- | ----------- | ----------------------------------- |
+| Eliminating Waterfalls    | ⚠️ 5 issues | 2 critical (import loop, bulk tags) |
+| Bundle Size Optimization  | ⚠️ 1 issue  | Recharts not dynamically imported   |
+| Server-Side Performance   | ⚠️ 1 issue  | Audit logging blocks response       |
+| Client-Side Data Fetching | ⚠️ Minor    | No SWR; useEffect-based fetches     |
+| Re-render Optimization    | ✅ Good     | Correct useMemo patterns            |
+| Barrel Imports            | ✅ Good     | Named imports throughout            |
+| RSC Boundaries            | ✅ Good     | Proper serialization                |
+| Server Action Auth        | ✅ N/A      | Uses route handlers with auth       |
+| Module-Level State        | ✅ Safe     | No request-leaking state            |
 
 ---
 
@@ -48,9 +48,11 @@ for (let i = 0; i < validRows.length; i++) {
 const BATCH_SIZE = 100;
 for (let i = 0; i < validRows.length; i += BATCH_SIZE) {
   const batch = validRows.slice(i, i + BATCH_SIZE);
-  await Promise.all(batch.map(async (row) => {
-    // upsert logic per row
-  }));
+  await Promise.all(
+    batch.map(async (row) => {
+      // upsert logic per row
+    })
+  );
 }
 ```
 
@@ -75,8 +77,8 @@ for (const entity of entities) {
 
 ```typescript
 if (addTags.length > 0) {
-  const values = entities.flatMap(entity =>
-    addTags.map(tagId => ({
+  const values = entities.flatMap((entity) =>
+    addTags.map((tagId) => ({
       tagId,
       factSheetType: entity.type,
       factSheetId: entity.id,
@@ -202,6 +204,7 @@ const rows = await db.select(...).from(webhooks).limit(pageSize).offset(offset);
 ### 🟡 MEDIUM — No SWR for Client Data Fetching
 
 Multiple client components (`SearchBar`, `SearchPageView`, `SearchModal`, admin pages) fetch data via `useEffect` + `fetch()`. This means:
+
 - No request deduplication across component instances
 - No stale-while-revalidate caching
 - Manual loading/error state management
@@ -212,27 +215,27 @@ Multiple client components (`SearchBar`, `SearchPageView`, `SearchModal`, admin 
 
 ## What's Done Well
 
-| Pattern | Evidence |
-|---------|----------|
-| **Promise.all() for parallel fetches** | Dashboard (5 parallel queries), Strategy, Radar, Reports, Detail pages |
-| **useMemo for derived state** | ApplicationsView (filter → sort → paginate), TechRadarView, RoadmapView |
-| **useCallback for stable references** | FactSheetDetail, FactSheetEditDialog, FactSheetCreateForm, admin pages |
-| **No barrel re-exports** | Components imported individually, no `src/components/index.ts` |
-| **Minimal RSC props** | Pages pass only needed fields to client components |
-| **No module-level mutable state** | All `let` variables correctly scoped inside async functions |
-| **No async client components** | All 44 client components use sync function signatures |
-| **Server-side auth in every route** | `requireAuth()` / `requirePermission()` in all handlers |
+| Pattern                                | Evidence                                                                |
+| -------------------------------------- | ----------------------------------------------------------------------- |
+| **Promise.all() for parallel fetches** | Dashboard (5 parallel queries), Strategy, Radar, Reports, Detail pages  |
+| **useMemo for derived state**          | ApplicationsView (filter → sort → paginate), TechRadarView, RoadmapView |
+| **useCallback for stable references**  | FactSheetDetail, FactSheetEditDialog, FactSheetCreateForm, admin pages  |
+| **No barrel re-exports**               | Components imported individually, no `src/components/index.ts`          |
+| **Minimal RSC props**                  | Pages pass only needed fields to client components                      |
+| **No module-level mutable state**      | All `let` variables correctly scoped inside async functions             |
+| **No async client components**         | All 44 client components use sync function signatures                   |
+| **Server-side auth in every route**    | `requireAuth()` / `requirePermission()` in all handlers                 |
 
 ---
 
 ## Remediation Priority
 
-| # | Issue | Effort | Impact |
-|---|-------|--------|--------|
-| 1 | Batch import upserts (chunked Promise.all or single SQL upsert) | Medium | Critical — 10-100× faster imports |
-| 2 | Batch bulk tag operations (single multi-row insert) | Small | Critical — eliminates N² loop |
-| 3 | Parallelize quality-seal page queries (Promise.all) | Small | High — 4× faster page load |
-| 4 | Parallelize governance stats (Promise.all) | Small | High — 2× faster page load |
-| 5 | Dynamic import Recharts (next/dynamic) | Small | High — 80KB off initial bundle |
-| 6 | Non-blocking audit logging (after()) | Small | High — 50-100ms faster mutations |
-| 7 | Parallelize webhook count + select | Trivial | Medium — minor improvement |
+| #   | Issue                                                           | Effort  | Impact                            |
+| --- | --------------------------------------------------------------- | ------- | --------------------------------- |
+| 1   | Batch import upserts (chunked Promise.all or single SQL upsert) | Medium  | Critical — 10-100× faster imports |
+| 2   | Batch bulk tag operations (single multi-row insert)             | Small   | Critical — eliminates N² loop     |
+| 3   | Parallelize quality-seal page queries (Promise.all)             | Small   | High — 4× faster page load        |
+| 4   | Parallelize governance stats (Promise.all)                      | Small   | High — 2× faster page load        |
+| 5   | Dynamic import Recharts (next/dynamic)                          | Small   | High — 80KB off initial bundle    |
+| 6   | Non-blocking audit logging (after())                            | Small   | High — 50-100ms faster mutations  |
+| 7   | Parallelize webhook count + select                              | Trivial | Medium — minor improvement        |

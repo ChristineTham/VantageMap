@@ -37,18 +37,14 @@ export const auth = betterAuth({
     autoSignIn: true,
     sendResetPassword: async ({ user, url }) => {
       // In production, replace with a transactional email service (Resend, Postmark, etc.)
-      console.log(
-        `[Auth] Password reset requested for ${user.email}: ${url}`
-      );
+      console.log(`[Auth] Password reset requested for ${user.email}: ${url}`);
     },
   },
 
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       // In production, replace with a transactional email service
-      console.log(
-        `[Auth] Email verification for ${user.email}: ${url}`
-      );
+      console.log(`[Auth] Email verification for ${user.email}: ${url}`);
     },
     sendOnSignUp: true,
   },

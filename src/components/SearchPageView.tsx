@@ -179,11 +179,7 @@ export function SearchPageView({ initialQuery, initialTypes, initialPage }: Sear
           disabled={isPending}
           className="inline-flex items-center gap-1.5 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white hover:bg-rosely-plum/90 transition-colors disabled:opacity-60"
         >
-          {isPending ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Search className="size-4" />
-          )}
+          {isPending ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
           Search
         </button>
       </form>

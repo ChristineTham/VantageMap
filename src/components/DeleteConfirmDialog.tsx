@@ -59,7 +59,9 @@ export function DeleteConfirmDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="delete-dialog-title"
-      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
@@ -70,7 +72,9 @@ export function DeleteConfirmDialog({
         <div className="flex items-center justify-between border-b border-rosely-blush px-6 py-4">
           <div className="flex items-center gap-2">
             <AlertTriangle className="size-5 text-rosely-rose" />
-            <h2 id="delete-dialog-title" className="text-lg font-semibold text-rosely-night">Delete {entityType}</h2>
+            <h2 id="delete-dialog-title" className="text-lg font-semibold text-rosely-night">
+              Delete {entityType}
+            </h2>
           </div>
           <button
             onClick={onClose}

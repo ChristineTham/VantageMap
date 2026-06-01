@@ -9,15 +9,15 @@ The codebase has **no breaking anti-patterns** and is properly set up for Tailwi
 
 ## Configuration (All Correct)
 
-| Aspect | Status | Notes |
-|--------|--------|-------|
-| Entry point | ✅ | `@import "tailwindcss"` in `globals.css` |
-| Theme config | ✅ | `@theme inline { }` with CSS variables |
-| PostCSS | ✅ | `@tailwindcss/postcss` plugin (not legacy `tailwindcss`) |
-| No legacy config | ✅ | No `tailwind.config.ts` / `tailwind.config.js` |
-| No v3 directives | ✅ | No `@tailwind base/components/utilities` |
-| `tailwind-merge` | ✅ | v3.6+ (has native v4 support) |
-| `cn()` utility | ✅ | Correct `twMerge(clsx(...))` pattern |
+| Aspect           | Status | Notes                                                    |
+| ---------------- | ------ | -------------------------------------------------------- |
+| Entry point      | ✅     | `@import "tailwindcss"` in `globals.css`                 |
+| Theme config     | ✅     | `@theme inline { }` with CSS variables                   |
+| PostCSS          | ✅     | `@tailwindcss/postcss` plugin (not legacy `tailwindcss`) |
+| No legacy config | ✅     | No `tailwind.config.ts` / `tailwind.config.js`           |
+| No v3 directives | ✅     | No `@tailwind base/components/utilities`                 |
+| `tailwind-merge` | ✅     | v3.6+ (has native v4 support)                            |
+| `cn()` utility   | ✅     | Correct `twMerge(clsx(...))` pattern                     |
 
 ## Findings
 
@@ -30,6 +30,7 @@ The codebase has **no breaking anti-patterns** and is properly set up for Tailwi
 The theme defines `--color-card: #ffffff` and `--card: #ffffff`. Using `bg-card` instead of `bg-white` would make theming (including future dark mode) trivial.
 
 **Files with highest density:**
+
 - `src/components/BulkEditDialog.tsx` (4 occurrences)
 - `src/components/TechRadarView.tsx` (3 occurrences)
 - `src/components/ApplicationsView.tsx` (2 occurrences)
@@ -45,6 +46,7 @@ The theme defines `--color-card: #ffffff` and `--card: #ffffff`. Using `bg-card`
 **Count:** 6 occurrences of `text-[9px]` or `text-[10px]`
 
 **Files:**
+
 - `src/components/RoadmapView.tsx` — lines 164, 166, 204
 - `src/components/SearchModal.tsx` — lines 191, 192
 - `src/components/SearchBar.tsx` — line 171
@@ -100,13 +102,13 @@ One improvement: `min-w-[2rem]` in `Pagination.tsx` could be `min-w-8`.
 
 ## Summary of Recommendations
 
-| # | Finding | Priority | Effort | Impact |
-|---|---------|----------|--------|--------|
-| 1 | Replace `bg-white` → `bg-card` in card contexts | Low | ~30 edits | Theme flexibility |
-| 2 | Define `text-2xs`/`text-3xs` custom tokens | Low | 1 CSS + 6 edits | Consistency |
-| 3 | Dark mode prep (future) | Deferred | N/A | Future feature |
-| 4 | `space-*`→`gap-*` for new code | Informational | None | Style preference |
-| 5 | `min-w-[2rem]` → `min-w-8` | Trivial | 1 edit | Cleanliness |
+| #   | Finding                                         | Priority      | Effort          | Impact            |
+| --- | ----------------------------------------------- | ------------- | --------------- | ----------------- |
+| 1   | Replace `bg-white` → `bg-card` in card contexts | Low           | ~30 edits       | Theme flexibility |
+| 2   | Define `text-2xs`/`text-3xs` custom tokens      | Low           | 1 CSS + 6 edits | Consistency       |
+| 3   | Dark mode prep (future)                         | Deferred      | N/A             | Future feature    |
+| 4   | `space-*`→`gap-*` for new code                  | Informational | None            | Style preference  |
+| 5   | `min-w-[2rem]` → `min-w-8`                      | Trivial       | 1 edit          | Cleanliness       |
 
 ## Conclusion
 

@@ -90,7 +90,9 @@ export function FactSheetEditDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-dialog-title"
-      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
@@ -99,7 +101,9 @@ export function FactSheetEditDialog({
       <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 id="edit-dialog-title" className="text-lg font-semibold text-rosely-night">Edit {config.displayName}</h2>
+          <h2 id="edit-dialog-title" className="text-lg font-semibold text-rosely-night">
+            Edit {config.displayName}
+          </h2>
           <button
             onClick={onClose}
             aria-label="Close dialog"

@@ -24,10 +24,11 @@ function applyTheme(theme: Theme) {
 export function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   const [theme, setTheme] = useState<Theme>("light");
 
-  // Load saved preference on mount
+  // Load saved preference on mount — reading from localStorage (external system)
   useEffect(() => {
     const saved = localStorage.getItem("theme") as Theme | null;
     const initial = saved ?? "system";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initial);
     applyTheme(initial);
   }, []);
@@ -51,14 +52,13 @@ export function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   }
 
   const Icon = theme === "dark" ? Moon : theme === "light" ? Sun : Monitor;
-  const label =
-    theme === "dark" ? "Dark mode" : theme === "light" ? "Light mode" : "System theme";
+  const label = theme === "dark" ? "Dark mode" : theme === "light" ? "Light mode" : "System theme";
 
   return (
     <button
       onClick={cycle}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors w-full",
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors w-full"
       )}
       aria-label={label}
       title={label}

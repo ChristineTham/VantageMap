@@ -9,7 +9,7 @@ const eslintConfig = defineConfig([
   // Disable ESLint rules that conflict with Prettier formatting.
   prettier,
   // Override default ignores of eslint-config-next.
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**"]),
+  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**", ".agents/**"]),
   // Allow unused function parameters prefixed with _ (intentional placeholders).
   {
     rules: {

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { BarChart3, ShieldAlert, Activity, Layers } from "lucide-react";
 import {
   getTimeDistribution,
@@ -9,16 +8,10 @@ import {
   getCapabilityCoverage,
 } from "@/lib/data";
 import { ObsolescenceTable } from "@/components/ObsolescenceTable";
-
-const ReportingCharts = dynamic(
-  () => import("@/components/ReportingCharts").then((m) => m.ReportingCharts),
-  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
-);
-
-const CapabilityCoverageChart = dynamic(
-  () => import("@/components/CapabilityCoverageChart").then((m) => m.CapabilityCoverageChart),
-  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
-);
+import {
+  ReportingChartsLazy as ReportingCharts,
+  CapabilityCoverageChartLazy as CapabilityCoverageChart,
+} from "@/components/LazyCharts";
 
 export const metadata: Metadata = {
   title: "Reports – VantageMap",

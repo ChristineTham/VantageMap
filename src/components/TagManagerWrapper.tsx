@@ -9,13 +9,7 @@
 
 import { useState } from "react";
 import { TagManager } from "@/components/TagManager";
-import {
-  createTagGroup,
-  deleteTagGroup,
-  createTag,
-  deleteTag,
-  type TagGroup,
-} from "@/lib/api";
+import { createTagGroup, deleteTagGroup, createTag, deleteTag, type TagGroup } from "@/lib/api";
 
 interface TagManagerWrapperProps {
   initialTagGroups: TagGroup[];
@@ -50,11 +44,7 @@ export function TagManagerWrapper({ initialTagGroups }: TagManagerWrapperProps) 
         try {
           const res = await createTag(groupId, data);
           setTagGroups((prev) =>
-            prev.map((g) =>
-              g.id === groupId
-                ? { ...g, tags: [...g.tags, res.data] }
-                : g
-            )
+            prev.map((g) => (g.id === groupId ? { ...g, tags: [...g.tags, res.data] } : g))
           );
         } catch {
           // Error handled silently for now
@@ -65,9 +55,7 @@ export function TagManagerWrapper({ initialTagGroups }: TagManagerWrapperProps) 
           await deleteTag(groupId, tagId);
           setTagGroups((prev) =>
             prev.map((g) =>
-              g.id === groupId
-                ? { ...g, tags: g.tags.filter((t) => t.id !== tagId) }
-                : g
+              g.id === groupId ? { ...g, tags: g.tags.filter((t) => t.id !== tagId) } : g
             )
           );
         } catch {

@@ -16,7 +16,7 @@ interface Comment {
   content: string;
   createdAt: string;
   editedAt: string | null;
-  replies: Comment[];
+  replies?: Comment[];
 }
 
 interface CommentThreadProps {
@@ -91,9 +91,9 @@ function CommentItem({
       </div>
 
       {/* Nested replies */}
-      {comment.replies.length > 0 && (
+      {(comment.replies?.length ?? 0) > 0 && (
         <div className="flex flex-col gap-0">
-          {comment.replies.map((reply) => (
+          {comment.replies!.map((reply) => (
             <CommentItem
               key={reply.id}
               comment={reply}

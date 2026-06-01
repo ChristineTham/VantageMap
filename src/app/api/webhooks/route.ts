@@ -53,7 +53,10 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const { pageSize, offset } = pagination;
 
   const [countResult, rows] = await Promise.all([
-    db.select({ value: count() }).from(webhooks).then((r) => r[0]),
+    db
+      .select({ value: count() })
+      .from(webhooks)
+      .then((r) => r[0]),
     db
       .select({
         id: webhooks.id,

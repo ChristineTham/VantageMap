@@ -10,20 +10,20 @@ Comprehensive review of the VantageMap codebase against Next.js 16 best practice
 
 ## Summary
 
-| Category | Verdict | Issues |
-|----------|---------|--------|
-| Async params/searchParams | ✅ Fully compliant | 0 |
-| RSC boundaries (async client) | ✅ Fully compliant | 0 |
-| Non-serializable props | ✅ No violations | 0 |
-| Image optimization | ✅ No raw `<img>` tags | 0 |
-| Route handler patterns | ✅ Correct | 0 |
-| Error handling (error.tsx) | ✅ Root level | 0 |
-| File conventions | ✅ Correct structure | 0 |
-| Runtime selection | ✅ Node.js default | 0 |
-| Loading states | ⚠️ Partial coverage | 4 missing |
-| Metadata/SEO | ⚠️ Partial coverage | ~8 pages missing |
-| Data fetching patterns | ⚠️ Minor waterfalls | 2 opportunities |
-| Suspense boundaries | ⚠️ Missing for useSearchParams | 2 pages |
+| Category                      | Verdict                        | Issues           |
+| ----------------------------- | ------------------------------ | ---------------- |
+| Async params/searchParams     | ✅ Fully compliant             | 0                |
+| RSC boundaries (async client) | ✅ Fully compliant             | 0                |
+| Non-serializable props        | ✅ No violations               | 0                |
+| Image optimization            | ✅ No raw `<img>` tags         | 0                |
+| Route handler patterns        | ✅ Correct                     | 0                |
+| Error handling (error.tsx)    | ✅ Root level                  | 0                |
+| File conventions              | ✅ Correct structure           | 0                |
+| Runtime selection             | ✅ Node.js default             | 0                |
+| Loading states                | ⚠️ Partial coverage            | 4 missing        |
+| Metadata/SEO                  | ⚠️ Partial coverage            | ~8 pages missing |
+| Data fetching patterns        | ⚠️ Minor waterfalls            | 2 opportunities  |
+| Suspense boundaries           | ⚠️ Missing for useSearchParams | 2 pages          |
 
 ---
 
@@ -57,12 +57,12 @@ No raw `<img>` tags anywhere in the codebase. All visual content uses Lucide Rea
 
 Loading states exist for the 5 main views + detail/create pages, but these segments lack them:
 
-| Route | Impact |
-|-------|--------|
-| `/admin/*` | Admin pages show no skeleton during load |
-| `/search` | Search results page has no loading indicator |
+| Route           | Impact                                         |
+| --------------- | ---------------------------------------------- |
+| `/admin/*`      | Admin pages show no skeleton during load       |
+| `/search`       | Search results page has no loading indicator   |
 | `/governance/*` | Governance hub/sub-pages load without skeleton |
-| `/profile` | Profile page has no loading state |
+| `/profile`      | Profile page has no loading state              |
 
 **Recommendation:** Add `loading.tsx` to each. A simple skeleton pattern:
 
@@ -83,10 +83,10 @@ export default function Loading() {
 
 Two client pages use `useSearchParams()` without being wrapped in a Suspense boundary:
 
-| Page | Hook |
-|------|------|
-| `src/app/(auth)/login/page.tsx` | `useSearchParams()` for `callbackUrl` |
-| `src/app/(auth)/reset-password/page.tsx` | `useSearchParams()` for `token` |
+| Page                                     | Hook                                  |
+| ---------------------------------------- | ------------------------------------- |
+| `src/app/(auth)/login/page.tsx`          | `useSearchParams()` for `callbackUrl` |
+| `src/app/(auth)/reset-password/page.tsx` | `useSearchParams()` for `token`       |
 
 In Next.js 15+, `useSearchParams()` in a client component causes the entire page to CSR-bailout unless wrapped in `<Suspense>`. This means the page cannot be statically generated and will show no fallback during hydration.
 
@@ -139,8 +139,8 @@ The `FactSheetDetail.tsx` governance tab already uses `Promise.all()` correctly 
 
 ## Remediation Priority
 
-| # | Issue | Effort | Impact |
-|---|-------|--------|--------|
-| 1 | Add Suspense boundary for `useSearchParams` in auth pages | Small | Prevents CSR bailout |
-| 2 | Add `loading.tsx` to admin/search/governance/profile | Small | Better perceived performance |
-| 3 | Add metadata to auth/admin/profile/governance pages | Trivial | SEO + browser tab titles |
+| #   | Issue                                                     | Effort  | Impact                       |
+| --- | --------------------------------------------------------- | ------- | ---------------------------- |
+| 1   | Add Suspense boundary for `useSearchParams` in auth pages | Small   | Prevents CSR bailout         |
+| 2   | Add `loading.tsx` to admin/search/governance/profile      | Small   | Better perceived performance |
+| 3   | Add metadata to auth/admin/profile/governance pages       | Trivial | SEO + browser tab titles     |
