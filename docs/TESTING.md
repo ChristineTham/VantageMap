@@ -284,3 +284,29 @@ After running `npx shadcn@latest add ...` in Codespaces (see `docs/shadcn-migrat
 - Form inputs should use shadcn `Input`/`Label`
 - Badges should use shadcn `Badge` with Rosely variants
 - Dropdown menus should use shadcn `DropdownMenu`
+
+## Neon Serverless Postgres
+
+### Connection Configuration
+
+The database connection in `src/db/index.ts` uses Neon's HTTP driver with optimized fetch options. Verify:
+
+1. Set an invalid `DATABASE_URL` (missing `sslmode=require`) — app should fail with a clear validation error from `src/env.ts`
+2. Set `SKIP_ENV_VALIDATION=true` during build — build should succeed without a database
+3. Remove `DATABASE_URL` entirely — first database query should throw "DATABASE_URL is not set"
+
+### Retry Logic
+
+The `withRetry()` utility in `src/lib/neon-retry.ts` handles transient Neon failures. Verify:
+
+1. Import and wrap a query: `await withRetry(() => db.select().from(users))`
+2. Simulated network failure should retry up to 3 times with exponential backoff
+3. Non-transient errors (e.g. SQL syntax errors) should throw immediately without retry
+
+### Scale-to-Zero Cold Start
+
+Neon computes suspend after idle timeout. Verify:
+
+1. Leave the app idle for 5+ minutes (Neon Free tier default)
+2. Make a query — first request may take 500-1000ms (cold start)
+3. Subsequent requests should respond in <100ms
