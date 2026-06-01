@@ -33,7 +33,7 @@ export function BulkSelectToolbar({
       )}
     >
       <div className="flex items-center gap-2">
-        <CheckSquare className="h-4 w-4 text-rosely-plum" />
+        <CheckSquare className="size-4 text-rosely-plum" />
         <span className="text-sm font-medium text-rosely-night">
           {selectedCount} of {totalCount} selected
         </span>
@@ -53,7 +53,7 @@ export function BulkSelectToolbar({
           onClick={onBulkEdit}
           className="inline-flex items-center gap-1 rounded-lg bg-rosely-plum px-3 py-1.5 text-xs font-medium text-white hover:bg-rosely-plum/90 transition-colors"
         >
-          <Pencil className="h-3 w-3" />
+          <Pencil className="size-3" />
           Bulk Actions
         </button>
 
@@ -62,7 +62,7 @@ export function BulkSelectToolbar({
           className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
           title="Clear selection"
         >
-          <X className="h-4 w-4" />
+          <X className="size-4" />
         </button>
       </div>
     </div>

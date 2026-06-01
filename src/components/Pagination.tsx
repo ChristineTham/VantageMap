@@ -40,7 +40,7 @@ export function Pagination({ page, totalPages, onPageChange, className }: Pagina
         )}
         aria-label="Previous page"
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="size-4" />
       </button>
 
       {start > 1 && (
@@ -72,7 +72,7 @@ export function Pagination({ page, totalPages, onPageChange, className }: Pagina
         )}
         aria-label="Next page"
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="size-4" />
       </button>
     </nav>
   );
@@ -93,7 +93,7 @@ function PageButton({
     <button
       onClick={() => onClick(page)}
       className={cn(
-        "min-w-[2rem] rounded-lg px-2 py-1 text-sm font-medium transition-colors",
+        "min-w-8 rounded-lg px-2 py-1 text-sm font-medium transition-colors",
         isActive
           ? "bg-rosely-plum text-white"
           : "text-rosely-dusk hover:bg-rosely-petal hover:text-rosely-night"

@@ -38,7 +38,7 @@ export function FilterBar({ filters, colorMap, onRemove, onClearAll, className }
             colorMap={colorMap}
             className="pr-1 cursor-pointer group-hover:opacity-80"
           />
-          <X className="h-3 w-3 text-rosely-mist group-hover:text-rosely-rose transition-colors" />
+          <X className="size-3 text-rosely-mist group-hover:text-rosely-rose transition-colors" />
         </button>
       ))}
       {onClearAll && filters.length > 1 && (

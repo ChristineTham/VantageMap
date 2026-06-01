@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-rosely-night">
             Email
@@ -91,7 +91,7 @@ export default function LoginPage() {
               className="absolute right-3 top-1/2 -translate-y-1/2 text-rosely-mist hover:text-rosely-night"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
         </div>
@@ -111,9 +111,9 @@ export default function LoginPage() {
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-rosely-plum px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
         >
           {loading ? (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
           ) : (
-            <LogIn className="h-4 w-4" />
+            <LogIn className="size-4" />
           )}
           Sign In
         </button>

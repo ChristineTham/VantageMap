@@ -52,24 +52,26 @@ export const GET = withErrorHandler(async (request: NextRequest) => {
   const { pagination } = parseListParams(new URL(request.url).searchParams);
   const { pageSize, offset } = pagination;
 
-  const [countResult] = await db.select({ value: count() }).from(webhooks);
-  const total = countResult?.value ?? 0;
+  const [countResult, rows] = await Promise.all([
+    db.select({ value: count() }).from(webhooks).then((r) => r[0]),
+    db
+      .select({
+        id: webhooks.id,
+        url: webhooks.url,
+        events: webhooks.events,
+        active: webhooks.active,
+        name: webhooks.name,
+        description: webhooks.description,
+        createdBy: webhooks.createdBy,
+        createdAt: webhooks.createdAt,
+        updatedAt: webhooks.updatedAt,
+      })
+      .from(webhooks)
+      .limit(pageSize)
+      .offset(offset),
+  ]);
 
-  const rows = await db
-    .select({
-      id: webhooks.id,
-      url: webhooks.url,
-      events: webhooks.events,
-      active: webhooks.active,
-      name: webhooks.name,
-      description: webhooks.description,
-      createdBy: webhooks.createdBy,
-      createdAt: webhooks.createdAt,
-      updatedAt: webhooks.updatedAt,
-    })
-    .from(webhooks)
-    .limit(pageSize)
-    .offset(offset);
+  const total = countResult?.value ?? 0;
 
   return ok({
     data: rows,

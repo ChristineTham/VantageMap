@@ -64,7 +64,7 @@ function CommentItem({
             onClick={() => setShowReply(!showReply)}
             className="inline-flex items-center gap-1 text-xs text-rosely-plum hover:text-rosely-plum/80 transition-colors"
           >
-            <Reply className="w-3 h-3" />
+            <Reply className="size-3" />
             Reply
           </button>
         </div>
@@ -84,7 +84,7 @@ function CommentItem({
               aria-label="Send reply"
               className="p-2 rounded-lg text-white bg-rosely-plum hover:bg-rosely-plum/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <Send className="w-4 h-4" />
+              <Send className="size-4" />
             </button>
           </div>
         )}
@@ -92,7 +92,7 @@ function CommentItem({
 
       {/* Nested replies */}
       {comment.replies.length > 0 && (
-        <div className="space-y-0">
+        <div className="flex flex-col gap-0">
           {comment.replies.map((reply) => (
             <CommentItem
               key={reply.id}
@@ -122,9 +122,9 @@ export function CommentThread({ comments, currentUserId, onSubmitComment }: Comm
   };
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <h3 className="text-sm font-medium text-rosely-night flex items-center gap-1.5">
-        <MessageSquare className="w-4 h-4 text-rosely-plum" />
+        <MessageSquare className="size-4 text-rosely-plum" />
         Comments
         {comments.length > 0 && (
           <span className="text-xs text-rosely-mist">({comments.length})</span>
@@ -146,7 +146,7 @@ export function CommentThread({ comments, currentUserId, onSubmitComment }: Comm
           aria-label="Send comment"
           className="p-2 rounded-lg text-white bg-rosely-plum hover:bg-rosely-plum/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <Send className="w-4 h-4" />
+          <Send className="size-4" />
         </button>
       </div>
 

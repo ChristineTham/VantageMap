@@ -48,7 +48,7 @@ export default function ProfilePage() {
           href="/"
           className="mb-4 inline-flex items-center gap-1 text-sm text-rosely-mist hover:text-rosely-night"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="size-4" />
           Back to Dashboard
         </Link>
         <h1 className="text-2xl font-bold text-rosely-night">Profile & Settings</h1>
@@ -67,7 +67,7 @@ export default function ProfilePage() {
                 : "text-rosely-dusk hover:text-rosely-night"
             }`}
           >
-            <tab.icon className="h-4 w-4" />
+            <tab.icon className="size-4" />
             {tab.label}
           </button>
         ))}
@@ -125,7 +125,7 @@ function ProfileTab({ user }: { user: { name: string; email: string } }) {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="mt-6 space-y-4">
+      <form onSubmit={handleSave} className="mt-6 flex flex-col gap-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-rosely-night">
             Full Name
@@ -159,7 +159,7 @@ function ProfileTab({ user }: { user: { name: string; email: string } }) {
           disabled={saving}
           className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
         >
-          <Save className="h-4 w-4" />
+          <Save className="size-4" />
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </form>
@@ -228,7 +228,7 @@ function PasswordTab() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
           <label htmlFor="currentPassword" className="block text-sm font-medium text-rosely-night">
             Current Password
@@ -284,7 +284,7 @@ function PasswordTab() {
           disabled={saving}
           className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
         >
-          <Lock className="h-4 w-4" />
+          <Lock className="size-4" />
           {saving ? "Updating..." : "Change Password"}
         </button>
       </form>
@@ -340,7 +340,7 @@ function NotificationsTab() {
         </div>
       )}
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 flex flex-col gap-4">
         <ToggleRow
           label="Email Notifications"
           description="Receive notifications via email"
@@ -372,7 +372,7 @@ function NotificationsTab() {
         disabled={saving}
         className="mt-6 flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
       >
-        <Save className="h-4 w-4" />
+        <Save className="size-4" />
         {saving ? "Saving..." : "Save Preferences"}
       </button>
     </div>
@@ -402,7 +402,7 @@ function ToggleRow({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-rosely-blush text-rosely-plum focus:ring-rosely-lilac"
+        className="size-4 rounded border-rosely-blush text-rosely-plum focus:ring-rosely-lilac"
       />
     </label>
   );

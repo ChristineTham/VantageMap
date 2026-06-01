@@ -71,10 +71,10 @@ export function SubscriptionPanel({
   );
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-rosely-night flex items-center gap-1.5">
-          <Users className="w-4 h-4 text-rosely-plum" />
+          <Users className="size-4 text-rosely-plum" />
           Subscriptions
         </h3>
         {!readOnly && (
@@ -83,7 +83,7 @@ export function SubscriptionPanel({
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
             aria-label="Manage subscription"
           >
-            <UserPlus className="w-4 h-4" />
+            <UserPlus className="size-4" />
           </button>
         )}
       </div>
@@ -99,7 +99,7 @@ export function SubscriptionPanel({
                 key={role}
                 className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${config.color}`}
               >
-                <Icon className="w-3 h-3" />
+                <Icon className="size-3" />
                 You: {config.label}
                 {!readOnly && (
                   <button
@@ -107,7 +107,7 @@ export function SubscriptionPanel({
                     className="ml-1 hover:text-rosely-rose transition-colors"
                     aria-label={`Unsubscribe as ${role}`}
                   >
-                    <UserMinus className="w-3 h-3" />
+                    <UserMinus className="size-3" />
                   </button>
                 )}
               </span>
@@ -117,7 +117,7 @@ export function SubscriptionPanel({
       )}
 
       {/* Subscribers by role */}
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         {(["Responsible", "Accountable", "Observer"] as SubscriptionRole[]).map((role) => {
           const subs = byRole[role] ?? [];
           if (subs.length === 0) return null;
@@ -143,7 +143,7 @@ export function SubscriptionPanel({
 
       {/* Role picker */}
       {showRolePicker && (
-        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm space-y-1.5">
+        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm flex flex-col gap-1.5">
           <p className="text-xs text-rosely-mist mb-2">Subscribe as:</p>
           {(["Responsible", "Accountable", "Observer"] as SubscriptionRole[]).map((role) => {
             const config = ROLE_CONFIG[role];
@@ -166,7 +166,7 @@ export function SubscriptionPanel({
                     : "hover:bg-rosely-petal text-rosely-dusk"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="size-4" />
                 <span>{config.label}</span>
                 {isSubscribed && (
                   <span className="ml-auto text-xs text-rosely-teal">Subscribed</span>

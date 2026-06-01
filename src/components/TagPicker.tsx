@@ -62,10 +62,10 @@ export function TagPicker({
   );
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-rosely-night flex items-center gap-1.5">
-          <Tag className="w-4 h-4 text-rosely-plum" />
+          <Tag className="size-4 text-rosely-plum" />
           Tags
         </h3>
         {!readOnly && (
@@ -74,14 +74,14 @@ export function TagPicker({
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
             aria-label="Add tag"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="size-4" />
           </button>
         )}
       </div>
 
       {/* Assigned tags grouped by category */}
       {Object.keys(groupedTags).length > 0 ? (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {Object.entries(groupedTags).map(([groupName, groupTags]) => (
             <div key={groupName}>
               <span className="text-xs text-rosely-mist">{groupName}</span>
@@ -107,7 +107,7 @@ export function TagPicker({
                         className="ml-0.5 hover:text-rosely-rose transition-colors"
                         aria-label={`Remove tag ${tag.tagName}`}
                       >
-                        <X className="w-3 h-3" />
+                        <X className="size-3" />
                       </button>
                     )}
                   </span>
@@ -130,7 +130,7 @@ export function TagPicker({
             onChange={(e) => setSearch(e.target.value)}
             className="w-full px-3 py-1.5 text-sm border border-rosely-blush rounded-md focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
           />
-          <div className="mt-2 max-h-40 overflow-y-auto space-y-1">
+          <div className="mt-2 max-h-40 overflow-y-auto flex flex-col gap-1">
             {unassigned.length > 0 ? (
               unassigned.map((tag) => (
                 <button

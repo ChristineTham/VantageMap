@@ -16,7 +16,7 @@ export function Skeleton({ className }: SkeletonProps) {
  */
 export function CardSkeleton({ className }: SkeletonProps) {
   return (
-    <div className={cn("rounded-xl border border-rosely-blush bg-white p-4 space-y-3", className)}>
+    <div className={cn("flex flex-col gap-3 rounded-xl border border-rosely-blush bg-white p-4", className)}>
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-4/5" />
@@ -62,7 +62,7 @@ export function TableSkeleton({
  */
 export function PageSkeleton({ className }: SkeletonProps) {
   return (
-    <div className={cn("space-y-6 p-6", className)}>
+    <div className={cn("flex flex-col gap-6 p-6", className)}>
       {/* Title */}
       <Skeleton className="h-7 w-48" />
       {/* Search + filters bar */}

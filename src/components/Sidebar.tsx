@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { SearchModal } from "@/components/SearchModal";
 import { SearchBar } from "@/components/SearchBar";
 import { UserMenu } from "@/components/UserMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // ── Navigation Items ────────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ export function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 px-2 py-3">
+        <nav className="flex-1 flex flex-col gap-1 px-2 py-3">
           {navItems.map((item) => {
             const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
@@ -92,7 +93,7 @@ export function Sidebar() {
                 )}
                 title={collapsed ? item.label : undefined}
               >
-                <item.icon className="h-5 w-5 shrink-0" />
+                <item.icon className="size-5 shrink-0" />
                 {!collapsed && <span>{item.label}</span>}
               </Link>
             );
@@ -105,7 +106,7 @@ export function Sidebar() {
               title="Search (⌘K)"
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
             >
-              <Search className="h-5 w-5 shrink-0" />
+              <Search className="size-5 shrink-0" />
             </button>
           ) : (
             <SearchBar />
@@ -114,13 +115,14 @@ export function Sidebar() {
 
         {/* Collapse Toggle */}
         <div className="border-t border-rosely-blush p-2">
+          <ThemeToggle collapsed={collapsed} />
           <UserMenu collapsed={collapsed} />
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="flex w-full items-center justify-center rounded-lg p-2 text-rosely-mist hover:bg-rosely-petal/50 hover:text-rosely-night transition-colors"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
           </button>
         </div>
       </aside>

@@ -175,15 +175,21 @@ export function RelationshipAddDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="relationship-dialog-title"
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+    >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} />
+      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
 
       {/* Dialog */}
       <div className="relative w-full max-w-lg max-h-[70vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 className="text-lg font-semibold text-rosely-night">
+          <h2 id="relationship-dialog-title" className="text-lg font-semibold text-rosely-night">
             {step === "type" ? "Add Relationship" : `Select ${selectedTargetType}`}
           </h2>
           <button
@@ -191,11 +197,11 @@ export function RelationshipAddDialog({
             aria-label="Close dialog"
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="p-6 flex flex-col gap-4">
           {error && (
             <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
               {error}
@@ -210,7 +216,7 @@ export function RelationshipAddDialog({
 
               {/* Search filter */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rosely-mist" />
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-rosely-mist" />
                 <input
                   type="text"
                   value={typeSearch}
@@ -225,7 +231,7 @@ export function RelationshipAddDialog({
               </div>
 
               {/* Relationship options */}
-              <div className="space-y-1 max-h-64 overflow-y-auto">
+              <div className="flex flex-col gap-1 max-h-64 overflow-y-auto">
                 {filteredOptions.length === 0 ? (
                   <p className="text-sm text-rosely-mist py-4 text-center">
                     No valid relationship types found.
@@ -260,7 +266,7 @@ export function RelationshipAddDialog({
               {/* Selected entity display */}
               {selectedTarget ? (
                 <div className="flex items-center gap-2 rounded-lg border border-rosely-lilac/40 bg-rosely-petal px-3 py-2">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-rosely-plum" />
+                  <CheckCircle2 className="size-4 shrink-0 text-rosely-plum" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-rosely-night">
                       {selectedTarget.name}
@@ -283,12 +289,12 @@ export function RelationshipAddDialog({
                   </button>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <label className="block text-xs font-medium text-rosely-dusk">
                     Search for a {selectedTargetType}
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rosely-mist" />
+                    <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-rosely-mist" />
                     <input
                       type="text"
                       autoFocus
@@ -302,7 +308,7 @@ export function RelationshipAddDialog({
                       )}
                     />
                     {searching && (
-                      <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-rosely-mist" />
+                      <Loader2 className="absolute right-3 top-1/2 size-4 -translate-y-1/2 animate-spin text-rosely-mist" />
                     )}
                   </div>
 
@@ -385,9 +391,9 @@ export function RelationshipAddDialog({
                     )}
                   >
                     {saving ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      <Plus className="h-4 w-4" />
+                      <Plus className="size-4" />
                     )}
                     {saving ? "Creating…" : "Add Relationship"}
                   </button>

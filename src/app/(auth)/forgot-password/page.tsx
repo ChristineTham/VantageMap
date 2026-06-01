@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Mail } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -16,16 +17,19 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/request-password-reset", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, redirectTo: "/reset-password" }),
+      const result = await authClient.forgetPassword({
+        email,
+        redirectTo: "/reset-password",
       });
-      if (!res.ok) throw new Error("Request failed");
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
 
       setSubmitted(true);
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      // Always show success to prevent email enumeration
+      setSubmitted(true);
     } finally {
       setLoading(false);
     }
@@ -35,8 +39,8 @@ export default function ForgotPasswordPage() {
     return (
       <div className="rounded-xl border border-rosely-blush bg-white p-8 shadow-sm">
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rosely-teal/20">
-            <Mail className="h-6 w-6 text-rosely-teal" />
+          <div className="flex size-12 items-center justify-center rounded-full bg-rosely-teal/20">
+            <Mail className="size-6 text-rosely-teal" />
           </div>
           <h2 className="mt-4 text-xl font-bold text-rosely-night">Check Your Email</h2>
           <p className="mt-2 text-sm text-rosely-mist">
@@ -67,7 +71,7 @@ export default function ForgotPasswordPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-rosely-night">
             Email
@@ -90,9 +94,9 @@ export default function ForgotPasswordPage() {
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-rosely-plum px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
         >
           {loading ? (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
           ) : (
-            <Mail className="h-4 w-4" />
+            <Mail className="size-4" />
           )}
           Send Reset Link
         </button>

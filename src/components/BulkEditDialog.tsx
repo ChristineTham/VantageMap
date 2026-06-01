@@ -97,17 +97,23 @@ export function BulkEditDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bulk-edit-dialog-title"
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+    >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} />
+      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
 
       {/* Dialog */}
       <div className="relative w-full max-w-md rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-rosely-blush px-6 py-4">
           <div className="flex items-center gap-2">
-            <CheckSquare className="h-5 w-5 text-rosely-plum" />
-            <h2 className="text-lg font-semibold text-rosely-night">
+            <CheckSquare className="size-5 text-rosely-plum" />
+            <h2 id="bulk-edit-dialog-title" className="text-lg font-semibold text-rosely-night">
               Bulk Action ({selectedIds.length} selected)
             </h2>
           </div>
@@ -116,7 +122,7 @@ export function BulkEditDialog({
             aria-label="Close dialog"
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
 
@@ -132,7 +138,7 @@ export function BulkEditDialog({
                   : "border-transparent text-rosely-mist hover:text-rosely-night"
               )}
             >
-              <Pencil className="inline h-4 w-4 mr-1" />
+              <Pencil className="inline size-4 mr-1" />
               Update
             </button>
             <button
@@ -144,14 +150,14 @@ export function BulkEditDialog({
                   : "border-transparent text-rosely-mist hover:text-rosely-night"
               )}
             >
-              <Trash2 className="inline h-4 w-4 mr-1" />
+              <Trash2 className="inline size-4 mr-1" />
               Delete
             </button>
           </nav>
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5 space-y-4">
+        <div className="px-6 py-5 flex flex-col gap-4">
           {error && (
             <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
               {error}
@@ -165,7 +171,7 @@ export function BulkEditDialog({
                 be changed.
               </p>
 
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <div>
                   <label className="block text-xs font-medium text-rosely-dusk mb-1">
                     Lifecycle Phase
@@ -258,7 +264,7 @@ export function BulkEditDialog({
                   : "bg-rosely-plum hover:bg-rosely-plum/90"
               )}
             >
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              {saving && <Loader2 className="size-4 animate-spin" />}
               {saving ? "Updating…" : "Update Selected"}
             </button>
           )}
@@ -273,7 +279,7 @@ export function BulkEditDialog({
                   : "bg-rosely-rose/40 cursor-not-allowed"
               )}
             >
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              {saving && <Loader2 className="size-4 animate-spin" />}
               {saving ? "Deleting…" : "Delete Selected"}
             </button>
           )}

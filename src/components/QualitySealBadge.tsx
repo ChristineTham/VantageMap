@@ -62,10 +62,10 @@ export function QualitySealBadge({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-rosely-night flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-rosely-plum" />
+          <ShieldCheck className="size-4 text-rosely-plum" />
           Quality Seal
         </h3>
       </div>
@@ -85,7 +85,7 @@ export function QualitySealBadge({
           >
             Change
             <ChevronDown
-              className={`w-3 h-3 transition-transform ${showActions ? "rotate-180" : ""}`}
+              className={`size-3 transition-transform ${showActions ? "rotate-180" : ""}`}
             />
           </button>
         )}
@@ -93,7 +93,7 @@ export function QualitySealBadge({
 
       {/* Transition actions */}
       {showActions && (
-        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm space-y-2">
+        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm flex flex-col gap-2">
           {selectedTransition === null ? (
             <>
               <p className="text-xs text-rosely-mist">Available actions:</p>
@@ -114,7 +114,7 @@ export function QualitySealBadge({
               ))}
             </>
           ) : (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <p className="text-xs text-rosely-dusk">
                 Transitioning to: <strong>{selectedTransition}</strong>
               </p>
@@ -154,12 +154,12 @@ export function QualitySealBadge({
             onClick={() => setShowHistory(!showHistory)}
             className="text-xs text-rosely-plum hover:text-rosely-plum/80 flex items-center gap-1 transition-colors"
           >
-            <Clock className="w-3 h-3" />
+            <Clock className="size-3" />
             {showHistory ? "Hide" : "Show"} history ({history.length})
           </button>
 
           {showHistory && (
-            <div className="mt-2 space-y-1.5 max-h-40 overflow-y-auto">
+            <div className="mt-2 flex flex-col gap-1.5 max-h-40 overflow-y-auto">
               {history.map((entry) => (
                 <div
                   key={entry.id}
@@ -170,7 +170,7 @@ export function QualitySealBadge({
                   >
                     {entry.fromState}
                   </span>
-                  <ArrowRight className="w-3 h-3 text-rosely-mist" />
+                  <ArrowRight className="size-3 text-rosely-mist" />
                   <span
                     className={`rounded-full px-1.5 py-0.5 ${STATE_STYLES[entry.toState as QualitySealState] ?? ""}`}
                   >

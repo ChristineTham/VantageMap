@@ -43,11 +43,17 @@
 }
 
 /* ── Tailwind v4 Theme Registration ─────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   /* Typography */
   --font-sans: var(--font-noto-sans);
   --font-serif: var(--font-noto-serif);
   --font-mono: var(--font-noto-sans-mono);
+
+  /* Custom font sizes for compact UI elements */
+  --font-size-3xs: 0.5625rem;  /* 9px */
+  --font-size-2xs: 0.625rem;   /* 10px */
 
   /* ── Rosely colour tokens ── */
   --color-rosely-night: var(--rosely0);
@@ -86,6 +92,37 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+}
+
+/* ── Dark Mode Overrides ──────────────────────────────────────────────── */
+.dark {
+  --rosely0: #f4eee8;
+  --rosely1: #a49e9e;
+  --rosely2: #be9cc1;
+  --rosely3: #615f5f;
+  --rosely4: #3a3a3d;
+  --rosely5: #2e2e31;
+  --rosely6: #1c1c1e;
+
+  --background: var(--rosely6);
+  --foreground: var(--rosely0);
+  --card: #27272a;
+  --card-foreground: var(--rosely0);
+  --popover: #27272a;
+  --popover-foreground: var(--rosely0);
+  --primary: var(--rosely10);
+  --primary-foreground: #ffffff;
+  --secondary: var(--rosely5);
+  --secondary-foreground: var(--rosely0);
+  --muted: var(--rosely5);
+  --muted-foreground: var(--rosely3);
+  --accent: var(--rosely8);
+  --accent-foreground: var(--rosely0);
+  --destructive: var(--rosely11);
+  --destructive-foreground: #ffffff;
+  --border: var(--rosely4);
+  --input: var(--rosely4);
+  --ring: var(--rosely8);
 }
 
 /* ── Base Styles ─────────────────────────────────────────────────────── */

@@ -37,7 +37,15 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${notoSans.variable} ${notoSerif.variable} ${notoSansMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.classList.add("dark")}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="flex min-h-full bg-background font-sans text-foreground">
         <AuthSessionProvider>
           <Sidebar />

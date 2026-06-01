@@ -169,36 +169,31 @@ async function handleBulkUpdate(
     }
   }
 
-  // Add tags
+  // Add tags — single multi-row insert
   if (addTags && addTags.length > 0) {
-    for (const entity of entities) {
-      for (const tagId of addTags) {
-        try {
-          await db
-            .insert(tagAssignments)
-            .values({
-              tagId,
-              factSheetType: entity.type as never,
-              factSheetId: entity.id,
-            })
-            .onConflictDoNothing();
-        } catch {
-          // Ignore constraint violations (e.g., invalid tag ID)
-        }
-      }
+    const values = entities.flatMap((entity) =>
+      addTags.map((tagId) => ({
+        tagId,
+        factSheetType: entity.type as never,
+        factSheetId: entity.id,
+      }))
+    );
+    try {
+      await db.insert(tagAssignments).values(values).onConflictDoNothing();
+    } catch {
+      // Ignore constraint violations (e.g., invalid tag IDs)
     }
   }
 
-  // Remove tags
+  // Remove tags — batch per entity using parameterized queries
   if (removeTags && removeTags.length > 0) {
-    for (const entity of entities) {
-      const tagIdList = removeTags.map((id) => `'${id}'`).join(",");
-      await db.execute(
-        sql.raw(
-          `DELETE FROM tag_assignments WHERE tag_id IN (${tagIdList}) AND fact_sheet_type = '${entity.type}' AND fact_sheet_id = '${entity.id}'`
+    await Promise.all(
+      entities.map((entity) =>
+        db.execute(
+          sql`DELETE FROM tag_assignments WHERE tag_id = ANY(${removeTags}) AND fact_sheet_type = ${entity.type} AND fact_sheet_id = ${entity.id}`
         )
-      );
-    }
+      )
+    );
   }
 
   return ok({

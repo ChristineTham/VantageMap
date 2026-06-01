@@ -85,26 +85,32 @@ export function FactSheetEditDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-dialog-title"
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+    >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} />
+      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
 
       {/* Dialog */}
       <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 className="text-lg font-semibold text-rosely-night">Edit {config.displayName}</h2>
+          <h2 id="edit-dialog-title" className="text-lg font-semibold text-rosely-night">Edit {config.displayName}</h2>
           <button
             onClick={onClose}
             aria-label="Close dialog"
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-6">
           {error && (
             <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
               {error}
@@ -112,7 +118,7 @@ export function FactSheetEditDialog({
           )}
 
           {Array.from(fieldGroups.entries()).map(([group, fields]) => (
-            <fieldset key={group} className="space-y-4">
+            <fieldset key={group} className="flex flex-col gap-4">
               <legend className="text-sm font-semibold text-rosely-night">{group}</legend>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {fields.map((field) => (
@@ -146,7 +152,7 @@ export function FactSheetEditDialog({
                   : "bg-rosely-plum hover:bg-rosely-plum/90"
               )}
             >
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
               {saving ? "Saving…" : "Save Changes"}
             </button>
           </div>

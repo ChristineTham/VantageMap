@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Layers, AppWindow, Target, Radar, GanttChart, AlertTriangle } from "lucide-react";
 import {
   getCapabilities,
@@ -13,8 +14,16 @@ import {
   getPortfolioHealth,
 } from "@/lib/data";
 import type { HealthStatus } from "@/lib/types";
-import { DashboardCharts } from "@/components/DashboardCharts";
-import { ReportingCharts } from "@/components/ReportingCharts";
+
+const DashboardCharts = dynamic(
+  () => import("@/components/DashboardCharts").then((m) => m.DashboardCharts),
+  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
+);
+
+const ReportingCharts = dynamic(
+  () => import("@/components/ReportingCharts").then((m) => m.ReportingCharts),
+  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
+);
 
 export const metadata: Metadata = {
   title: "Dashboard – VantageMap",
@@ -54,7 +63,7 @@ export default async function HomePage() {
   const criticalApps = applications.filter((a) => a.health === "Critical" || a.health === "Poor");
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-7xl mx-auto">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Dashboard</h1>
@@ -68,31 +77,31 @@ export default async function HomePage() {
         <SummaryCard
           title="Capabilities"
           count={capabilities.length}
-          icon={<Layers className="h-5 w-5 text-rosely-plum" />}
+          icon={<Layers className="size-5 text-rosely-plum" />}
           href="/capabilities"
         />
         <SummaryCard
           title="Applications"
           count={applications.length}
-          icon={<AppWindow className="h-5 w-5 text-rosely-cornflower" />}
+          icon={<AppWindow className="size-5 text-rosely-cornflower" />}
           href="/applications"
         />
         <SummaryCard
           title="Objectives"
           count={objectives.length}
-          icon={<Target className="h-5 w-5 text-rosely-teal" />}
+          icon={<Target className="size-5 text-rosely-teal" />}
           href="/strategy"
         />
         <SummaryCard
           title="Initiatives"
           count={initiatives.length}
-          icon={<GanttChart className="h-5 w-5 text-rosely-golden" />}
+          icon={<GanttChart className="size-5 text-rosely-golden" />}
           href="/roadmap"
         />
         <SummaryCard
           title="Tech Components"
           count={itComponents.length}
-          icon={<Radar className="h-5 w-5 text-rosely-lilac" />}
+          icon={<Radar className="size-5 text-rosely-lilac" />}
           href="/radar"
         />
       </div>
@@ -119,10 +128,10 @@ export default async function HomePage() {
       {criticalApps.length > 0 && (
         <div className="rounded-xl border border-rosely-flamingo/30 bg-rosely-flamingo/5 p-5">
           <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="h-4 w-4 text-rosely-flamingo" />
+            <AlertTriangle className="size-4 text-rosely-flamingo" />
             <h2 className="text-sm font-semibold text-rosely-night">Attention Needed</h2>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {criticalApps.slice(0, 5).map((app) => (
               <div key={app.id} className="flex items-center justify-between text-sm">
                 <span className="text-rosely-night">{app.name}</span>
@@ -144,31 +153,31 @@ export default async function HomePage() {
           title="Business Capabilities"
           description="Hierarchical capability map with health indicators"
           href="/capabilities"
-          icon={<Layers className="h-5 w-5 text-rosely-plum" />}
+          icon={<Layers className="size-5 text-rosely-plum" />}
         />
         <NavCard
           title="Application Portfolio"
           description="Filterable table with fit scores and lifecycle"
           href="/applications"
-          icon={<AppWindow className="h-5 w-5 text-rosely-cornflower" />}
+          icon={<AppWindow className="size-5 text-rosely-cornflower" />}
         />
         <NavCard
           title="Strategy Map"
           description="Balanced Scorecard objectives by perspective"
           href="/strategy"
-          icon={<Target className="h-5 w-5 text-rosely-teal" />}
+          icon={<Target className="size-5 text-rosely-teal" />}
         />
         <NavCard
           title="Technology Radar"
           description="Technology landscape with quadrants and rings"
           href="/radar"
-          icon={<Radar className="h-5 w-5 text-rosely-lilac" />}
+          icon={<Radar className="size-5 text-rosely-lilac" />}
         />
         <NavCard
           title="Strategic Roadmap"
           description="Initiative timeline with status and milestones"
           href="/roadmap"
-          icon={<GanttChart className="h-5 w-5 text-rosely-golden" />}
+          icon={<GanttChart className="size-5 text-rosely-golden" />}
         />
       </div>
     </div>

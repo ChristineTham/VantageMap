@@ -201,43 +201,55 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
     });
   }
 
-  // Execute mode — upsert rows
+  // Execute mode — upsert rows in batches for performance
   const table = TABLE_MAP[factSheetType];
   let insertedCount = 0;
   let updatedCount = 0;
   const rowErrors: { row: number; message: string }[] = [];
 
-  for (let i = 0; i < validRows.length; i++) {
-    const row = validRows[i];
-    try {
-      if (row.id) {
-        // Upsert: try update first
-        const [existing] = await db
-          .select({ id: table.id })
-          .from(table)
-          .where(eq(table.id, row.id as string))
-          .limit(1);
+  const BATCH_SIZE = 50;
+  for (let batchStart = 0; batchStart < validRows.length; batchStart += BATCH_SIZE) {
+    const batch = validRows.slice(batchStart, batchStart + BATCH_SIZE);
+    const batchResults = await Promise.all(
+      batch.map(async (row, idx) => {
+        const rowIndex = batchStart + idx;
+        try {
+          if (row.id) {
+            // Upsert: try update first
+            const [existing] = await db
+              .select({ id: table.id })
+              .from(table)
+              .where(eq(table.id, row.id as string))
+              .limit(1);
 
-        if (existing) {
-          await db
-            .update(table)
-            .set({ ...row, updatedAt: new Date() })
-            .where(eq(table.id, row.id as string));
-          updatedCount++;
-        } else {
-          await db.insert(table).values({ ...row, createdAt: new Date(), updatedAt: new Date() });
-          insertedCount++;
+            if (existing) {
+              await db
+                .update(table)
+                .set({ ...row, updatedAt: new Date() })
+                .where(eq(table.id, row.id as string));
+              return { action: "updated" as const };
+            } else {
+              await db.insert(table).values({ ...row, createdAt: new Date(), updatedAt: new Date() });
+              return { action: "inserted" as const };
+            }
+          } else {
+            // Insert new
+            await db.insert(table).values({ ...row, createdAt: new Date(), updatedAt: new Date() });
+            return { action: "inserted" as const };
+          }
+        } catch (err) {
+          rowErrors.push({
+            row: rowIndex + 2,
+            message: err instanceof Error ? err.message : "Unknown error",
+          });
+          return { action: "error" as const };
         }
-      } else {
-        // Insert new
-        await db.insert(table).values({ ...row, createdAt: new Date(), updatedAt: new Date() });
-        insertedCount++;
-      }
-    } catch (err) {
-      rowErrors.push({
-        row: i + 2,
-        message: err instanceof Error ? err.message : "Unknown error",
-      });
+      })
+    );
+
+    for (const result of batchResults) {
+      if (result.action === "inserted") insertedCount++;
+      else if (result.action === "updated") updatedCount++;
     }
   }
 

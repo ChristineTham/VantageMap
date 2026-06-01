@@ -70,7 +70,7 @@ export function TechRadarView({ components, categories: _categories }: TechRadar
   }, [filtered]);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <SearchInput
@@ -154,7 +154,7 @@ function QuadrantCard({ label, items }: { label: string; items: ITComponent[] })
       {items.length === 0 ? (
         <p className="text-xs text-rosely-mist italic">No technologies in this quadrant.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {RINGS.map((ring) => {
             const ringItems = byRing.get(ring.key);
             if (!ringItems) return null;

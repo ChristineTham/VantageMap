@@ -8,6 +8,8 @@ import { SearchInput } from "@/components/SearchInput";
 import { HealthBadge } from "@/components/StatusBadge";
 import { LifecycleTag } from "@/components/LifecycleTag";
 import { Pagination } from "@/components/Pagination";
+import { BulkSelectToolbar } from "@/components/BulkSelectToolbar";
+import { BulkEditDialog } from "@/components/BulkEditDialog";
 
 const PAGE_SIZE = 20;
 
@@ -22,6 +24,10 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
   const [filterLifecycle, setFilterLifecycle] = useState<string>("all");
   const [page, setPage] = useState(1);
   const { sortBy, sortDirection, toggleSort } = useTableSort("name");
+
+  // Bulk selection state
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showBulkEdit, setShowBulkEdit] = useState(false);
 
   // Filter
   const filtered = useMemo(() => {
@@ -68,6 +74,29 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
   };
 
   const columns: Column<Application>[] = [
+    {
+      key: "_select",
+      header: "",
+      render: (row) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(row.id)}
+          onChange={(e) => {
+            e.stopPropagation();
+            setSelectedIds((prev) => {
+              const next = new Set(prev);
+              if (next.has(row.id)) next.delete(row.id);
+              else next.add(row.id);
+              return next;
+            });
+          }}
+          onClick={(e) => e.stopPropagation()}
+          className="rounded border-rosely-blush text-rosely-plum focus:ring-rosely-lilac"
+          aria-label={`Select ${row.name}`}
+        />
+      ),
+      className: "w-10",
+    },
     {
       key: "name",
       header: "Name",
@@ -123,7 +152,7 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <SearchInput
@@ -183,6 +212,31 @@ export function ApplicationsView({ applications }: ApplicationsViewProps) {
 
       {/* Pagination */}
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+
+      {/* Bulk Selection Toolbar */}
+      <BulkSelectToolbar
+        selectedCount={selectedIds.size}
+        totalCount={filtered.length}
+        onSelectAll={() => {
+          setSelectedIds(new Set(filtered.map((a) => a.id)));
+        }}
+        onClearSelection={() => setSelectedIds(new Set())}
+        onBulkEdit={() => setShowBulkEdit(true)}
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40"
+      />
+
+      {/* Bulk Edit Dialog */}
+      {showBulkEdit && (
+        <BulkEditDialog
+          selectedIds={Array.from(selectedIds)}
+          entityType="Application"
+          onClose={() => setShowBulkEdit(false)}
+          onComplete={() => {
+            setShowBulkEdit(false);
+            setSelectedIds(new Set());
+          }}
+        />
+      )}
     </div>
   );
 }

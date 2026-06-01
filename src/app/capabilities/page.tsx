@@ -43,7 +43,7 @@ export default async function CapabilitiesPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -58,21 +58,21 @@ export default async function CapabilitiesPage() {
       {/* Legend */}
       <div className="flex flex-wrap gap-4 text-xs text-rosely-dusk">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded border-2 border-rosely-plum bg-rosely-plum/10" />
+          <span className="inline-block size-3 rounded border-2 border-rosely-plum bg-rosely-plum/10" />
           Level 1 — Domain
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded border-2 border-rosely-cornflower bg-rosely-cornflower/10" />
+          <span className="inline-block size-3 rounded border-2 border-rosely-cornflower bg-rosely-cornflower/10" />
           Level 2 — Area
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded border-2 border-rosely-mist bg-rosely-mist/10" />
+          <span className="inline-block size-3 rounded border-2 border-rosely-mist bg-rosely-mist/10" />
           Level 3 — Capability
         </span>
       </div>
 
       {/* Capability Map */}
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {level1.map((l1) => {
           const l2Children = getChildren(l1.id, level2);
           return (

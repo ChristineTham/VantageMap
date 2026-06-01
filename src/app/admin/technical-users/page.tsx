@@ -82,7 +82,7 @@ export default function TechnicalUsersPage() {
           onClick={() => setShowCreateModal(true)}
           className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="size-4" />
           Create Token
         </button>
       </div>
@@ -113,7 +113,7 @@ export default function TechnicalUsersPage() {
             ) : tokens.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-rosely-mist">
-                  <Key className="mx-auto h-8 w-8 text-rosely-blush" />
+                  <Key className="mx-auto size-8 text-rosely-blush" />
                   <p className="mt-2">No API tokens created yet</p>
                   <p className="text-xs">
                     Create a token for CI/CD pipelines or external integrations
@@ -158,7 +158,7 @@ function NewTokenBanner({ token, onDismiss }: { token: string; onDismiss: () => 
   return (
     <div className="mb-6 rounded-xl border border-rosely-golden/50 bg-rosely-golden/10 p-4">
       <div className="flex items-start gap-3">
-        <AlertTriangle className="h-5 w-5 shrink-0 text-rosely-night" />
+        <AlertTriangle className="size-5 shrink-0 text-rosely-night" />
         <div className="flex-1">
           <p className="text-sm font-medium text-rosely-night">
             Copy your token now — it won&apos;t be shown again
@@ -173,9 +173,9 @@ function NewTokenBanner({ token, onDismiss }: { token: string; onDismiss: () => 
               aria-label="Copy token"
             >
               {copied ? (
-                <Check className="h-4 w-4 text-rosely-teal" />
+                <Check className="size-4 text-rosely-teal" />
               ) : (
-                <Copy className="h-4 w-4 text-rosely-dusk" />
+                <Copy className="size-4 text-rosely-dusk" />
               )}
             </button>
           </div>
@@ -224,7 +224,7 @@ function TokenRow({ token, onRevoke }: { token: ApiToken; onRevoke: () => void }
           <span
             className={`flex items-center gap-1 text-xs ${isExpired ? "text-rosely-rose" : "text-rosely-dusk"}`}
           >
-            <Clock className="h-3 w-3" />
+            <Clock className="size-3" />
             {isExpired ? "Expired" : new Date(token.expiresAt).toLocaleDateString()}
           </span>
         ) : (
@@ -244,7 +244,7 @@ function TokenRow({ token, onRevoke }: { token: ApiToken; onRevoke: () => void }
           className="rounded-lg p-1.5 text-rosely-rose hover:bg-rosely-rose/10 transition-colors disabled:opacity-50"
           aria-label={`Revoke token ${token.name}`}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="size-4" />
         </button>
       </td>
     </tr>
@@ -311,7 +311,7 @@ function CreateTokenModal({
           </div>
         )}
 
-        <form onSubmit={handleCreate} className="mt-4 space-y-4">
+        <form onSubmit={handleCreate} className="mt-4 flex flex-col gap-4">
           <div>
             <label htmlFor="token-name" className="block text-sm font-medium text-rosely-night">
               Token Name
@@ -359,7 +359,7 @@ function CreateTokenModal({
               disabled={creating}
               className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
             >
-              <Key className="h-4 w-4" />
+              <Key className="size-4" />
               {creating ? "Creating..." : "Create Token"}
             </button>
           </div>

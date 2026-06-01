@@ -31,7 +31,7 @@ export default async function RadarPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-7xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Technology Radar</h1>
         <p className="text-sm text-rosely-mist mt-1">

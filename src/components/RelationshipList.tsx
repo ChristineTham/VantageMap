@@ -26,7 +26,7 @@ export function RelationshipList({ relationships, entityType, entityId }: Relati
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-rosely-night">
@@ -54,7 +54,7 @@ export function RelationshipList({ relationships, entityType, entityId }: Relati
           </button>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {Array.from(grouped.entries()).map(([relType, rels]) => (
             <div
               key={relType}
@@ -113,7 +113,7 @@ function RelationshipRow({
   return (
     <li className="flex items-center justify-between px-4 py-3 hover:bg-rosely-petal/30 transition-colors group">
       <div className="flex items-center gap-3">
-        <ArrowRight className={cn("h-4 w-4 text-rosely-mist", !isSource && "rotate-180")} />
+        <ArrowRight className={cn("size-4 text-rosely-mist", !isSource && "rotate-180")} />
         <div>
           <Link
             href={`/${linkedSlug}/${linkedId}`}

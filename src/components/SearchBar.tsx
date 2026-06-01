@@ -103,9 +103,9 @@ export function SearchBar() {
         )}
       >
         {searching ? (
-          <Loader2 className="h-4 w-4 shrink-0 animate-spin text-rosely-lilac" />
+          <Loader2 className="size-4 shrink-0 animate-spin text-rosely-lilac" />
         ) : (
-          <Search className="h-4 w-4 shrink-0 text-rosely-mist" />
+          <Search className="size-4 shrink-0 text-rosely-mist" />
         )}
         <input
           ref={inputRef}
@@ -168,7 +168,7 @@ export function SearchBar() {
                           )}
                         </div>
                         <div className="shrink-0 flex flex-col items-end gap-1">
-                          <span className="rounded-full bg-rosely-cream px-1.5 py-0.5 text-[10px] text-rosely-dusk whitespace-nowrap">
+                          <span className="rounded-full bg-rosely-cream px-1.5 py-0.5 text-2xs text-rosely-dusk whitespace-nowrap">
                             {config?.displayName ?? hit.entityType}
                           </span>
                           {hit.health && (

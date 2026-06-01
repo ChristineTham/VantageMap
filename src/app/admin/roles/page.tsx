@@ -134,9 +134,9 @@ export default function RolesPage() {
                   {ROLES.map((role) => (
                     <td key={role} className="px-4 py-3 text-center">
                       {PERMISSION_MATRIX[op.key]?.includes(role) ? (
-                        <Check className="mx-auto h-4 w-4 text-rosely-teal" />
+                        <Check className="mx-auto size-4 text-rosely-teal" />
                       ) : (
-                        <X className="mx-auto h-4 w-4 text-rosely-rose/50" />
+                        <X className="mx-auto size-4 text-rosely-rose/50" />
                       )}
                     </td>
                   ))}

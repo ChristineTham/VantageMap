@@ -91,7 +91,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
           href={`/${config.slug}`}
           className="inline-flex items-center gap-1 hover:text-rosely-night transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="size-4" />
           {config.pluralName}
         </Link>
         <span>/</span>
@@ -107,7 +107,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {error && (
           <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
             {error}
@@ -117,7 +117,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
         {Array.from(fieldGroups.entries()).map(([group, fields]) => (
           <fieldset
             key={group}
-            className="rounded-xl border border-rosely-blush bg-white p-5 space-y-4"
+            className="rounded-xl border border-rosely-blush bg-white p-5 flex flex-col gap-4"
           >
             <legend className="text-sm font-semibold text-rosely-night px-1">{group}</legend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -151,7 +151,7 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
                 : "bg-rosely-plum hover:bg-rosely-plum/90"
             )}
           >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+            {saving ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
             {saving ? "Creating…" : `Create ${config.displayName}`}
           </button>
         </div>

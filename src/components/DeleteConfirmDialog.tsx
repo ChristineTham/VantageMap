@@ -54,29 +54,35 @@ export function DeleteConfirmDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-dialog-title"
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+    >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} />
+      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
 
       {/* Dialog */}
       <div className="relative w-full max-w-md rounded-xl border border-rosely-blush bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-rosely-blush px-6 py-4">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-rosely-rose" />
-            <h2 className="text-lg font-semibold text-rosely-night">Delete {entityType}</h2>
+            <AlertTriangle className="size-5 text-rosely-rose" />
+            <h2 id="delete-dialog-title" className="text-lg font-semibold text-rosely-night">Delete {entityType}</h2>
           </div>
           <button
             onClick={onClose}
             aria-label="Close dialog"
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="size-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5 space-y-4">
+        <div className="px-6 py-5 flex flex-col gap-4">
           {error && (
             <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
               {error}
@@ -127,7 +133,7 @@ export function DeleteConfirmDialog({
                 : "bg-rosely-rose/40 cursor-not-allowed"
             )}
           >
-            {deleting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {deleting && <Loader2 className="size-4 animate-spin" />}
             {deleting ? "Deleting…" : "Delete"}
           </button>
         </div>

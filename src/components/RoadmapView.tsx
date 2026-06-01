@@ -115,7 +115,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <SearchInput
@@ -161,9 +161,9 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
                 key={idx}
                 className="flex-1 min-w-[60px] border-r border-rosely-petal px-1 py-2 text-center"
               >
-                <span className="text-[10px] text-rosely-mist block">{m.label}</span>
+                <span className="text-2xs text-rosely-mist block">{m.label}</span>
                 {(idx === 0 || m.label === "Jan") && (
-                  <span className="text-[9px] text-rosely-mist/60">{m.year}</span>
+                  <span className="text-3xs text-rosely-mist/60">{m.year}</span>
                 )}
               </div>
             ))}
@@ -201,7 +201,7 @@ export function RoadmapView({ initiatives }: RoadmapViewProps) {
                       style={{ left: pos.left, width: pos.width }}
                       title={`${initiative.startDate || "?"} → ${initiative.endDate || "?"}`}
                     >
-                      <span className="absolute inset-0 flex items-center justify-center text-[9px] font-medium text-white truncate px-1">
+                      <span className="absolute inset-0 flex items-center justify-center text-3xs font-medium text-white truncate px-1">
                         {initiative.status}
                       </span>
                     </div>

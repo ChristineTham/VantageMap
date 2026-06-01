@@ -93,7 +93,7 @@ export default function AdminUsersPage() {
           onClick={() => setShowInviteModal(true)}
           className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve"
         >
-          <UserPlus className="h-4 w-4" />
+          <UserPlus className="size-4" />
           Invite User
         </button>
       </div>
@@ -101,7 +101,7 @@ export default function AdminUsersPage() {
       {/* Filters */}
       <div className="mb-4 flex gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rosely-mist" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-rosely-mist" />
           <input
             type="text"
             value={searchQuery}
@@ -145,7 +145,7 @@ export default function AdminUsersPage() {
             ) : users.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-rosely-mist">
-                  <Users className="mx-auto h-8 w-8 text-rosely-blush" />
+                  <Users className="mx-auto size-8 text-rosely-blush" />
                   <p className="mt-2">No users found</p>
                 </td>
               </tr>
@@ -174,7 +174,7 @@ export default function AdminUsersPage() {
                         className="rounded-lg p-1 text-rosely-mist hover:bg-rosely-petal hover:text-rosely-night"
                         aria-label={`Actions for ${u.name}`}
                       >
-                        <MoreVertical className="h-4 w-4" />
+                        <MoreVertical className="size-4" />
                       </button>
                       {actionMenuId === u.id && (
                         <UserActionMenu
@@ -283,21 +283,21 @@ function UserActionMenu({
         onClick={() => changeRole("Viewer")}
         className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
       >
-        <Shield className="h-4 w-4" />
+        <Shield className="size-4" />
         Set as Viewer
       </button>
       <button
         onClick={() => changeRole("Member")}
         className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
       >
-        <Shield className="h-4 w-4" />
+        <Shield className="size-4" />
         Set as Member
       </button>
       <button
         onClick={() => changeRole("Admin")}
         className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
       >
-        <Shield className="h-4 w-4" />
+        <Shield className="size-4" />
         Set as Admin
       </button>
       <div className="my-1 border-t border-rosely-blush" />
@@ -307,12 +307,12 @@ function UserActionMenu({
       >
         {u.status === "Archived" ? (
           <>
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="size-4" />
             Restore User
           </>
         ) : (
           <>
-            <Archive className="h-4 w-4" />
+            <Archive className="size-4" />
             Archive User
           </>
         )}
@@ -370,7 +370,7 @@ function InviteUserModal({ onClose, onInvited }: { onClose: () => void; onInvite
           </div>
         )}
 
-        <form onSubmit={handleInvite} className="mt-4 space-y-4">
+        <form onSubmit={handleInvite} className="mt-4 flex flex-col gap-4">
           <div>
             <label htmlFor="invite-email" className="block text-sm font-medium text-rosely-night">
               Email Address
@@ -415,7 +415,7 @@ function InviteUserModal({ onClose, onInvited }: { onClose: () => void; onInvite
               disabled={sending}
               className="flex items-center gap-2 rounded-lg bg-rosely-plum px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
             >
-              <Mail className="h-4 w-4" />
+              <Mail className="size-4" />
               {sending ? "Sending..." : "Send Invite"}
             </button>
           </div>

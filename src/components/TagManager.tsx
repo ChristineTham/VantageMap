@@ -85,24 +85,24 @@ export function TagManager({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rosely-night flex items-center gap-2">
-          <Tags className="w-5 h-5 text-rosely-plum" />
+          <Tags className="size-5 text-rosely-plum" />
           Tag Groups
         </h2>
         <button
           onClick={() => setShowNewGroup(true)}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-rosely-plum rounded-lg hover:bg-rosely-plum/90 transition-colors"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="size-4" />
           New Group
         </button>
       </div>
 
       {/* Create new group form */}
       {showNewGroup && (
-        <div className="bg-white rounded-xl border border-rosely-blush p-4 space-y-3">
+        <div className="bg-white rounded-xl border border-rosely-blush p-4 flex flex-col gap-3">
           <input
             type="text"
             placeholder="Group name"
@@ -145,7 +145,7 @@ export function TagManager({
       )}
 
       {/* Tag groups list */}
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         {tagGroups.map((group) => (
           <div
             key={group.id}
@@ -158,9 +158,9 @@ export function TagManager({
                 className="flex items-center gap-2 flex-1 text-left"
               >
                 {expandedGroups.has(group.id) ? (
-                  <ChevronDown className="w-4 h-4 text-rosely-mist" />
+                  <ChevronDown className="size-4 text-rosely-mist" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-rosely-mist" />
+                  <ChevronRight className="size-4 text-rosely-mist" />
                 )}
                 <span className="text-sm font-medium text-rosely-night">{group.name}</span>
                 <span className="text-xs text-rosely-mist">
@@ -217,7 +217,7 @@ export function TagManager({
                         className="ml-0.5 hover:text-rosely-rose transition-colors"
                         aria-label={`Delete tag ${tag.name}`}
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="size-3" />
                       </button>
                     </span>
                   ))}
@@ -258,7 +258,7 @@ export function TagManager({
                     onClick={() => setAddingTagTo(group.id)}
                     className="inline-flex items-center gap-1 mt-3 text-xs text-rosely-plum hover:text-rosely-plum/80 transition-colors"
                   >
-                    <Plus className="w-3 h-3" />
+                    <Plus className="size-3" />
                     Add tag
                   </button>
                 )}
@@ -270,7 +270,7 @@ export function TagManager({
 
       {tagGroups.length === 0 && !showNewGroup && (
         <div className="text-center py-8 text-rosely-mist">
-          <Tags className="w-10 h-10 mx-auto mb-2 opacity-50" />
+          <Tags className="size-10 mx-auto mb-2 opacity-50" />
           <p className="text-sm">No tag groups yet. Create one to get started.</p>
         </div>
       )}

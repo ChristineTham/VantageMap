@@ -23,7 +23,7 @@ export function CreateButton({ href, label, className }: CreateButtonProps) {
         className
       )}
     >
-      <Plus className="h-4 w-4" />
+      <Plus className="size-4" />
       {label}
     </Link>
   );

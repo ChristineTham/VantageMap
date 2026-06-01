@@ -290,6 +290,281 @@ export async function bulkUpsert(
   });
 }
 
+// ── Audit API ───────────────────────────────────────────────────────────────
+
+export interface AuditEntry {
+  id: string;
+  actorId: string | null;
+  actorType: string;
+  actorDisplayName: string | null;
+  action: string;
+  targetType: string;
+  targetId: string;
+  targetDisplayName: string | null;
+  diff: Record<string, unknown> | null;
+  requestContext: { ip?: string; userAgent?: string; method?: string; path?: string } | null;
+  reason: string | null;
+  createdAt: string;
+}
+
+export async function getAuditEntries(params: {
+  targetType: string;
+  targetId: string;
+  page?: number;
+  pageSize?: number;
+}): Promise<ApiListResponse<AuditEntry>> {
+  const searchParams = new URLSearchParams({
+    targetType: params.targetType,
+    targetId: params.targetId,
+  });
+  if (params.page) searchParams.set("page", String(params.page));
+  if (params.pageSize) searchParams.set("pageSize", String(params.pageSize));
+
+  return apiFetch<ApiListResponse<AuditEntry>>(`/api/audit?${searchParams}`);
+}
+
+// ── Governance API (Fact Sheet sub-resources) ───────────────────────────────
+
+export interface Comment {
+  id: string;
+  authorId: string;
+  authorName?: string;
+  content: string;
+  parentId: string | null;
+  createdAt: string;
+  editedAt: string | null;
+  replies?: Comment[];
+}
+
+export interface TodoItem {
+  id: string;
+  title: string;
+  description: string | null;
+  assigneeId: string | null;
+  assigneeName?: string;
+  done: boolean;
+  dueDate: string | null;
+  completedAt: string | null;
+  createdAt: string;
+}
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  userName?: string;
+  role: "Responsible" | "Accountable" | "Observer";
+}
+
+export interface TagAssignment {
+  id: string;
+  tagId: string;
+  tagName: string;
+  tagGroupName: string;
+  tagColor: string | null;
+}
+
+export interface QualitySealInfo {
+  currentState: string;
+  validTransitions: { toState: string; label: string }[];
+  history: {
+    id: string;
+    fromState: string;
+    toState: string;
+    actorId: string;
+    reason: string | null;
+    createdAt: string;
+  }[];
+}
+
+export interface TagGroup {
+  id: string;
+  name: string;
+  description: string | null;
+  mode: string;
+  tags: { id: string; name: string; color: string | null }[];
+}
+
+export interface Survey {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  createdAt: string;
+  questions: { id: string; text: string; type: string; options: string[] | null }[];
+  responseCount?: number;
+}
+
+/** Fetch comments for a fact sheet. */
+export async function getFactSheetComments(
+  type: string,
+  id: string
+): Promise<ApiSuccessResponse<Comment[]>> {
+  return apiFetch<ApiSuccessResponse<Comment[]>>(
+    `/api/fact-sheets/${type}/${id}/comments`
+  );
+}
+
+/** Post a new comment. */
+export async function createFactSheetComment(
+  type: string,
+  id: string,
+  data: { content: string; parentId?: string }
+): Promise<ApiSuccessResponse<Comment>> {
+  return apiFetch<ApiSuccessResponse<Comment>>(
+    `/api/fact-sheets/${type}/${id}/comments`,
+    { method: "POST", body: JSON.stringify(data) }
+  );
+}
+
+/** Fetch todos for a fact sheet. */
+export async function getFactSheetTodos(
+  type: string,
+  id: string
+): Promise<ApiSuccessResponse<TodoItem[]>> {
+  return apiFetch<ApiSuccessResponse<TodoItem[]>>(
+    `/api/fact-sheets/${type}/${id}/todos`
+  );
+}
+
+/** Create a todo on a fact sheet. */
+export async function createFactSheetTodo(
+  type: string,
+  id: string,
+  data: { title: string; assigneeId?: string; dueDate?: string }
+): Promise<ApiSuccessResponse<TodoItem>> {
+  return apiFetch<ApiSuccessResponse<TodoItem>>(
+    `/api/fact-sheets/${type}/${id}/todos`,
+    { method: "POST", body: JSON.stringify(data) }
+  );
+}
+
+/** Fetch subscriptions for a fact sheet. */
+export async function getFactSheetSubscriptions(
+  type: string,
+  id: string
+): Promise<ApiSuccessResponse<Subscription[]>> {
+  return apiFetch<ApiSuccessResponse<Subscription[]>>(
+    `/api/fact-sheets/${type}/${id}/subscriptions`
+  );
+}
+
+/** Subscribe to a fact sheet. */
+export async function subscribeToFactSheet(
+  type: string,
+  id: string,
+  role: "Responsible" | "Accountable" | "Observer"
+): Promise<ApiSuccessResponse<Subscription>> {
+  return apiFetch<ApiSuccessResponse<Subscription>>(
+    `/api/fact-sheets/${type}/${id}/subscriptions`,
+    { method: "POST", body: JSON.stringify({ role }) }
+  );
+}
+
+/** Unsubscribe from a fact sheet. */
+export async function unsubscribeFromFactSheet(
+  type: string,
+  id: string,
+  role: "Responsible" | "Accountable" | "Observer"
+): Promise<void> {
+  await apiFetch<void>(
+    `/api/fact-sheets/${type}/${id}/subscriptions`,
+    { method: "DELETE", body: JSON.stringify({ role }) }
+  );
+}
+
+/** Fetch tags for a fact sheet. */
+export async function getFactSheetTags(
+  type: string,
+  id: string
+): Promise<ApiSuccessResponse<TagAssignment[]>> {
+  return apiFetch<ApiSuccessResponse<TagAssignment[]>>(
+    `/api/fact-sheets/${type}/${id}/tags`
+  );
+}
+
+/** Get quality seal info for a fact sheet. */
+export async function getFactSheetQualitySeal(
+  type: string,
+  id: string
+): Promise<ApiSuccessResponse<QualitySealInfo>> {
+  return apiFetch<ApiSuccessResponse<QualitySealInfo>>(
+    `/api/fact-sheets/${type}/${id}/quality-seal`
+  );
+}
+
+/** Transition quality seal state. */
+export async function transitionQualitySeal(
+  type: string,
+  id: string,
+  toState: string,
+  reason?: string
+): Promise<ApiSuccessResponse<QualitySealInfo>> {
+  return apiFetch<ApiSuccessResponse<QualitySealInfo>>(
+    `/api/fact-sheets/${type}/${id}/quality-seal`,
+    { method: "POST", body: JSON.stringify({ toState, reason }) }
+  );
+}
+
+/** Fetch all tag groups. */
+export async function getTagGroups(): Promise<ApiSuccessResponse<TagGroup[]>> {
+  return apiFetch<ApiSuccessResponse<TagGroup[]>>("/api/tag-groups");
+}
+
+/** Create a tag group. */
+export async function createTagGroup(
+  data: { name: string; description?: string; mode: string }
+): Promise<ApiSuccessResponse<TagGroup>> {
+  return apiFetch<ApiSuccessResponse<TagGroup>>("/api/tag-groups", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/** Delete a tag group. */
+export async function deleteTagGroup(id: string): Promise<void> {
+  await apiFetch<void>(`/api/tag-groups/${id}`, { method: "DELETE" });
+}
+
+/** Create a tag within a group. */
+export async function createTag(
+  groupId: string,
+  data: { name: string; color?: string }
+): Promise<ApiSuccessResponse<{ id: string; name: string; color: string | null }>> {
+  return apiFetch(`/api/tag-groups/${groupId}/tags`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/** Delete a tag from a group. */
+export async function deleteTag(groupId: string, tagId: string): Promise<void> {
+  await apiFetch<void>(`/api/tag-groups/${groupId}/tags/${tagId}`, {
+    method: "DELETE",
+  });
+}
+
+/** Fetch all surveys. */
+export async function getSurveys(
+  status?: string
+): Promise<ApiSuccessResponse<Survey[]>> {
+  const params = status ? `?filter[status]=${status}` : "";
+  return apiFetch<ApiSuccessResponse<Survey[]>>(`/api/surveys${params}`);
+}
+
+/** Create a survey. */
+export async function createSurvey(
+  data: {
+    title: string;
+    description?: string;
+    questions: { text: string; type: string; options?: string[] }[];
+  }
+): Promise<ApiSuccessResponse<Survey>> {
+  return apiFetch<ApiSuccessResponse<Survey>>("/api/surveys", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
 // ── Re-export error type ────────────────────────────────────────────────────
 
 export { ApiError };

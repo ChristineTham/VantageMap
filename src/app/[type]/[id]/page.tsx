@@ -40,7 +40,7 @@ export default async function FactSheetDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-5xl mx-auto">
       <FactSheetDetail
         entity={entity}
         entityType={config.type}

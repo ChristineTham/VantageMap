@@ -74,7 +74,7 @@ export default async function StrategyPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-7xl mx-auto">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Strategy Map</h1>
@@ -85,7 +85,7 @@ export default async function StrategyPage() {
       </div>
 
       {/* BSC Perspectives */}
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {PERSPECTIVES.map((perspective) => {
           const items = grouped.get(perspective.key) || [];
           return (

@@ -16,7 +16,10 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
   client: {
-    NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+    NEXT_PUBLIC_APP_URL:
+      process.env.NODE_ENV === "production"
+        ? z.string().url("NEXT_PUBLIC_APP_URL is required in production")
+        : z.string().url().optional(),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,

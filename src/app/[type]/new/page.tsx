@@ -27,7 +27,7 @@ export default async function CreateFactSheetPage({ params }: PageProps) {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-3xl mx-auto">
+    <div className="p-6 flex flex-col gap-6 max-w-3xl mx-auto">
       <FactSheetCreateForm config={config} />
     </div>
   );

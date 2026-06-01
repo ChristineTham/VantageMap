@@ -12,6 +12,7 @@
 import { eq, and, count, type SQL, type Column } from "drizzle-orm";
 import type { PgTableWithColumns } from "drizzle-orm/pg-core";
 import { type ZodSchema } from "zod";
+import { after } from "next/server";
 import { db } from "@/db";
 import {
   ok,
@@ -159,13 +160,15 @@ export function createCreateHandler(config: CrudConfig) {
           ? (row as any)[config.displayNameColumn]
           : ((row as any).name ?? undefined);
 
-      await writeAuditLog({
-        auth: auth.auth,
-        action: "create",
-        targetType: config.entityType,
-        targetId: (row as any).id,
-        targetDisplayName: displayName,
-        request,
+      after(async () => {
+        await writeAuditLog({
+          auth: auth.auth,
+          action: "create",
+          targetType: config.entityType,
+          targetId: (row as any).id,
+          targetDisplayName: displayName,
+          request,
+        });
       });
     }
 
@@ -216,14 +219,16 @@ export function createUpdateHandler(config: CrudConfig) {
           parsed.data as Record<string, unknown>
         );
 
-        await writeAuditLog({
-          auth: auth.auth,
-          action: "update",
-          targetType: config.entityType,
-          targetId: id,
-          targetDisplayName: (updated as any).name ?? undefined,
-          diff: diff as Record<string, unknown> | undefined,
-          request,
+        after(async () => {
+          await writeAuditLog({
+            auth: auth.auth,
+            action: "update",
+            targetType: config.entityType,
+            targetId: id,
+            targetDisplayName: (updated as any).name ?? undefined,
+            diff: diff as Record<string, unknown> | undefined,
+            request,
+          });
         });
       }
 
@@ -262,13 +267,15 @@ export function createDeleteHandler(config: CrudConfig) {
       await db.delete(config.table).where(eq((config.table as any).id, id));
 
       if (isFeatureEnabled("FEATURE_AUDIT_LOGGING")) {
-        await writeAuditLog({
-          auth: auth.auth,
-          action: "delete",
-          targetType: config.entityType,
-          targetId: id,
-          targetDisplayName: (existing as any).name ?? undefined,
-          request,
+        after(async () => {
+          await writeAuditLog({
+            auth: auth.auth,
+            action: "delete",
+            targetType: config.entityType,
+            targetId: id,
+            targetDisplayName: (existing as any).name ?? undefined,
+            request,
+          });
         });
       }
 

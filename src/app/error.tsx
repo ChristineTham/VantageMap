@@ -23,7 +23,7 @@ export default function GlobalError({
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center p-6 text-center">
       <div className="rounded-full bg-rosely-flamingo/10 p-3">
-        <AlertTriangle className="h-8 w-8 text-rosely-flamingo" />
+        <AlertTriangle className="size-8 text-rosely-flamingo" />
       </div>
       <h2 className="mt-4 font-serif text-lg font-semibold text-rosely-night">
         Something went wrong

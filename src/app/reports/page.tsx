@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { BarChart3, ShieldAlert, Activity, Layers } from "lucide-react";
 import {
   getTimeDistribution,
@@ -7,9 +8,17 @@ import {
   getPortfolioHealth,
   getCapabilityCoverage,
 } from "@/lib/data";
-import { ReportingCharts } from "@/components/ReportingCharts";
 import { ObsolescenceTable } from "@/components/ObsolescenceTable";
-import { CapabilityCoverageChart } from "@/components/CapabilityCoverageChart";
+
+const ReportingCharts = dynamic(
+  () => import("@/components/ReportingCharts").then((m) => m.ReportingCharts),
+  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
+);
+
+const CapabilityCoverageChart = dynamic(
+  () => import("@/components/CapabilityCoverageChart").then((m) => m.CapabilityCoverageChart),
+  { ssr: false, loading: () => <div className="h-60 animate-pulse rounded-lg bg-rosely-blush/30" /> }
+);
 
 export const metadata: Metadata = {
   title: "Reports – VantageMap",
@@ -28,7 +37,7 @@ export default async function ReportsPage() {
     ]);
 
   return (
-    <div className="p-6 space-y-8 max-w-7xl mx-auto">
+    <div className="p-6 flex flex-col gap-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-rosely-night">Reports & Analytics</h1>
@@ -42,25 +51,25 @@ export default async function ReportsPage() {
         <StatCard
           title="Portfolio Health"
           value={`${portfolioReport.overallScore}/100`}
-          icon={<Activity className="h-5 w-5 text-rosely-teal" />}
+          icon={<Activity className="size-5 text-rosely-teal" />}
           subtitle={`${portfolioReport.trends.appsWithCriticalHealth} critical apps`}
         />
         <StatCard
           title="TIME Classified"
           value={`${timeReport.classified}/${timeReport.total}`}
-          icon={<BarChart3 className="h-5 w-5 text-rosely-cornflower" />}
+          icon={<BarChart3 className="size-5 text-rosely-cornflower" />}
           subtitle={`${timeReport.unclassified} need review`}
         />
         <StatCard
           title="Obsolescence Risks"
           value={`${obsolescenceReport.summary.critical + obsolescenceReport.summary.high}`}
-          icon={<ShieldAlert className="h-5 w-5 text-rosely-rose" />}
+          icon={<ShieldAlert className="size-5 text-rosely-rose" />}
           subtitle={`${obsolescenceReport.pastEolCount} past EOL`}
         />
         <StatCard
           title="Capability Coverage"
           value={`${coverageReport.avgAppsPerCapability} avg`}
-          icon={<Layers className="h-5 w-5 text-rosely-plum" />}
+          icon={<Layers className="size-5 text-rosely-plum" />}
           subtitle={`${coverageReport.uncoveredCapabilities} uncovered`}
         />
       </div>

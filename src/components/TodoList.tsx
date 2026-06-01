@@ -46,10 +46,10 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
   const completed = todos.filter((t) => t.done);
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-rosely-night flex items-center gap-1.5">
-          <CheckSquare className="w-4 h-4 text-rosely-plum" />
+          <CheckSquare className="size-4 text-rosely-plum" />
           To-Dos
           {todos.length > 0 && (
             <span className="text-xs text-rosely-mist">
@@ -63,14 +63,14 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
             className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
             aria-label="Add todo"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="size-4" />
           </button>
         )}
       </div>
 
       {/* New todo form */}
       {showNew && (
-        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm space-y-2">
+        <div className="border border-rosely-blush rounded-lg p-3 bg-white shadow-sm flex flex-col gap-2">
           <input
             type="text"
             placeholder="What needs to be done?"
@@ -110,7 +110,7 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
 
       {/* Pending todos */}
       {pending.length > 0 && (
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           {pending.map((todo) => (
             <div
               key={todo.id}
@@ -122,20 +122,20 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
                 aria-label={`Mark "${todo.title}" as done`}
                 className="mt-0.5 text-rosely-mist hover:text-rosely-plum transition-colors"
               >
-                <Square className="w-4 h-4" />
+                <Square className="size-4" />
               </button>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-rosely-night">{todo.title}</p>
                 <div className="flex items-center gap-3 mt-0.5">
                   {todo.dueDate && (
                     <span className="inline-flex items-center gap-1 text-xs text-rosely-mist">
-                      <Calendar className="w-3 h-3" />
+                      <Calendar className="size-3" />
                       {new Date(todo.dueDate).toLocaleDateString()}
                     </span>
                   )}
                   {todo.assigneeName && (
                     <span className="inline-flex items-center gap-1 text-xs text-rosely-mist">
-                      <User className="w-3 h-3" />
+                      <User className="size-3" />
                       {todo.assigneeName}
                     </span>
                   )}
@@ -148,7 +148,7 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
 
       {/* Completed todos */}
       {completed.length > 0 && (
-        <div className="space-y-1 opacity-60">
+        <div className="flex flex-col gap-1 opacity-60">
           <span className="text-xs text-rosely-mist font-medium">Completed</span>
           {completed.map((todo) => (
             <div key={todo.id} className="flex items-start gap-2 py-1.5 px-2">
@@ -158,7 +158,7 @@ export function TodoList({ todos, onToggle, onCreate, readOnly = false }: TodoLi
                 aria-label={`Mark "${todo.title}" as not done`}
                 className="mt-0.5 text-rosely-teal"
               >
-                <CheckSquare className="w-4 h-4" />
+                <CheckSquare className="size-4" />
               </button>
               <p className="text-sm text-rosely-dusk line-through">{todo.title}</p>
             </div>

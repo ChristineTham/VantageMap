@@ -6,14 +6,24 @@
  */
 
 import { Tags } from "lucide-react";
+import { getTagGroups } from "@/lib/api";
+import { TagManagerWrapper } from "@/components/TagManagerWrapper";
 
-export default function TagsAdminPage() {
+export default async function TagsAdminPage() {
+  let tagGroups: Awaited<ReturnType<typeof getTagGroups>>["data"] = [];
+  try {
+    const res = await getTagGroups();
+    tagGroups = res.data;
+  } catch {
+    tagGroups = [];
+  }
+
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 max-w-5xl mx-auto flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-rosely-night flex items-center gap-2">
-            <Tags className="w-6 h-6 text-rosely-plum" />
+            <Tags className="size-6 text-rosely-plum" />
             Tag Management
           </h1>
           <p className="text-sm text-rosely-mist mt-1">
@@ -41,18 +51,8 @@ export default function TagsAdminPage() {
         </div>
       </div>
 
-      {/* Tag groups will be rendered by the client component TagManager */}
-      <div className="bg-white rounded-xl border border-rosely-blush p-5">
-        <p className="text-sm text-rosely-mist">
-          Tag group management requires client-side interactivity. This component will be hydrated
-          with the <code className="text-rosely-plum">TagManager</code> component.
-        </p>
-        <p className="text-xs text-rosely-mist mt-2">
-          API: <code className="text-rosely-plum">GET /api/tag-groups</code> |{" "}
-          <code className="text-rosely-plum">POST /api/tag-groups</code> |{" "}
-          <code className="text-rosely-plum">GET /api/tag-groups/:id/tags</code>
-        </p>
-      </div>
+      {/* Tag Manager Client Component */}
+      <TagManagerWrapper initialTagGroups={tagGroups} />
     </div>
   );
 }

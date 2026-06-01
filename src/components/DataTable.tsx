@@ -117,12 +117,12 @@ export function DataTable<T>({
 
 function SortIcon({ active, direction }: { active: boolean; direction?: "asc" | "desc" }) {
   if (!active) {
-    return <ArrowUpDown className="h-3 w-3 opacity-40" />;
+    return <ArrowUpDown className="size-3 opacity-40" />;
   }
   if (direction === "asc") {
-    return <ArrowUp className="h-3 w-3" />;
+    return <ArrowUp className="size-3" />;
   }
-  return <ArrowDown className="h-3 w-3" />;
+  return <ArrowDown className="size-3" />;
 }
 
 // ── Hook: useTableSort ──────────────────────────────────────────────────────

@@ -103,9 +103,9 @@ export function SearchModal({ onClose }: SearchModalProps) {
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-rosely-blush">
           {searching ? (
-            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-rosely-lilac" />
+            <Loader2 className="size-4 shrink-0 animate-spin text-rosely-lilac" />
           ) : (
-            <Search className="h-4 w-4 shrink-0 text-rosely-mist" />
+            <Search className="size-4 shrink-0 text-rosely-mist" />
           )}
           <input
             ref={inputRef}
@@ -123,7 +123,7 @@ export function SearchModal({ onClose }: SearchModalProps) {
             className="rounded-md p-1 text-rosely-mist hover:text-rosely-night hover:bg-rosely-cream transition-colors"
             aria-label="Close search"
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </button>
         </div>
 
@@ -188,8 +188,8 @@ export function SearchModal({ onClose }: SearchModalProps) {
 
         {/* Keyboard hint */}
         <div className="border-t border-rosely-blush/60 px-4 py-2 flex items-center justify-end gap-3">
-          <span className="text-[10px] text-rosely-mist">
-            <kbd className="rounded border border-rosely-blush bg-rosely-cream px-1 py-0.5 font-mono text-[10px]">
+          <span className="text-2xs text-rosely-mist">
+            <kbd className="rounded border border-rosely-blush bg-rosely-cream px-1 py-0.5 font-mono text-2xs">
               Esc
             </kbd>{" "}
             close

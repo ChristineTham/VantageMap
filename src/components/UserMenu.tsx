@@ -67,7 +67,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
         )}
         aria-label="User menu"
       >
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rosely-lilac/30 text-xs font-medium text-rosely-plum">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-rosely-lilac/30 text-xs font-medium text-rosely-plum">
           {initials}
         </span>
         {!collapsed && (
@@ -75,7 +75,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
             <span className="flex-1 truncate text-left text-rosely-night">{user.name}</span>
             <ChevronUp
               className={cn(
-                "h-4 w-4 text-rosely-mist transition-transform",
+                "size-4 text-rosely-mist transition-transform",
                 open ? "rotate-0" : "rotate-180"
               )}
             />
@@ -95,7 +95,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-4 py-2 text-sm text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night"
           >
-            <User className="h-4 w-4" />
+            <User className="size-4" />
             Profile & Settings
           </Link>
 
@@ -104,7 +104,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-4 py-2 text-sm text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night"
           >
-            <Shield className="h-4 w-4" />
+            <Shield className="size-4" />
             Administration
           </Link>
 
@@ -113,7 +113,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-4 py-2 text-sm text-rosely-dusk hover:bg-rosely-petal/50 hover:text-rosely-night"
           >
-            <Settings className="h-4 w-4" />
+            <Settings className="size-4" />
             Preferences
           </Link>
 
@@ -122,7 +122,7 @@ export function UserMenu({ collapsed = false }: UserMenuProps) {
               onClick={handleSignOut}
               className="flex w-full items-center gap-3 px-4 py-2 text-sm text-rosely-rose hover:bg-rosely-petal/50"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="size-4" />
               Sign Out
             </button>
           </div>
