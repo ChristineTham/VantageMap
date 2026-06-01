@@ -1,4 +1,10 @@
-# Plan: VantageMap Enterprise Architecture Platform
+# Plan: VantageMap V1 (MVP)
+
+**Status: COMPLETE** — All 13 phases delivered. V1 MVP is feature-complete and deployed.
+
+For post-MVP roadmap (Phases 14+), see [PLANV2.md](PLANV2.md).
+
+---
 
 Build VantageMap incrementally from backend to frontend as a LeanIX-inspired enterprise architecture platform. Each step is designed for AI-assisted vibe coding: self-contained, clearly scoped, and independently implementable. Steps within a phase can run in parallel unless an explicit dependency is noted.
 
@@ -264,35 +270,6 @@ Implement use-case engines and analytics from [USE-CASES.md](USE-CASES.md). **St
 
 ---
 
-### Phase 14 — Enterprise Identity (Post-MVP)
-
-Enterprise SSO and provisioning from [UAM.md](UAM.md). Deferred from MVP unless required by pilot customers.
-
-| Step | Title                      | Scope                                                                                                                                                        | Depends on |
-| ---- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| 14.1 | SAML 2.0 SSO               | SP-initiated SAML flow. IdP metadata configuration UI. JIT user provisioning on first login. Attribute mapping (firstname, lastname, email, uid, role).      | 10.1, 4.2  |
-| 14.2 | SCIM provisioning          | SCIM 2.0 endpoint for user lifecycle sync (create, update, deactivate). Attribute mapping for role, department, ACE. Workspace-specific configuration.       | 14.1       |
-| 14.3 | IdP-managed custom roles   | Receive custom role claims from IdP. Map to permission sets. Standard role precedence rules. Multiple role aggregation.                                      | 14.1, 4.3  |
-| 14.4 | Virtual workspaces and ACL | Access Control Entities (ACE) for fact sheet scoping. Virtual workspace views with filtered fact sheet visibility. ACL defaults for new vs existing records. | 14.3, 10.5 |
-
----
-
-### Phase 15 — Advanced Features (Post-MVP)
-
-Advanced capabilities from [ADMIN.md](ADMIN.md), [USE-CASES.md](USE-CASES.md), and [DEVELOPER.md](DEVELOPER.md). All steps are independent.
-
-| Step | Title                         | Scope                                                                                                                                                                      | Depends on       |
-| ---- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| 15.1 | Automation framework          | No-code event-condition-action workflows. Trigger on fact sheet changes. Actions: update fields, send notifications, create tasks. Admin UI for rule builder.              | Phase 5, 12.3    |
-| 15.2 | Transformation scenarios      | Scenario modeling with baseline and target states. Predefined templates (cloud migration, org restructure). Side-by-side comparison view. Rollback support.                | Phase 5, Phase 8 |
-| 15.3 | MCP server for AI integration | MCP-compatible endpoint exposing fact sheet tools for AI clients. Permission-scoped tool visibility. Query limits (max 10 values). Reference [DEVELOPER.md](DEVELOPER.md). | Phase 5, 4.3     |
-| 15.4 | AI-powered recommendations    | AI-assisted description generation for fact sheets. Relationship suggestions based on existing patterns. Natural language search/filtering.                                | 6.2, 9.1         |
-| 15.5 | Portal for external audiences | Read-only portal view of selected fact sheets and reports. Configurable visibility scope. Branding and theming. No authentication required for portal consumers.           | Phase 8, 4.6     |
-| 15.6 | Connector catalog             | Pre-built integration connectors for common data sources (ServiceNow, Jira, Azure AD, AWS). Connector configuration UI. Scheduled sync with conflict resolution.           | 12.3, 12.4       |
-| 15.7 | AI governance use case        | AI policy and ethics tracking. AI Agent fact sheet subtype management. Risk and compliance scoring for AI initiatives. Reference [USE-CASES.md](USE-CASES.md).             | 5.2, 13.4        |
-
----
-
 ### Cross-Cutting Concerns (Continuous)
 
 These activities run alongside all phases and should be addressed incrementally as each step is implemented.
@@ -311,32 +288,24 @@ These activities run alongside all phases and should be addressed incrementally 
 ### Dependency Graph Summary
 
 ```
-Phase 0 ✅
-  └→ Phase 1 (Tech Stack Research)
-       └→ Phase 2 (Project Bootstrap)
-            ├→ Phase 3 (Database Schema)         — all 3.x steps parallel
-            │    └→ Phase 4 (API Foundation)      — sequential within phase
-            │         └→ Phase 5 (Entity APIs)    — all 5.x steps parallel
-            │              ├→ Phase 6 (Relationships & Search)
-            │              ├→ Phase 12 (Integrations)
-            │              └→ Phase 13 (Reporting)
-            └→ Phase 7 (Frontend Shell)           — parallel with Phase 3–5
-                 └→ Phase 8 (Frontend Views)      — all 8.x steps parallel
-                      └→ Phase 9 (CRUD UI)
+Phase 0 ✅ (Requirements)
+  └→ Phase 1 ✅ (Tech Stack Research)
+       └→ Phase 2 ✅ (Project Bootstrap)
+            ├→ Phase 3 ✅ (Database Schema)
+            │    └→ Phase 4 ✅ (API Foundation)
+            │         └→ Phase 5 ✅ (Entity APIs)
+            │              ├→ Phase 6 ✅ (Relationships & Search)
+            │              ├→ Phase 12 ✅ (Integrations)
+            │              └→ Phase 13 ✅ (Reporting)
+            └→ Phase 7 ✅ (Frontend Shell)
+                 └→ Phase 8 ✅ (Frontend Views)
+                      └→ Phase 9 ✅ (CRUD UI)
 
-Phase 4.2 → Phase 10 (User Management)
-Phase 5 + 8 → Phase 11 (Governance)
-Phase 10 → Phase 14 (Enterprise Identity)    — Post-MVP
-Phase 5 + 12 → Phase 15 (Advanced Features)  — Post-MVP
+Phase 4.2 → Phase 10 ✅ (User Management)
+Phase 5 + 8 → Phase 11 ✅ (Governance)
 ```
 
-**Shortest path to a working demo**: 1.9 → 2.1 → 2.2 → 2.3 → 3.1 → 3.2 → 3.9 → 4.1 → 5.1 → 5.2 → 7.1 → 7.2 → 7.3 → 8.1 → 8.2 → 8.3
-
-**Parallelizable tracks after Phase 2**:
-
-- Track A: Database schema (Phase 3) → API foundation (Phase 4) → Entity APIs (Phase 5)
-- Track B: Frontend shell (Phase 7) → Frontend views (Phase 8) — can use static fixtures initially
-- Track C: CI, linting, testing setup (2.4, 2.6) — independent from tracks A and B
+All V1 phases complete. For V2 roadmap (Phases 14–17), see [PLANV2.md](PLANV2.md).
 
 ---
 
@@ -371,8 +340,7 @@ Phase 5 + 12 → Phase 15 (Advanced Features)  — Post-MVP
 | Styling               | Tailwind CSS v4 + Rosely palette + shadcn/ui Base UI (see [DESIGN.md](../DESIGN.md)) | Already chosen and documented; not re-evaluated                                                                     |
 | API strategy          | REST-first (MVP), GraphQL added in Phase 12                                          | REST is simpler for vibe-coding agents; GraphQL deferred until schema is stable                                     |
 | Custom fields         | JSONB columns with validation                                                        | Avoids per-customer schema migrations; flexible for early product-market fit                                        |
-| MVP boundary          | Phases 1–13 are MVP; Phases 14–15 are Post-MVP                                       | Core platform, six views, CRUD, governance, integrations, and reporting before enterprise SSO and advanced features |
-| Virtual workspace ACL | Post-MVP (Phase 14.4)                                                                | Complexity deferred unless pilot customer requires data segmentation                                                |
+| MVP boundary          | Phases 0–13 are V1 MVP; Phases 14+ moved to [PLANV2.md](PLANV2.md)                   | Core platform complete before enterprise SSO and advanced features                                                  |
 | MVP deployment cost   | Zero monetary cost using free tiers                                                  | MVP must deploy without budget approval; validates product-market fit before spending                               |
 | Technology preference | Open-source first at every layer                                                     | Avoid vendor lock-in; commercial services only when free tier exists and no OSS alternative is viable               |
 | Production hosting    | Azure preferred, GCP second, AWS third                                               | Enterprise alignment; application code is cloud-agnostic, only configuration differs                                |
