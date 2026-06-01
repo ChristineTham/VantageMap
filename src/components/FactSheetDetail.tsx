@@ -16,6 +16,7 @@ import { QualitySealBadge } from "@/components/QualitySealBadge";
 import { SubscriptionPanel } from "@/components/SubscriptionPanel";
 import { CommentThread } from "@/components/CommentThread";
 import { TodoList } from "@/components/TodoList";
+import { Skeleton } from "@/components/Skeleton";
 import {
   getAuditEntries,
   getFactSheetComments,
@@ -416,7 +417,7 @@ export function FactSheetDetail({
           {!auditLoaded ? (
             <div className="flex flex-col gap-2">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-12 rounded-lg bg-rosely-cream/50 animate-pulse" />
+                <Skeleton key={i} className="h-12 rounded-lg" />
               ))}
             </div>
           ) : auditEntries.length === 0 ? (

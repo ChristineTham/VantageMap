@@ -2,8 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Loader2, CheckSquare, Pencil, Trash2 } from "lucide-react";
+import { Loader2, CheckSquare, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface BulkEditDialogProps {
   selectedIds: string[];
@@ -97,36 +106,19 @@ export function BulkEditDialog({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="bulk-edit-dialog-title"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
-
-      {/* Dialog */}
-      <div className="relative w-full max-w-md rounded-xl border border-rosely-blush bg-white shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-rosely-blush px-6 py-4">
-          <div className="flex items-center gap-2">
-            <CheckSquare className="size-5 text-rosely-plum" />
-            <h2 id="bulk-edit-dialog-title" className="text-lg font-semibold text-rosely-night">
-              Bulk Action ({selectedIds.length} selected)
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close dialog"
-            className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
+      <DialogContent className="max-w-md p-0 gap-0">
+        <DialogHeader className="flex-row items-center gap-2 border-b border-rosely-blush px-6 py-4 space-y-0">
+          <CheckSquare className="size-5 text-rosely-plum shrink-0" />
+          <DialogTitle className="text-lg font-semibold text-rosely-night">
+            Bulk Action ({selectedIds.length} selected)
+          </DialogTitle>
+        </DialogHeader>
 
         {/* Mode tabs */}
         <div className="border-b border-rosely-blush px-6">
@@ -161,9 +153,10 @@ export function BulkEditDialog({
         {/* Content */}
         <div className="px-6 py-5 flex flex-col gap-4">
           {error && (
-            <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           {mode === "update" && (
@@ -246,8 +239,7 @@ export function BulkEditDialog({
           )}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3 border-t border-rosely-blush px-6 py-4">
+        <DialogFooter className="border-t border-rosely-blush px-6 py-4">
           <button
             type="button"
             onClick={onClose}
@@ -285,8 +277,8 @@ export function BulkEditDialog({
               {saving ? "Deleting…" : "Delete Selected"}
             </button>
           )}
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -2,9 +2,12 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { X, Plus, Loader2, Search, CheckCircle2 } from "lucide-react";
+import { Plus, Loader2, Search, CheckCircle2 } from "lucide-react";
 import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetType } from "@/lib/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 import { VALID_RELATIONSHIP_PAIRS } from "@/lib/relationship-rules";
 
@@ -175,39 +178,25 @@ export function RelationshipAddDialog({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="relationship-dialog-title"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
-
-      {/* Dialog */}
-      <div className="relative w-full max-w-lg max-h-[70vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 id="relationship-dialog-title" className="text-lg font-semibold text-rosely-night">
+      <DialogContent className="max-w-lg max-h-[70vh] overflow-y-auto p-0 gap-0">
+        <DialogHeader className="sticky top-0 z-10 border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
+          <DialogTitle className="text-lg font-semibold text-rosely-night">
             {step === "type" ? "Add Relationship" : `Select ${selectedTargetType}`}
-          </h2>
-          <button
-            onClick={onClose}
-            aria-label="Close dialog"
-            className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="p-6 flex flex-col gap-4">
           {error && (
-            <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           {step === "type" && (
@@ -404,7 +393,7 @@ export function RelationshipAddDialog({
             </>
           )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

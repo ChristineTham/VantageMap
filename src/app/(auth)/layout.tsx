@@ -8,6 +8,7 @@
 
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
   title: "Sign In — VantageMap",
@@ -21,9 +22,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <h1 className="font-serif text-3xl font-bold text-rosely-plum">VantageMap</h1>
           <p className="mt-2 text-sm text-rosely-mist">Enterprise Architecture Platform</p>
         </div>
-        <Suspense fallback={<div className="h-96 animate-pulse rounded-xl bg-rosely-blush/30" />}>
-          {children}
-        </Suspense>
+        <Suspense fallback={<Skeleton className="h-96 rounded-xl" />}>{children}</Suspense>
       </div>
     </div>
   );

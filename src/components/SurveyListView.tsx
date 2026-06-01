@@ -7,8 +7,17 @@
  */
 
 import { useState } from "react";
-import { Plus, FileText, CheckCircle2, Clock, Archive, ClipboardList } from "lucide-react";
+import {
+  Plus,
+  FileText,
+  CheckCircle2,
+  Clock,
+  Archive,
+  ClipboardList,
+  AlertCircle,
+} from "lucide-react";
 import { createSurvey, type Survey } from "@/lib/api";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface SurveyListViewProps {
   initialSurveys: Survey[];
@@ -106,9 +115,10 @@ export function SurveyListView({ initialSurveys }: SurveyListViewProps) {
         <div className="bg-white rounded-xl border border-rosely-blush p-5">
           <h2 className="text-base font-semibold text-rosely-night mb-4">New Survey</h2>
           {error && (
-            <div className="mb-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-              {error}
-            </div>
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
           <form onSubmit={handleCreate} className="flex flex-col gap-4">
             <div>

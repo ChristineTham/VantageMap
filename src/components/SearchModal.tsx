@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, Loader2 } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { cn, clientAuthHeaders } from "@/lib/utils";
 import { FACT_SHEET_CONFIGS } from "@/lib/fact-sheet-config";
 import { HealthBadge } from "@/components/StatusBadge";
 import { LifecycleTag } from "@/components/LifecycleTag";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface SearchHit {
   id: string;
@@ -34,15 +35,6 @@ export function SearchModal({ onClose }: SearchModalProps) {
   useEffect(() => {
     setTimeout(() => inputRef.current?.focus(), 50);
   }, []);
-
-  // Close on Escape
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose]);
 
   const doSearch = useCallback(async (q: string) => {
     if (!q.trim()) {
@@ -85,21 +77,13 @@ export function SearchModal({ onClose }: SearchModalProps) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Search"
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
     >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-rosely-night/40 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Panel */}
-      <div className="relative z-10 w-full max-w-xl mx-4 rounded-2xl border border-rosely-blush bg-white shadow-2xl overflow-hidden">
+      <DialogContent className="top-[15vh] translate-y-0 max-w-xl rounded-2xl p-0 gap-0 overflow-hidden">
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-rosely-blush">
           {searching ? (
@@ -118,13 +102,6 @@ export function SearchModal({ onClose }: SearchModalProps) {
               "focus:outline-none"
             )}
           />
-          <button
-            onClick={onClose}
-            className="rounded-md p-1 text-rosely-mist hover:text-rosely-night hover:bg-rosely-cream transition-colors"
-            aria-label="Close search"
-          >
-            <X className="size-4" />
-          </button>
         </div>
 
         {/* Results */}
@@ -195,7 +172,7 @@ export function SearchModal({ onClose }: SearchModalProps) {
             close
           </span>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

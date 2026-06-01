@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { HealthStatus } from "@/lib/types";
-import { healthBg } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import type { BadgeVariant } from "@/components/ui/badge";
 
 interface StatusBadgeProps {
   status: string;
@@ -15,21 +16,19 @@ interface StatusBadgeProps {
 export function StatusBadge({ status, colorMap, className }: StatusBadgeProps) {
   const colorClass = colorMap?.[status] ?? "bg-rosely-mist/20 text-rosely-dusk";
 
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        colorClass,
-        className
-      )}
-    >
-      {status}
-    </span>
-  );
+  return <Badge className={cn("border-transparent", colorClass, className)}>{status}</Badge>;
 }
 
+const healthVariantMap: Record<HealthStatus, BadgeVariant> = {
+  Excellent: "success",
+  Good: "success",
+  Fair: "warning",
+  Poor: "destructive",
+  Critical: "destructive",
+};
+
 /**
- * Specialised StatusBadge for HealthStatus values with pre-configured colours.
+ * Specialised badge for HealthStatus values with pre-configured Rosely variants.
  */
 export function HealthBadge({
   health,
@@ -39,5 +38,9 @@ export function HealthBadge({
   className?: string;
 }) {
   if (!health) return null;
-  return <StatusBadge status={health} colorMap={healthBg} className={className} />;
+  return (
+    <Badge variant={healthVariantMap[health]} className={className}>
+      {health}
+    </Badge>
+  );
 }

@@ -19,8 +19,20 @@ import {
   Archive,
   RotateCcw,
   Mail,
+  AlertCircle,
 } from "lucide-react";
 import { useAuthSession } from "@/components/AuthSessionProvider";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/Skeleton";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -43,7 +55,6 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [actionMenuId, setActionMenuId] = useState<string | null>(null);
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -168,22 +179,47 @@ export default function AdminUsersPage() {
                     {new Date(u.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="relative">
-                      <button
-                        onClick={() => setActionMenuId(actionMenuId === u.id ? null : u.id)}
-                        className="rounded-lg p-1 text-rosely-mist hover:bg-rosely-petal hover:text-rosely-night"
-                        aria-label={`Actions for ${u.name}`}
-                      >
-                        <MoreVertical className="size-4" />
-                      </button>
-                      {actionMenuId === u.id && (
-                        <UserActionMenu
-                          user={u}
-                          onClose={() => setActionMenuId(null)}
-                          onRefresh={fetchUsers}
-                        />
-                      )}
-                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          className="rounded-lg p-1 text-rosely-mist hover:bg-rosely-petal hover:text-rosely-night"
+                          aria-label={`Actions for ${u.name}`}
+                        >
+                          <MoreVertical className="size-4" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => changeRole(u.id, "Viewer", fetchUsers)}>
+                          <Shield className="size-4" />
+                          Set as Viewer
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => changeRole(u.id, "Member", fetchUsers)}>
+                          <Shield className="size-4" />
+                          Set as Member
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => changeRole(u.id, "Admin", fetchUsers)}>
+                          <Shield className="size-4" />
+                          Set as Admin
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => toggleArchive(u.id, u.status, fetchUsers)}
+                          className="text-rosely-rose"
+                        >
+                          {u.status === "Archived" ? (
+                            <>
+                              <RotateCcw className="size-4" />
+                              Restore User
+                            </>
+                          ) : (
+                            <>
+                              <Archive className="size-4" />
+                              Archive User
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               ))
@@ -237,88 +273,33 @@ function RoleBadge({ role }: { role: string }) {
   );
 }
 
-// ── Action Menu ─────────────────────────────────────────────────────────────
+// ── Action helpers ─────────────────────────────────────────────────────────
 
-function UserActionMenu({
-  user: u,
-  onClose,
-  onRefresh,
-}: {
-  user: UserRecord;
-  onClose: () => void;
-  onRefresh: () => void;
-}) {
-  async function changeRole(role: string) {
-    try {
-      await fetch(`/api/admin/users/${u.id}/role`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role }),
-      });
-      onRefresh();
-    } catch {
-      // silently fail
-    }
-    onClose();
+async function changeRole(userId: string, role: string, onRefresh: () => void) {
+  try {
+    await fetch(`/api/admin/users/${userId}/role`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role }),
+    });
+    onRefresh();
+  } catch {
+    // silently fail
   }
+}
 
-  async function toggleArchive() {
-    const newStatus = u.status === "Archived" ? "Active" : "Archived";
-    try {
-      await fetch(`/api/admin/users/${u.id}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      onRefresh();
-    } catch {
-      // silently fail
-    }
-    onClose();
+async function toggleArchive(userId: string, currentStatus: string, onRefresh: () => void) {
+  const newStatus = currentStatus === "Archived" ? "Active" : "Archived";
+  try {
+    await fetch(`/api/admin/users/${userId}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    onRefresh();
+  } catch {
+    // silently fail
   }
-
-  return (
-    <div className="absolute right-0 top-full z-10 mt-1 w-48 rounded-lg border border-rosely-blush bg-white py-1 shadow-lg">
-      <button
-        onClick={() => changeRole("Viewer")}
-        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
-      >
-        <Shield className="size-4" />
-        Set as Viewer
-      </button>
-      <button
-        onClick={() => changeRole("Member")}
-        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
-      >
-        <Shield className="size-4" />
-        Set as Member
-      </button>
-      <button
-        onClick={() => changeRole("Admin")}
-        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-dusk hover:bg-rosely-petal/50"
-      >
-        <Shield className="size-4" />
-        Set as Admin
-      </button>
-      <div className="my-1 border-t border-rosely-blush" />
-      <button
-        onClick={toggleArchive}
-        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rosely-rose hover:bg-rosely-petal/50"
-      >
-        {u.status === "Archived" ? (
-          <>
-            <RotateCcw className="size-4" />
-            Restore User
-          </>
-        ) : (
-          <>
-            <Archive className="size-4" />
-            Archive User
-          </>
-        )}
-      </button>
-    </div>
-  );
 }
 
 // ── Invite Modal ────────────────────────────────────────────────────────────
@@ -365,31 +346,28 @@ function InviteUserModal({ onClose, onInvited }: { onClose: () => void; onInvite
         </p>
 
         {error && (
-          <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="size-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         <form onSubmit={handleInvite} className="mt-4 flex flex-col gap-4">
           <div>
-            <label htmlFor="invite-email" className="block text-sm font-medium text-rosely-night">
-              Email Address
-            </label>
-            <input
+            <Label htmlFor="invite-email">Email Address</Label>
+            <Input
               id="invite-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="colleague@company.com"
-              className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+              className="mt-1"
             />
           </div>
 
           <div>
-            <label htmlFor="invite-role" className="block text-sm font-medium text-rosely-night">
-              Role
-            </label>
+            <Label htmlFor="invite-role">Role</Label>
             <select
               id="invite-role"
               value={role}
@@ -430,8 +408,8 @@ function InviteUserModal({ onClose, onInvited }: { onClose: () => void; onInvite
 function AdminLoadingSkeleton() {
   return (
     <div className="p-8">
-      <div className="h-8 w-48 animate-pulse rounded bg-rosely-petal" />
-      <div className="mt-6 h-96 w-full animate-pulse rounded-xl bg-rosely-petal" />
+      <Skeleton className="h-8 w-48 rounded" />
+      <Skeleton className="mt-6 h-96 w-full rounded-xl" />
     </div>
   );
 }

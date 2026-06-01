@@ -1,11 +1,19 @@
-import { cn } from "@/lib/utils";
 import type { LifecyclePhase } from "@/lib/types";
-import { lifecycleColour } from "@/lib/types";
+import { Badge } from "@/components/ui/badge";
+import type { BadgeVariant } from "@/components/ui/badge";
 
 interface LifecycleTagProps {
   lifecycle: LifecyclePhase | null;
   className?: string;
 }
+
+const lifecycleVariantMap: Record<LifecyclePhase, BadgeVariant> = {
+  Plan: "info",
+  "Phase In": "info",
+  Active: "success",
+  "Phase Out": "warning",
+  "End of Life": "destructive",
+};
 
 /**
  * A badge displaying the lifecycle phase of a fact sheet.
@@ -13,17 +21,9 @@ interface LifecycleTagProps {
 export function LifecycleTag({ lifecycle, className }: LifecycleTagProps) {
   if (!lifecycle) return null;
 
-  const colorClass = lifecycleColour[lifecycle];
-
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        colorClass,
-        className
-      )}
-    >
+    <Badge variant={lifecycleVariantMap[lifecycle]} className={className}>
       {lifecycle}
-    </span>
+    </Badge>
   );
 }

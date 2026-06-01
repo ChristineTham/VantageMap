@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowLeft, Plus, Loader2 } from "lucide-react";
 import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetConfig, FieldDefinition } from "@/lib/fact-sheet-config";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface FactSheetCreateFormProps {
   config: FactSheetConfig;
@@ -109,9 +111,10 @@ export function FactSheetCreateForm({ config }: FactSheetCreateFormProps) {
       {/* Form */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {error && (
-          <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-            {error}
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="size-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         {Array.from(fieldGroups.entries()).map(([group, fields]) => (

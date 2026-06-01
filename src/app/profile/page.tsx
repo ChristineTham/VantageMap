@@ -11,8 +11,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthSession } from "@/components/AuthSessionProvider";
 import { authClient } from "@/lib/auth-client";
-import { User, Lock, Bell, Save, ArrowLeft } from "lucide-react";
+import { User, Lock, Bell, Save, ArrowLeft, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/Skeleton";
 
 type Tab = "profile" | "password" | "notifications";
 
@@ -24,8 +28,8 @@ export default function ProfilePage() {
   if (isPending) {
     return (
       <div className="p-8">
-        <div className="h-8 w-48 animate-pulse rounded bg-rosely-petal" />
-        <div className="mt-6 h-64 w-full max-w-2xl animate-pulse rounded-xl bg-rosely-petal" />
+        <Skeleton className="h-8 w-48 rounded" />
+        <Skeleton className="mt-6 h-64 w-full max-w-2xl rounded-xl" />
       </div>
     );
   }
@@ -120,36 +124,33 @@ function ProfileTab({ user }: { user: { name: string; email: string } }) {
       )}
 
       {error && (
-        <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-          {error}
-        </div>
+        <Alert variant="destructive" className="mt-4">
+          <AlertCircle className="size-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <form onSubmit={handleSave} className="mt-6 flex flex-col gap-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-rosely-night">
-            Full Name
-          </label>
-          <input
+          <Label htmlFor="name">Full Name</Label>
+          <Input
             id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-rosely-night">
-            Email
-          </label>
-          <input
+          <Label htmlFor="email">Email</Label>
+          <Input
             id="email"
             type="email"
             value={user.email}
             disabled
-            className="mt-1 w-full rounded-lg border border-rosely-blush bg-rosely-cream/50 px-3 py-2 text-sm text-rosely-mist"
+            className="mt-1 bg-rosely-cream/50 text-rosely-mist"
           />
           <p className="mt-1 text-xs text-rosely-mist">Email cannot be changed</p>
         </div>
@@ -223,32 +224,29 @@ function PasswordTab() {
       )}
 
       {error && (
-        <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-          {error}
-        </div>
+        <Alert variant="destructive" className="mt-4">
+          <AlertCircle className="size-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
-          <label htmlFor="currentPassword" className="block text-sm font-medium text-rosely-night">
-            Current Password
-          </label>
-          <input
+          <Label htmlFor="currentPassword">Current Password</Label>
+          <Input
             id="currentPassword"
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
             autoComplete="current-password"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
           />
         </div>
 
         <div>
-          <label htmlFor="newPassword" className="block text-sm font-medium text-rosely-night">
-            New Password
-          </label>
-          <input
+          <Label htmlFor="newPassword">New Password</Label>
+          <Input
             id="newPassword"
             type="password"
             value={newPassword}
@@ -256,26 +254,21 @@ function PasswordTab() {
             required
             autoComplete="new-password"
             minLength={8}
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
           />
           <p className="mt-1 text-xs text-rosely-mist">Minimum 8 characters</p>
         </div>
 
         <div>
-          <label
-            htmlFor="confirmNewPassword"
-            className="block text-sm font-medium text-rosely-night"
-          >
-            Confirm New Password
-          </label>
-          <input
+          <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+          <Input
             id="confirmNewPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             autoComplete="new-password"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
           />
         </div>
 

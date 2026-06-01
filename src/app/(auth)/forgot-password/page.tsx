@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -66,40 +71,35 @@ export default function ForgotPasswordPage() {
       </p>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-          {error}
-        </div>
+        <Alert variant="destructive" className="mt-4">
+          <AlertCircle className="size-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-rosely-night">
-            Email
-          </label>
-          <input
+          <Label htmlFor="email">Email</Label>
+          <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
             placeholder="you@company.com"
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-rosely-plum px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
+          className="w-full bg-rosely-plum hover:bg-rosely-mauve text-white"
         >
-          {loading ? (
-            <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-          ) : (
-            <Mail className="size-4" />
-          )}
+          {loading ? <Loader2 className="animate-spin" /> : <Mail />}
           Send Reset Link
-        </button>
+        </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-rosely-mist">

@@ -10,8 +10,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Key, Plus, Trash2, Copy, Check, AlertTriangle, Clock } from "lucide-react";
+import { Key, Plus, Trash2, Copy, Check, AlertTriangle, Clock, AlertCircle } from "lucide-react";
 import { useAuthSession } from "@/components/AuthSessionProvider";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/Skeleton";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -58,8 +62,8 @@ export default function TechnicalUsersPage() {
   if (isPending) {
     return (
       <div className="p-8">
-        <div className="h-8 w-48 animate-pulse rounded bg-rosely-petal" />
-        <div className="mt-6 h-64 w-full animate-pulse rounded-xl bg-rosely-petal" />
+        <Skeleton className="h-8 w-48 rounded" />
+        <Skeleton className="mt-6 h-64 w-full rounded-xl" />
       </div>
     );
   }
@@ -306,31 +310,28 @@ function CreateTokenModal({
         </p>
 
         {error && (
-          <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="size-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         <form onSubmit={handleCreate} className="mt-4 flex flex-col gap-4">
           <div>
-            <label htmlFor="token-name" className="block text-sm font-medium text-rosely-night">
-              Token Name
-            </label>
-            <input
+            <Label htmlFor="token-name">Token Name</Label>
+            <Input
               id="token-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="e.g. CI/CD Pipeline, Import Script"
-              className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+              className="mt-1"
             />
           </div>
 
           <div>
-            <label htmlFor="token-expiry" className="block text-sm font-medium text-rosely-night">
-              Expiration
-            </label>
+            <Label htmlFor="token-expiry">Expiration</Label>
             <select
               id="token-expiry"
               value={expiryDays}

@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signUp } from "@/lib/auth-client";
-import { Eye, EyeOff, UserPlus } from "lucide-react";
+import { Eye, EyeOff, UserPlus, Loader2, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -60,50 +64,45 @@ export default function RegisterPage() {
       <p className="mt-1 text-sm text-rosely-mist">Sign up to start using VantageMap</p>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-          {error}
-        </div>
+        <Alert variant="destructive" className="mt-4">
+          <AlertCircle className="size-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-rosely-night">
-            Full Name
-          </label>
-          <input
+          <Label htmlFor="name">Full Name</Label>
+          <Input
             id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             autoComplete="name"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
             placeholder="Jane Doe"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-rosely-night">
-            Email
-          </label>
-          <input
+          <Label htmlFor="email">Email</Label>
+          <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
             placeholder="you@company.com"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-rosely-night">
-            Password
-          </label>
+          <Label htmlFor="password">Password</Label>
           <div className="relative mt-1">
-            <input
+            <Input
               id="password"
               type={showPassword ? "text" : "password"}
               value={password}
@@ -111,7 +110,7 @@ export default function RegisterPage() {
               required
               autoComplete="new-password"
               minLength={8}
-              className="w-full rounded-lg border border-rosely-blush px-3 py-2 pr-10 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+              className="pr-10"
               placeholder="••••••••"
             />
             <button
@@ -127,33 +126,27 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-rosely-night">
-            Confirm Password
-          </label>
-          <input
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             autoComplete="new-password"
-            className="mt-1 w-full rounded-lg border border-rosely-blush px-3 py-2 text-sm text-rosely-night placeholder:text-rosely-mist focus:border-rosely-lilac focus:outline-none focus:ring-1 focus:ring-rosely-lilac"
+            className="mt-1"
             placeholder="••••••••"
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-rosely-plum px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rosely-mauve disabled:opacity-50"
+          className="w-full bg-rosely-plum hover:bg-rosely-mauve text-white"
         >
-          {loading ? (
-            <span className="size-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-          ) : (
-            <UserPlus className="size-4" />
-          )}
+          {loading ? <Loader2 className="animate-spin" /> : <UserPlus />}
           Create Account
-        </button>
+        </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-rosely-mist">

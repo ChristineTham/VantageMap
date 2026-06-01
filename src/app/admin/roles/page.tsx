@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Shield, Check, X, Info } from "lucide-react";
 import { useAuthSession } from "@/components/AuthSessionProvider";
+import { Skeleton } from "@/components/Skeleton";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -83,7 +84,7 @@ export default function RolesPage() {
   if (isPending) {
     return (
       <div className="p-8">
-        <div className="h-8 w-48 animate-pulse rounded bg-rosely-petal" />
+        <Skeleton className="h-8 w-48 rounded" />
       </div>
     );
   }

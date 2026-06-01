@@ -2,9 +2,18 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { X, Save, Loader2 } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
 import { cn, clientAuthHeaders } from "@/lib/utils";
 import type { FactSheetConfig, FieldDefinition } from "@/lib/fact-sheet-config";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface FactSheetEditDialogProps {
   entity: Record<string, unknown>;
@@ -41,7 +50,6 @@ export function FactSheetEditDialog({
     setError(null);
 
     try {
-      // Build payload: only send changed fields
       const payload: Record<string, unknown> = {};
       for (const field of config.fields) {
         const newVal = formData[field.key] || null;
@@ -76,7 +84,6 @@ export function FactSheetEditDialog({
     }
   };
 
-  // Group fields for rendering
   const fieldGroups = new Map<string, FieldDefinition[]>();
   for (const field of config.fields) {
     const group = field.group ?? "Other";
@@ -85,40 +92,25 @@ export function FactSheetEditDialog({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="edit-dialog-title"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-rosely-night/30" onClick={onClose} aria-hidden="true" />
-
-      {/* Dialog */}
-      <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-rosely-blush bg-white shadow-xl">
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
-          <h2 id="edit-dialog-title" className="text-lg font-semibold text-rosely-night">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto p-0 gap-0">
+        <DialogHeader className="sticky top-0 z-10 border-b border-rosely-blush bg-white px-6 py-4 rounded-t-xl">
+          <DialogTitle className="text-lg font-semibold text-rosely-night">
             Edit {config.displayName}
-          </h2>
-          <button
-            onClick={onClose}
-            aria-label="Close dialog"
-            className="p-1.5 rounded-lg text-rosely-mist hover:text-rosely-night hover:bg-rosely-petal transition-colors"
-          >
-            <X className="size-5" />
-          </button>
-        </div>
+          </DialogTitle>
+        </DialogHeader>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-6">
           {error && (
-            <div className="rounded-lg border border-rosely-rose/30 bg-rosely-rose/10 px-4 py-3 text-sm text-rosely-rose">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           {Array.from(fieldGroups.entries()).map(([group, fields]) => (
@@ -137,8 +129,7 @@ export function FactSheetEditDialog({
             </fieldset>
           ))}
 
-          {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-rosely-blush">
+          <DialogFooter className="pt-4 border-t border-rosely-blush">
             <button
               type="button"
               onClick={onClose}
@@ -159,14 +150,14 @@ export function FactSheetEditDialog({
               {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
               {saving ? "Saving…" : "Save Changes"}
             </button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
-// ── Form Field Component ────────────────────────────────────────────────────
+// ── Form Field Component ──────────────────────────────────────────────────────────────────────────
 
 function FormField({
   field,
